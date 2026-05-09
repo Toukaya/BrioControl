@@ -22,15 +22,17 @@ protocol SliderCapableProperty {
 final class NumberCaptureDeviceProperty: SliderCapableProperty, ObservableObject {
     private let control: UVCIntControl
 
-    @Published private var internalValue: Float
-
     var sliderValue: Float {
         get {
             return Float(control.current)
         }
         set {
             if sliderValue != newValue {
-                internalValue = newValue
+                // Defer the change notification so SwiftUI does not see a
+                // publish during a view-update cycle.
+                DispatchQueue.main.async { [weak self] in
+                    self?.objectWillChange.send()
+                }
                 Task {
                     control.current = Int(newValue)
                 }
@@ -47,7 +49,6 @@ final class NumberCaptureDeviceProperty: SliderCapableProperty, ObservableObject
     init(_ control: UVCIntControl) {
         self.control = control
         isCapable = control.isCapable
-        internalValue = Float(control.defaultValue)
         minimum = Float(control.minimum)
         maximum = Float(control.maximum)
         resolution = Float(control.resolution)
