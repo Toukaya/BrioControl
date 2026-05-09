@@ -33,7 +33,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             for _ in 1...4 {
                 path = path.deletingLastPathComponent as NSString
             }
-            NSWorkspace.shared.launchApplication(path as String)
+            // openApplication(at:configuration:completionHandler:) is the
+            // post-macOS-11 replacement for launchApplication. Pass an
+            // empty configuration since we want the same default launch
+            // behavior the legacy call provided.
+            let url = URL(fileURLWithPath: path as String)
+            NSWorkspace.shared.openApplication(at: url,
+                                               configuration: NSWorkspace.OpenConfiguration(),
+                                               completionHandler: nil)
         }
     }
 }

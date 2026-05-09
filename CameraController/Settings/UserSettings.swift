@@ -17,6 +17,14 @@ final class UserSettings {
 
     var openAtLogin: Bool {
         didSet {
+            // SMLoginItemSetEnabled was deprecated in macOS 13 in favor of
+            // SMAppService.loginItem(identifier:). Migrating to SMAppService
+            // requires repackaging the helper into a `Contents/Library/
+            // LoginItems` bundle path and shipping a separate launchd plist;
+            // that's out of scope for the strict-concurrency migration, so
+            // the legacy call is preserved verbatim. The single deprecation
+            // warning emitted on the line below is intentional tech debt
+            // tracked for a future task that will repackage the helper.
             let success = SMLoginItemSetEnabled("com.itaysoft.CameraController.Helper" as CFString, openAtLogin)
             if success {
                 UserDefaults.standard.set(openAtLogin, forKey: "login")

@@ -29,7 +29,7 @@ final class DevicesManager {
     }
 
     private init() {
-        let session = AVCaptureDevice.DiscoverySession(deviceTypes: [.externalUnknown, .builtInWideAngleCamera],
+        let session = AVCaptureDevice.DiscoverySession(deviceTypes: [.external, .builtInWideAngleCamera],
                                                                 mediaType: nil,
                                                                 position: .unspecified)
         devices = session.devices.map({ (device) -> CaptureDevice in
@@ -46,17 +46,17 @@ final class DevicesManager {
     func startMonitoring() {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(deviceAdded(notif:)),
-                                               name: NSNotification.Name.AVCaptureDeviceWasConnected,
+                                               name: AVCaptureDevice.wasConnectedNotification,
                                                object: nil)
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(deviceRemoved(notif:)),
-                                               name: NSNotification.Name.AVCaptureDeviceWasDisconnected,
+                                               name: AVCaptureDevice.wasDisconnectedNotification,
                                                object: nil)
     }
 
     func stopMonitoring() {
         NotificationCenter.default.removeObserver(self,
-                                                  name: NSNotification.Name.AVCaptureDeviceWasConnected,
+                                                  name: AVCaptureDevice.wasConnectedNotification,
                                                   object: nil)
     }
 

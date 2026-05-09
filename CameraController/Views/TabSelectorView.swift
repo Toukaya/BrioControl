@@ -60,14 +60,14 @@ struct TabSelectorView: View {
                         .foregroundColor(colorForOption(option.index))
                     }
                     .buttonStyle(.borderless)
-                    .animation(nil)
+                    .animation(nil, value: displayedIndex)
                 }
             }
         }
         .frame(
             width: selectorWidth(optionsImages.count)
         )
-        .onChange(of: selectedIndex) { newValue in
+        .onChange(of: selectedIndex) { _, newValue in
             // Fix for indicator moving up/down because of window resize
             DispatchQueue.main.async {
                 withAnimation {

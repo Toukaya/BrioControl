@@ -46,7 +46,7 @@ struct ContentView: View {
             }.onDisappear {
                 DevicesManager.shared.stopMonitoring()
             }
-            .onChange(of: scenePhase) { newPhase in
+            .onChange(of: scenePhase) { _, newPhase in
                 switch newPhase {
                 case .active:
                     previewController.startSession()

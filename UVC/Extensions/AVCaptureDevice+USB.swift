@@ -25,7 +25,7 @@ extension AVCaptureDevice {
         // and fetch their property dicts and then match against the more specific values
 
         var iter: io_iterator_t = 0
-        if IOServiceGetMatchingServices(kIOMasterPortDefault, dictionary, &iter) == kIOReturnSuccess {
+        if IOServiceGetMatchingServices(kIOMainPortDefault, dictionary, &iter) == kIOReturnSuccess {
             var cameraCandidate: io_service_t
             cameraCandidate = IOIteratorNext(iter)
             while cameraCandidate != 0 {
@@ -59,7 +59,7 @@ extension AVCaptureDevice {
 
         // if we haven't found a camera after looping through the iterator, fallback on GetMatchingService method
         if camera == 0 {
-            camera = IOServiceGetMatchingService(kIOMasterPortDefault, dictionary)
+            camera = IOServiceGetMatchingService(kIOMainPortDefault, dictionary)
         }
 
         return camera
