@@ -10,43 +10,37 @@ import Foundation
 import IOKit
 
 extension IOUSBConfigurationDescriptorPtr {
-    private struct DescriptorWalkState {
-        var processingUnitID: Int = -1
-        var cameraTerminalID: Int = -1
-        var interfaceID: Int = -1
-        var extensionUnits: [ExtensionUnit] = []
-    }
-
     func proccessDescriptor() -> UVCDescriptor {
-        var state = DescriptorWalkState()
+        var processingUnitID = -1
+        var cameraTerminalID = -1
+        var interfaceID = -1
 
         let remaining = self.pointee.wTotalLength - UInt16(self.pointee.bLength)
         var pointer = UnsafeMutablePointer<UInt8>(OpaquePointer(self))
         pointer = pointer.advanced(by: Int(self.pointee.bLength))
 
-        browseDescriptor(remaining, pointer, &state)
+        browseDescriptor(remaining, pointer, &processingUnitID, &cameraTerminalID, &interfaceID)
 
-        return UVCDescriptor(processingUnitID: state.processingUnitID,
-                             cameraTerminalID: state.cameraTerminalID,
-                             interfaceID: state.interfaceID,
-                             extensionUnits: state.extensionUnits)
+        // Extension units are collected by an independent second pass so that
+        // any safety bug in EU parsing cannot affect the standard UVC values
+        // (PU/CT/interface) that the rest of the app depends on.
+        let extensionUnits = collectExtensionUnits(remaining, pointer)
+
+        return UVCDescriptor(processingUnitID: processingUnitID,
+                             cameraTerminalID: cameraTerminalID,
+                             interfaceID: interfaceID,
+                             extensionUnits: extensionUnits)
     }
 
-    private func browseDescriptor(_ memory: UInt16,
-                                  _ pointer: UnsafeMutablePointer<UInt8>,
-                                  _ state: inout DescriptorWalkState) {
+    private func browseDescriptor(_ memory: UInt16, _ pointer: UnsafeMutablePointer<UInt8>,
+                                  _ processingUnitID: inout Int,
+                                  _ cameraTerminalID: inout Int,
+                                  _ interfaceID: inout Int) {
         var remaining = memory
         var currentPointer = pointer
 
         while remaining > 0 {
             var descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
-
-            // Sanity: bLength == 0 would never advance the pointer, producing
-            // an infinite loop on a single address. Treat as end-of-walk.
-            // (Other accounting is left as in the original implementation.)
-            if descriptorPointer.pointee.bLength == 0 {
-                break
-            }
 
             if descriptorPointer.pointee.bDescriptorType == kUSBInterfaceDesc {
                 let intDesc = UnsafeMutablePointer<IOUSBInterfaceDescriptor>(OpaquePointer(descriptorPointer))
@@ -80,17 +74,14 @@ extension IOUSBConfigurationDescriptorPtr {
                             break
                         }
 
-                        // bLength == 0 would never advance the pointer and
-                        // would spin forever on a single address. The original
-                        // WB7022-fix early-return masked this case by exiting
-                        // once PU+CT+interface were known; we walk further to
-                        // collect Extension Units, so the guard is needed.
-                        if descriptorPointer.pointee.bLength == 0 {
-                            break
-                        }
+                        getDeviceId(descriptorPointer, currentPointer, &processingUnitID, &cameraTerminalID)
+                        interfaceID = Int(intDesc.pointee.bInterfaceNumber)
 
-                        getDeviceId(descriptorPointer, currentPointer, &state)
-                        state.interfaceID = Int(intDesc.pointee.bInterfaceNumber)
+                        if interfaceID != -1 && processingUnitID != -1 && cameraTerminalID != -1 {
+                            // Found all necessary data, exit
+                            // Fix for WB7022 Camera
+                            return
+                        }
 
                         remainingMemory -= UInt16(descriptorPointer.pointee.bLength)
                         currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
@@ -109,32 +100,74 @@ extension IOUSBConfigurationDescriptorPtr {
 
     private func getDeviceId(_ descriptorPointer: InterfaceDescriptorPointer,
                              _ currentPointer: UnsafeMutablePointer<UInt8>,
-                             _ state: inout DescriptorWalkState) {
+                             _ processingUnitID: inout Int,
+                             _ cameraTerminalID: inout Int) {
         let unitType = UVCConstants.DescriptorSubtype(rawValue: descriptorPointer.pointee.bDescriptorSubType)
         switch unitType {
         case .processingUnit:
             let puPointer = ProcessingUnitDescriptorPointer(OpaquePointer(currentPointer))
-            state.processingUnitID = Int(puPointer.pointee.bUnitID)
+            processingUnitID = Int(puPointer.pointee.bUnitID)
         case .inputTerminal:
             let ctPointer = CameraTerminalDescriptorPointer(OpaquePointer(currentPointer))
-            state.cameraTerminalID = Int(ctPointer.pointee.bTerminalID)
+            cameraTerminalID = Int(ctPointer.pointee.bTerminalID)
         case .none:
             break
         case .selectorUnit:
             break
         case .extensionUnit:
-            if let extensionUnit = parseExtensionUnit(currentPointer) {
-                state.extensionUnits.append(extensionUnit)
-                #if DEBUG
-                let bmHex = extensionUnit.bmControls
-                    .map { String(format: "%02X", $0) }
-                    .joined(separator: " ")
-                print("[UVC] Extension Unit: unitID=\(extensionUnit.unitID) "
-                      + "guid=\(extensionUnit.guid.uuidString) "
-                      + "bmControls=[\(bmHex)]")
-                #endif
-            }
+            break
         }
+    }
+
+    /*
+     * Independent second pass that walks the same configuration descriptor
+     * looking only for VC Extension Unit descriptors. This is intentionally
+     * separate from `browseDescriptor`: any defect here cannot cause the
+     * standard UVC PU/CT/interface IDs to be lost, and conversely the
+     * original walker is left bit-for-bit identical to its long-shipped form.
+     */
+    private func collectExtensionUnits(_ memory: UInt16,
+                                       _ pointer: UnsafeMutablePointer<UInt8>) -> [ExtensionUnit] {
+        var result: [ExtensionUnit] = []
+        var remaining = memory
+        var currentPointer = pointer
+
+        while remaining > 0 {
+            let descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+            let bLength = UInt16(descriptorPointer.pointee.bLength)
+
+            // Defensive: a zero-length descriptor would never advance the
+            // pointer and would spin forever on a single address.
+            if bLength == 0 || bLength > remaining {
+                break
+            }
+
+            // Only class-specific VC Interface descriptors (type 0x24) carry
+            // an Extension Unit. Anything else is skipped without further
+            // interpretation.
+            if descriptorPointer.pointee.bDescriptorType == UVCConstants.descriptorTypeInterface {
+                let subType = UVCConstants.DescriptorSubtype(
+                    rawValue: descriptorPointer.pointee.bDescriptorSubType)
+                if subType == .extensionUnit {
+                    if let unit = parseExtensionUnit(currentPointer) {
+                        result.append(unit)
+                        #if DEBUG
+                        let bmHex = unit.bmControls
+                            .map { String(format: "%02X", $0) }
+                            .joined(separator: " ")
+                        print("[UVC] Extension Unit: unitID=\(unit.unitID) "
+                              + "guid=\(unit.guid.uuidString) "
+                              + "bmControls=[\(bmHex)]")
+                        #endif
+                    }
+                }
+            }
+
+            remaining -= bLength
+            currentPointer = currentPointer.advanced(by: Int(bLength))
+        }
+
+        return result
     }
 
     private func parseExtensionUnit(_ currentPointer: UnsafeMutablePointer<UInt8>) -> ExtensionUnit? {
