@@ -80,6 +80,7 @@
 		F4D171442A3EA6650039E353 /* StatefulPreviewWrapper.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D171432A3EA6650039E353 /* StatefulPreviewWrapper.swift */; };
 		F4D171482A3EAD320039E353 /* SectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D171472A3EAD320039E353 /* SectionView.swift */; };
 		F4D1714A2A3EBC740039E353 /* PreviewSizeSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D171492A3EBC740039E353 /* PreviewSizeSettings.swift */; };
+		F4260510AA0001000000E353 /* PreviewQualitySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510AA0000000000E353 /* PreviewQualitySettings.swift */; };
 		F4D4C6C924CBD26600581E05 /* BoolCaptureDeviceProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D4C6C824CBD26600581E05 /* BoolCaptureDeviceProperty.swift */; };
 		F4D4C6CB24CBD27600581E05 /* WhiteBalanceView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D4C6CA24CBD27600581E05 /* WhiteBalanceView.swift */; };
 		F4D4C6CE24CBD34300581E05 /* AdvancedView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4D4C6CD24CBD34300581E05 /* AdvancedView.swift */; };
@@ -233,6 +234,7 @@
 		F4D171432A3EA6650039E353 /* StatefulPreviewWrapper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatefulPreviewWrapper.swift; sourceTree = "<group>"; };
 		F4D171472A3EAD320039E353 /* SectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionView.swift; sourceTree = "<group>"; };
 		F4D171492A3EBC740039E353 /* PreviewSizeSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSizeSettings.swift; sourceTree = "<group>"; };
+		F4260510AA0000000000E353 /* PreviewQualitySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewQualitySettings.swift; sourceTree = "<group>"; };
 		F4D4C6C824CBD26600581E05 /* BoolCaptureDeviceProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoolCaptureDeviceProperty.swift; sourceTree = "<group>"; };
 		F4D4C6CA24CBD27600581E05 /* WhiteBalanceView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhiteBalanceView.swift; sourceTree = "<group>"; };
 		F4D4C6CD24CBD34300581E05 /* AdvancedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AdvancedView.swift; sourceTree = "<group>"; };
@@ -608,6 +610,7 @@
 				F4D4C70024CBF99200581E05 /* UserSettings.swift */,
 				F4D4C6FE24CBF98300581E05 /* RefreshSettingsRate.swift */,
 				F4D171492A3EBC740039E353 /* PreviewSizeSettings.swift */,
+				F4260510AA0000000000E353 /* PreviewQualitySettings.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -919,6 +922,7 @@
 				F42460492A5A6D5E009108C2 /* QuitButton.swift in Sources */,
 				F42460352A5A65A0009108C2 /* BrightnessView.swift in Sources */,
 				F4D1714A2A3EBC740039E353 /* PreviewSizeSettings.swift in Sources */,
+				F4260510AA0001000000E353 /* PreviewQualitySettings.swift in Sources */,
 				F42D42D827A0E92100107DFF /* WindowManager.swift in Sources */,
 				F469CF4724DD0D9F0092C7F9 /* ProfileManager.swift in Sources */,
 				F44150732A882D760021ADB5 /* ProfileRow.swift in Sources */,

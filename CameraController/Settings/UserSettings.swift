@@ -50,6 +50,13 @@ final class UserSettings: ObservableObject {
         }
     }
 
+    @Published var cameraPreviewQuality: PreviewQualitySettings {
+        didSet {
+            UserDefaults.standard.set(cameraPreviewQuality.rawValue, forKey: "cameraPreviewQuality")
+            NotificationCenter.default.post(name: .cameraPreviewQualityChanged, object: nil)
+        }
+    }
+
     @Published var checkForUpdatesOnStartup: Bool {
         didSet {
             UserDefaults.standard.set(checkForUpdatesOnStartup, forKey: "checkForUpdatesOnStartup")
@@ -70,6 +77,8 @@ final class UserSettings: ObservableObject {
         cameraPreviewSize = PreviewSizeSettings(
             rawValue: UserDefaults.standard.double(forKey: "cameraPreviewSize")
         ) ?? .small
+        let storedQuality = UserDefaults.standard.object(forKey: "cameraPreviewQuality") as? Int
+        cameraPreviewQuality = PreviewQualitySettings(rawValue: storedQuality ?? PreviewQualitySettings.fhd1080.rawValue) ?? .fhd1080
         checkForUpdatesOnStartup = UserDefaults.standard.bool(forKey: "checkForUpdatesOnStartup")
         mirrorPreview = UserDefaults.standard.bool(forKey: "mirrorPreview")
     }

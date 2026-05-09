@@ -12,4 +12,5 @@ extension NSNotification.Name {
     static let devicesUpdated = NSNotification.Name(rawValue: "DevicesUpdated")
     static let windowOpen = NSNotification.Name(rawValue: "WindowOpen")
     static let windowClose = NSNotification.Name(rawValue: "WindowClose")
+    static let cameraPreviewQualityChanged = NSNotification.Name(rawValue: "CameraPreviewQualityChanged")
 }
