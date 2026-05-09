@@ -41,11 +41,10 @@ extension IOUSBConfigurationDescriptorPtr {
         while remaining > 0 {
             var descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
 
-            // Sanity: bLength == 0 would never advance the pointer and never
-            // decrement `remaining`, producing an infinite loop on a single
-            // address. Treat as end-of-walk.
-            let outerBLength = UInt16(descriptorPointer.pointee.bLength)
-            if outerBLength == 0 || outerBLength > remaining {
+            // Sanity: bLength == 0 would never advance the pointer, producing
+            // an infinite loop on a single address. Treat as end-of-walk.
+            // (Other accounting is left as in the original implementation.)
+            if descriptorPointer.pointee.bLength == 0 {
                 break
             }
 
@@ -54,12 +53,7 @@ extension IOUSBConfigurationDescriptorPtr {
                 if !(intDesc.pointee.bInterfaceClass == UVCConstants.classVideo
                     && intDesc.pointee.bInterfaceSubClass == UVCConstants.subclassVideoControl) {
 
-                    // Decrement `remaining` so the outer loop terminates even
-                    // if the config descriptor never reaches a Video Control
-                    // interface (multi-class composite devices, audio-only
-                    // alt-settings preceding video, etc.).
-                    remaining -= outerBLength
-                    currentPointer = currentPointer.advanced(by: Int(outerBLength))
+                    currentPointer = currentPointer.advanced(by: Int(intDesc.pointee.bLength))
                     continue
                 }
 
@@ -86,23 +80,20 @@ extension IOUSBConfigurationDescriptorPtr {
                             break
                         }
 
-                        // Same defensive guard as the outer walk: a bLength of
-                        // zero or one that exceeds the remaining VC region is
-                        // either malformed or padding, and continuing would
-                        // either spin forever or read past the buffer. The
-                        // original "Fix for WB7022 Camera" early-return masked
-                        // this case by returning before reaching it; this
-                        // guard handles it explicitly without skipping EUs.
-                        let innerBLength = UInt16(descriptorPointer.pointee.bLength)
-                        if innerBLength == 0 || innerBLength > remainingMemory {
+                        // bLength == 0 would never advance the pointer and
+                        // would spin forever on a single address. The original
+                        // WB7022-fix early-return masked this case by exiting
+                        // once PU+CT+interface were known; we walk further to
+                        // collect Extension Units, so the guard is needed.
+                        if descriptorPointer.pointee.bLength == 0 {
                             break
                         }
 
                         getDeviceId(descriptorPointer, currentPointer, &state)
                         state.interfaceID = Int(intDesc.pointee.bInterfaceNumber)
 
-                        remainingMemory -= innerBLength
-                        currentPointer = currentPointer.advanced(by: Int(innerBLength))
+                        remainingMemory -= UInt16(descriptorPointer.pointee.bLength)
+                        currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
                     }
                 } else {
                     remaining -= UInt16(descriptorPointer.pointee.bLength)
