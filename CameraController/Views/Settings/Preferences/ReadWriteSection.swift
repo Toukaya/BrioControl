@@ -13,31 +13,33 @@ struct ReadWriteSection: View {
 
     var body: some View {
         @Bindable var settings = settings
-        SectionView {
-            SectionTitle(title: "Read / Write settings from device",
-                         image: Image(systemName: "arrow.left.arrow.right"))
-
-            HStack(spacing: 20.0) {
-                Text("Read")
+        Section("Read / Write settings from device") {
+            LabeledContent {
+                Picker("Read", selection: $settings.readRate) {
+                    Text("Disabled").tag(RefreshSettingsRate.disabled)
+                    Text("Every 0.5 Seconds").tag(RefreshSettingsRate.halfSecond)
+                    Text("Every 1 Second").tag(RefreshSettingsRate.oneSecond)
+                    Text("Every 2 Second").tag(RefreshSettingsRate.twoSeconds)
+                }
+                .labelsHidden()
+            } label: {
+                Label("Read", systemImage: "arrow.down.circle")
+                    .symbolRenderingMode(.hierarchical)
                     .help("CameraController will read the configuration from the camera every X amount of time.")
-                Spacer()
-                Picker(selection: $settings.readRate, label: Text("")) {
-                    Text("Disabled").tag(RefreshSettingsRate.disabled)
-                    Text("Every 0.5 Seconds").tag(RefreshSettingsRate.halfSecond)
-                    Text("Every 1 Second").tag(RefreshSettingsRate.oneSecond)
-                    Text("Every 2 Second").tag(RefreshSettingsRate.twoSeconds)
-                }.frame(width: 200)
             }
-            HStack(spacing: 20.0) {
-                Text("Write")
-                    .help("CameraController will write the configuration to the camera every X amount of time.")
-                Spacer()
-                Picker(selection: $settings.writeRate, label: Text("")) {
+
+            LabeledContent {
+                Picker("Write", selection: $settings.writeRate) {
                     Text("Disabled").tag(RefreshSettingsRate.disabled)
                     Text("Every 0.5 Seconds").tag(RefreshSettingsRate.halfSecond)
                     Text("Every 1 Second").tag(RefreshSettingsRate.oneSecond)
                     Text("Every 2 Second").tag(RefreshSettingsRate.twoSeconds)
-                }.frame(width: 200)
+                }
+                .labelsHidden()
+            } label: {
+                Label("Write", systemImage: "arrow.up.circle")
+                    .symbolRenderingMode(.hierarchical)
+                    .help("CameraController will write the configuration to the camera every X amount of time.")
             }
         }
     }
@@ -46,8 +48,11 @@ struct ReadWriteSection: View {
 #if DEBUG
 struct ReadWriteSection_Previews: PreviewProvider {
     static var previews: some View {
-        ReadWriteSection()
-            .environment(UserSettings.shared)
+        Form {
+            ReadWriteSection()
+        }
+        .formStyle(.grouped)
+        .environment(UserSettings.shared)
     }
 }
 #endif

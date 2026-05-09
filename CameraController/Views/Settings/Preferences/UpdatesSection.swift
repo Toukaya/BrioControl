@@ -13,17 +13,17 @@ struct UpdatesSection: View {
 
     var body: some View {
         @Bindable var settings = settings
-        SectionView {
-            SectionTitle(title: "Updates",
-                         image: Image(systemName: "icloud"))
-
-            HStack(spacing: 20.0) {
-                Text("Check For Updates On Startup")
-                Spacer()
-                Toggle(isOn: $settings.checkForUpdatesOnStartup)
-                    .toggleStyle(SwitchToggleStyle(tint: Constants.Colors.accentColor))
+        Section("Updates") {
+            LabeledContent {
+                SwiftUI.Toggle("Check For Updates On Startup", isOn: $settings.checkForUpdatesOnStartup)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+            } label: {
+                Label("Check For Updates On Startup", systemImage: "icloud")
+                    .symbolRenderingMode(.hierarchical)
             }
-            HStack(spacing: 20.0) {
+
+            HStack {
                 Spacer()
                 Button("Check For Updates Now") {
                     guard let delegate = NSApplication.shared.delegate as? AppDelegate else {
@@ -31,11 +31,7 @@ struct UpdatesSection: View {
                     }
                     delegate.checkForUpdates()
                 }
-                .buttonStyle(.plain)
-                .padding(.vertical, 5)
-                .padding(.horizontal, 10)
-                .background(Constants.Colors.sliderBackground)
-                .clipShape(Capsule())
+                .buttonStyle(.bordered)
                 Spacer()
             }
         }
@@ -45,8 +41,11 @@ struct UpdatesSection: View {
 #if DEBUG
 struct UpdatesSection_Previews: PreviewProvider {
     static var previews: some View {
-        UpdatesSection()
-            .environment(UserSettings.shared)
+        Form {
+            UpdatesSection()
+        }
+        .formStyle(.grouped)
+        .environment(UserSettings.shared)
     }
 }
 #endif

@@ -10,19 +10,15 @@ import SwiftUI
 
 struct QuitButton: View {
     var body: some View {
-        HStack {
-            Spacer()
-
-            Button("Quit") {
-                NSApplication.shared.terminate(nil)
+        Section {
+            HStack {
+                Spacer()
+                Button("Quit", role: .destructive) {
+                    NSApplication.shared.terminate(nil)
+                }
+                .buttonStyle(.bordered)
+                Spacer()
             }
-            .buttonStyle(.plain)
-            .padding(.vertical, 5)
-            .padding(.horizontal, 10)
-            .background(Constants.Colors.sliderBackground)
-            .clipShape(Capsule())
-
-            Spacer()
         }
     }
 }
@@ -30,7 +26,10 @@ struct QuitButton: View {
 #if DEBUG
 struct QuitButton_Previews: PreviewProvider {
     static var previews: some View {
-        QuitButton()
+        Form {
+            QuitButton()
+        }
+        .formStyle(.grouped)
     }
 }
 #endif

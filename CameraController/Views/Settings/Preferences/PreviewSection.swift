@@ -16,38 +16,40 @@ struct PreviewSection: View {
 
     var body: some View {
         @Bindable var settings = settings
-        SectionView {
-            SectionTitle(title: "Preview",
-                         image: Image(systemName: "photo"))
-
-            HStack {
-                Text("Preview Size")
-                Spacer()
-                Picker(selection: $settings.cameraPreviewSize, label: Text("")) {
+        Section("Preview") {
+            LabeledContent {
+                Picker("Preview Size", selection: $settings.cameraPreviewSize) {
                     Text("Disabled").tag(PreviewSizeSettings.disabled)
                     Text("Small").tag(PreviewSizeSettings.small)
                     Text("Medium").tag(PreviewSizeSettings.medium)
                     Text("Large").tag(PreviewSizeSettings.large)
                     Text("Extra Large").tag(PreviewSizeSettings.extraLarge)
                 }
-                .frame(width: 200)
+                .labelsHidden()
+            } label: {
+                Label("Preview Size", systemImage: "photo")
+                    .symbolRenderingMode(.hierarchical)
             }
 
-            HStack {
-                Text("Preview video quality")
-                Spacer()
-                Picker(selection: $settings.cameraPreviewQuality, label: Text("")) {
+            LabeledContent {
+                Picker("Preview video quality", selection: $settings.cameraPreviewQuality) {
                     ForEach(availableQualities, id: \.self) { quality in
                         Text(quality.displayName).tag(quality)
                     }
                 }
-                .frame(width: 240)
+                .labelsHidden()
+            } label: {
+                Label("Video Quality", systemImage: "rectangle.dashed.badge.record")
+                    .symbolRenderingMode(.hierarchical)
             }
 
-            HStack {
-                Text("Mirror Preview")
-                Spacer()
-                Toggle(isOn: $settings.mirrorPreview)
+            LabeledContent {
+                SwiftUI.Toggle("Mirror Preview", isOn: $settings.mirrorPreview)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+            } label: {
+                Label("Mirror Preview", systemImage: "arrow.left.and.right.righttriangle.left.righttriangle.right")
+                    .symbolRenderingMode(.hierarchical)
             }
         }
     }

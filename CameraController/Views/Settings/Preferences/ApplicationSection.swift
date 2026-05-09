@@ -13,15 +13,14 @@ struct ApplicationSection: View {
 
     var body: some View {
         @Bindable var settings = settings
-        SectionView {
-            SectionTitle(title: "Application",
-                         image: Image(systemName: "flag"))
-
-            HStack(spacing: 20.0) {
-                Text("Open at login")
-                Spacer()
-                Toggle(isOn: $settings.openAtLogin)
-                    .toggleStyle(SwitchToggleStyle(tint: Constants.Colors.accentColor))
+        Section("Application") {
+            LabeledContent {
+                SwiftUI.Toggle("Open at login", isOn: $settings.openAtLogin)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+            } label: {
+                Label("Open at login", systemImage: "flag")
+                    .symbolRenderingMode(.hierarchical)
             }
         }
     }
@@ -30,8 +29,11 @@ struct ApplicationSection: View {
 #if DEBUG
 struct ApplicationSection_Previews: PreviewProvider {
     static var previews: some View {
-        ApplicationSection()
-            .environment(UserSettings.shared)
+        Form {
+            ApplicationSection()
+        }
+        .formStyle(.grouped)
+        .environment(UserSettings.shared)
     }
 }
 #endif

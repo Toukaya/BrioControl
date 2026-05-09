@@ -10,7 +10,7 @@ import SwiftUI
 
 struct PreferencesView: View {
     var body: some View {
-        VStack(spacing: Constants.Style.controlsSpacing) {
+        Form {
             ApplicationSection()
             CameraSection()
             PreviewSection()
@@ -18,8 +18,8 @@ struct PreferencesView: View {
             UpdatesSection()
             QuitButton()
         }
-        .padding(.top, 2)
-        .padding(.bottom, Constants.Style.topSpacing)
+        .formStyle(.grouped)
+        .frame(maxHeight: 360)
     }
 }
 
