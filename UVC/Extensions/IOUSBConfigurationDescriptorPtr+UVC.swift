@@ -10,32 +10,47 @@ import Foundation
 import IOKit
 
 extension IOUSBConfigurationDescriptorPtr {
-    func proccessDescriptor() -> UVCDescriptor {
+    // Mutable accumulator passed through the walker so the parser can
+    // populate fields in place without long inout argument lists.
+    fileprivate struct WalkIDs {
         var processingUnitID = -1
         var cameraTerminalID = -1
         var interfaceID = -1
+    }
+
+    // Result of locating a Video Control interface descriptor. `remainingAfter`
+    // mirrors the `remaining` byte counter at the moment of the find; the
+    // existing walker intentionally does not decrement it when crossing the
+    // interface descriptor itself.
+    fileprivate struct VideoControlInterface {
+        let intDesc: UnsafeMutablePointer<IOUSBInterfaceDescriptor>
+        let advancedPointer: UnsafeMutablePointer<UInt8>
+        let remainingAfter: UInt16
+    }
+
+    func proccessDescriptor() -> UVCDescriptor {
+        var ids = WalkIDs()
 
         let remaining = self.pointee.wTotalLength - UInt16(self.pointee.bLength)
         var pointer = UnsafeMutablePointer<UInt8>(OpaquePointer(self))
         pointer = pointer.advanced(by: Int(self.pointee.bLength))
 
-        browseDescriptor(remaining, pointer, &processingUnitID, &cameraTerminalID, &interfaceID)
+        browseDescriptor(remaining, pointer, &ids)
 
         // Extension units are collected by an independent second pass so that
         // any safety bug in EU parsing cannot affect the standard UVC values
         // (PU/CT/interface) that the rest of the app depends on.
         let extensionUnits = collectExtensionUnits(remaining, pointer)
 
-        return UVCDescriptor(processingUnitID: processingUnitID,
-                             cameraTerminalID: cameraTerminalID,
-                             interfaceID: interfaceID,
+        return UVCDescriptor(processingUnitID: ids.processingUnitID,
+                             cameraTerminalID: ids.cameraTerminalID,
+                             interfaceID: ids.interfaceID,
                              extensionUnits: extensionUnits)
     }
 
-    private func browseDescriptor(_ memory: UInt16, _ pointer: UnsafeMutablePointer<UInt8>,
-                                  _ processingUnitID: inout Int,
-                                  _ cameraTerminalID: inout Int,
-                                  _ interfaceID: inout Int) {
+    private func browseDescriptor(_ memory: UInt16,
+                                  _ pointer: UnsafeMutablePointer<UInt8>,
+                                  _ ids: inout WalkIDs) {
         var remaining = memory
         var currentPointer = pointer
         #if DEBUG
@@ -54,15 +69,10 @@ extension IOUSBConfigurationDescriptorPtr {
             }
             #endif
 
-            var descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+            let descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
 
             #if DEBUG
-            if iteration <= 50 || iteration % 1000 == 0 {
-                print("[UVC walk] iter=\(iteration) "
-                      + "type=0x\(String(descriptorPointer.pointee.bDescriptorType, radix: 16)) "
-                      + "bLength=\(descriptorPointer.pointee.bLength) "
-                      + "remaining=\(remaining)")
-            }
+            logWalkIteration(iteration, descriptorPointer, remaining)
             #endif
 
             // Defensive: bLength == 0 would never advance the pointer.
@@ -74,52 +84,17 @@ extension IOUSBConfigurationDescriptorPtr {
             }
 
             if descriptorPointer.pointee.bDescriptorType == kUSBInterfaceDesc {
-                let intDesc = UnsafeMutablePointer<IOUSBInterfaceDescriptor>(OpaquePointer(descriptorPointer))
-                if !(intDesc.pointee.bInterfaceClass == UVCConstants.classVideo
-                    && intDesc.pointee.bInterfaceSubClass == UVCConstants.subclassVideoControl) {
-
+                guard let found = findVideoControlInterface(currentPointer, remaining) else {
+                    let intDesc = UnsafeMutablePointer<IOUSBInterfaceDescriptor>(OpaquePointer(descriptorPointer))
                     currentPointer = currentPointer.advanced(by: Int(intDesc.pointee.bLength))
                     continue
                 }
+                currentPointer = found.advancedPointer
+                remaining = found.remainingAfter
 
-                currentPointer = currentPointer.advanced(by: Int(intDesc.pointee.bLength))
-                descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
-
-                if descriptorPointer.pointee.bDescriptorType != UVCConstants.descriptorTypeInterface {
-                    break
-                }
-
-                let internalDescriptor = UnsafeMutablePointer<UVC_VCHeaderDescriptor>(OpaquePointer(descriptorPointer))
-                if internalDescriptor.pointee.bDescriptorSubType == UVCConstants.subclassVideoControl {
-                    let littleEndian = Int(internalDescriptor.pointee.wTotalLength).littleEndian
-                    internalDescriptor.pointee.wTotalLength = UInt16(littleEndian)
-
-                    remaining -= internalDescriptor.pointee.wTotalLength
-                    currentPointer = currentPointer.advanced(by: Int(internalDescriptor.pointee.bLength))
-                    var remainingMemory = internalDescriptor.pointee.wTotalLength
-                        - UInt16(internalDescriptor.pointee.bLength)
-
-                    while remainingMemory > 0 {
-                        descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
-                        if descriptorPointer.pointee.bDescriptorType != UVCConstants.descriptorTypeInterface {
-                            break
-                        }
-
-                        getDeviceId(descriptorPointer, currentPointer, &processingUnitID, &cameraTerminalID)
-                        interfaceID = Int(intDesc.pointee.bInterfaceNumber)
-
-                        if interfaceID != -1 && processingUnitID != -1 && cameraTerminalID != -1 {
-                            // Found all necessary data, exit
-                            // Fix for WB7022 Camera
-                            return
-                        }
-
-                        remainingMemory -= UInt16(descriptorPointer.pointee.bLength)
-                        currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
-                    }
-                } else {
-                    remaining -= UInt16(descriptorPointer.pointee.bLength)
-                    currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
+                parseClassSpecificVCBlock(&currentPointer, &remaining, found.intDesc, &ids)
+                if ids.interfaceID != -1 && ids.processingUnitID != -1 && ids.cameraTerminalID != -1 {
+                    return
                 }
                 break
             } else {
@@ -128,6 +103,78 @@ extension IOUSBConfigurationDescriptorPtr {
             }
         }
     }
+
+    private func findVideoControlInterface(_ currentPointer: UnsafeMutablePointer<UInt8>,
+                                           _ remaining: UInt16) -> VideoControlInterface? {
+        let descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+        let intDesc = UnsafeMutablePointer<IOUSBInterfaceDescriptor>(OpaquePointer(descriptorPointer))
+        if !(intDesc.pointee.bInterfaceClass == UVCConstants.classVideo
+             && intDesc.pointee.bInterfaceSubClass == UVCConstants.subclassVideoControl) {
+            return nil
+        }
+        let advancedPointer = currentPointer.advanced(by: Int(intDesc.pointee.bLength))
+        return VideoControlInterface(intDesc: intDesc,
+                                     advancedPointer: advancedPointer,
+                                     remainingAfter: remaining)
+    }
+
+    private func parseClassSpecificVCBlock(_ currentPointer: inout UnsafeMutablePointer<UInt8>,
+                                           _ remaining: inout UInt16,
+                                           _ intDesc: UnsafeMutablePointer<IOUSBInterfaceDescriptor>,
+                                           _ ids: inout WalkIDs) {
+        var descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+
+        if descriptorPointer.pointee.bDescriptorType != UVCConstants.descriptorTypeInterface {
+            return
+        }
+
+        let internalDescriptor = UnsafeMutablePointer<UVC_VCHeaderDescriptor>(OpaquePointer(descriptorPointer))
+        if internalDescriptor.pointee.bDescriptorSubType == UVCConstants.subclassVideoControl {
+            let littleEndian = Int(internalDescriptor.pointee.wTotalLength).littleEndian
+            internalDescriptor.pointee.wTotalLength = UInt16(littleEndian)
+
+            remaining -= internalDescriptor.pointee.wTotalLength
+            currentPointer = currentPointer.advanced(by: Int(internalDescriptor.pointee.bLength))
+            var remainingMemory = internalDescriptor.pointee.wTotalLength
+                - UInt16(internalDescriptor.pointee.bLength)
+
+            while remainingMemory > 0 {
+                descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+                if descriptorPointer.pointee.bDescriptorType != UVCConstants.descriptorTypeInterface {
+                    break
+                }
+
+                getDeviceId(descriptorPointer, currentPointer,
+                            &ids.processingUnitID, &ids.cameraTerminalID)
+                ids.interfaceID = Int(intDesc.pointee.bInterfaceNumber)
+
+                if ids.interfaceID != -1 && ids.processingUnitID != -1 && ids.cameraTerminalID != -1 {
+                    // Found all necessary data, exit
+                    // Fix for WB7022 Camera
+                    return
+                }
+
+                remainingMemory -= UInt16(descriptorPointer.pointee.bLength)
+                currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
+            }
+        } else {
+            remaining -= UInt16(descriptorPointer.pointee.bLength)
+            currentPointer = currentPointer.advanced(by: Int(descriptorPointer.pointee.bLength))
+        }
+    }
+
+    #if DEBUG
+    private func logWalkIteration(_ iteration: Int,
+                                  _ descriptorPointer: InterfaceDescriptorPointer,
+                                  _ remaining: UInt16) {
+        if iteration <= 50 || iteration % 1000 == 0 {
+            print("[UVC walk] iter=\(iteration) "
+                  + "type=0x\(String(descriptorPointer.pointee.bDescriptorType, radix: 16)) "
+                  + "bLength=\(descriptorPointer.pointee.bLength) "
+                  + "remaining=\(remaining)")
+        }
+    }
+    #endif
 
     private func getDeviceId(_ descriptorPointer: InterfaceDescriptorPointer,
                              _ currentPointer: UnsafeMutablePointer<UInt8>,
