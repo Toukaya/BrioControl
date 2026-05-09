@@ -28,6 +28,10 @@ struct LogitechView: View {
                     indicatorLedSection(led)
                 }
 
+                if let rightLight = controller.logitechRightLight, rightLight.isCapable {
+                    rightLightSection(rightLight)
+                }
+
                 diagnosticsSection()
             }
             .padding(.top, 2)
@@ -106,6 +110,11 @@ struct LogitechView: View {
     }
 
     @ViewBuilder
+    private func rightLightSection(_ rightLight: NumberCaptureDeviceProperty) -> some View {
+        RightLightSection(rightLight: rightLight)
+    }
+
+    @ViewBuilder
     private func diagnosticsSection() -> some View {
         if let logitechBrio = controller.logitechBrio {
             SectionView {
@@ -157,5 +166,27 @@ struct LogitechView: View {
             return "(empty)"
         }
         return bytes.map { String(format: "%02X", $0) }.joined(separator: " ")
+    }
+}
+
+/*
+ * RightLight Mode is treated as an opaque integer in [minimum...maximum]
+ * because the value semantics are device-defined and labels are not yet
+ * confirmed. A discrete slider with the device's own GET_RES step is the
+ * most honest representation until the user reports value-to-label mapping.
+ */
+private struct RightLightSection: View {
+    @ObservedObject var rightLight: NumberCaptureDeviceProperty
+
+    var body: some View {
+        let lower = min(rightLight.minimum, rightLight.maximum)
+        let upper = max(rightLight.minimum, rightLight.maximum)
+        let step = rightLight.resolution > 0 ? rightLight.resolution : 1
+        GenericControl(value: $rightLight.sliderValue,
+                       step: step,
+                       range: lower...upper,
+                       title: "RightLight Mode",
+                       imageName: "sun.max",
+                       auto: nil)
     }
 }

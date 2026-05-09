@@ -40,9 +40,9 @@ public final class LogitechBrioDeviceProperties {
     public let hdr: UVCIntControl?
 
     /*
-     * RightLight. Placeholder until selectors are confirmed via USB capture
-     * (or the feature is determined to be a relabel of a standard PU/CT
-     * control, in which case it lives on UVCDeviceProperties instead).
+     * RightLight Mode. Lives on the SAME XU as FoV (BRIO Video Pipe V3).
+     * 1-byte payload, opaque integer treated as a discrete mode index.
+     * Range and step are reported via GET_MIN/GET_MAX/GET_RES at runtime.
      */
     public let rightLight: UVCIntControl?
 
@@ -59,13 +59,19 @@ public final class LogitechBrioDeviceProperties {
         let extensionUnits = device.descriptor.extensionUnits
         allExtensionUnits = extensionUnits
 
-        // FoV
-        if let fovUnit = LogitechBrioDeviceProperties.findExtensionUnit(
-            extensionUnits, withGuid: LogitechXUGuids.brioFoV) {
+        // FoV and RightLight Mode share the BRIO Video Pipe V3 XU.
+        // Look it up once and reuse the unitID for both controls.
+        let videoPipeV3Unit = LogitechBrioDeviceProperties.findExtensionUnit(
+            extensionUnits, withGuid: LogitechXUGuids.brioFoV)
+
+        if let unit = videoPipeV3Unit {
             fieldOfView = UVCIntControl(interface, 1, LogitechFoVXU.fov,
-                                        fovUnit.unitID, interfaceID)
+                                        unit.unitID, interfaceID)
+            rightLight = UVCIntControl(interface, 1, LogitechRightLightXU.rightLight,
+                                       unit.unitID, interfaceID)
         } else {
             fieldOfView = nil
+            rightLight = nil
         }
 
         // LED (legacy v1 USER_HW_CONTROL XU)
@@ -77,10 +83,10 @@ public final class LogitechBrioDeviceProperties {
             indicatorLed = nil
         }
 
-        // HDR / RightLight: placeholders. Both XU GUIDs are TBD; nothing to
-        // wire up until a USB capture supplies the selector.
+        // HDR: still TBD. Strongest hypothesis is HDR == RightLight (single
+        // control, marketed as "RightLight with HDR"), but until a USB
+        // capture confirms a separate selector, leave nil.
         hdr = nil
-        rightLight = nil
     }
 
     private static func findExtensionUnit(_ units: [ExtensionUnit],

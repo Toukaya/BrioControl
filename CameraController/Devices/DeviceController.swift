@@ -53,6 +53,10 @@ final class DeviceController: ObservableObject {
         guard let control = logitechBrio?.indicatorLed else { return nil }
         return NumberCaptureDeviceProperty(control)
     }()
+    lazy var logitechRightLight: NumberCaptureDeviceProperty? = {
+        guard let control = logitechBrio?.rightLight else { return nil }
+        return NumberCaptureDeviceProperty(control)
+    }()
 
     private let properties: UVCDeviceProperties
 

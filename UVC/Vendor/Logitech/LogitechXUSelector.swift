@@ -57,13 +57,17 @@ enum LogitechHdrXU: Int, Selector {
 }
 
 /*
- * RightLight XU selectors. TBD - selector value not publicly documented for
- * BRIO. May ultimately be a relabel of standard UVC PU/CT controls rather
- * than an XU at all (see research notes).
+ * RightLight XU selectors. RightLight Mode lives on the SAME XU as FoV
+ * (BRIO Video Pipe V3, GUID 49E40215-F434-47FE-B158-0E885023E51B),
+ * confirmed by Researcher #2 against llmike/v4l2-tools and mpls/libwebcam
+ * logitech.xml.
+ *   RightLight Mode selector: 0x04, length 1 byte.
+ *   Supports SET_CUR/GET_CUR/GET_MIN/GET_MAX/GET_RES/GET_DEF.
+ *   Value semantics are device-defined; treat as opaque integers and
+ *   surface the GET_MIN/GET_MAX/GET_RES range in the UI.
  */
 enum LogitechRightLightXU: Int, Selector {
-    // TBD: no confirmed selectors for BRIO RightLight.
-    case unused = -1
+    case rightLight = 0x04
 
     func raw() -> Int {
         return self.rawValue
