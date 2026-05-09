@@ -6,15 +6,16 @@
 //  Copyright © 2020 Itaysoft. All rights reserved.
 //
 //  Thin NSApplicationDelegate adopted via @NSApplicationDelegateAdaptor on
-//  CameraControllerApp. Owns Sparkle, LetsMove, the AVCaptureDevice video
-//  permission prompt, and the applicationShouldTerminateAfterLastWindowClosed
-//  override. The menu-bar item and popover-style window are now provided by
-//  SwiftUI's MenuBarExtra scene and no longer live here.
+//  CameraControllerApp. Owns Sparkle, LetsMove, and the
+//  applicationShouldTerminateAfterLastWindowClosed override. The
+//  AVCaptureDevice video permission prompt now fires from
+//  CameraControllerApp.init so that the prompt appears before the first
+//  PreviewSession.attach() runs. The menu-bar item and popover-style
+//  window are provided by SwiftUI's MenuBarExtra scene.
 //
 
 import Cocoa
 import SwiftUI
-import AVFoundation
 import Sparkle
 
 @MainActor
@@ -28,14 +29,6 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         LetsMove.shared.moveToApplicationsFolderIfNecessary()
-
-        // Request camera access at launch instead of lazily at first capture.
-        // The permission prompt ('CameraController would like to access the
-        // camera') appears immediately, before the user clicks the menu-bar
-        // icon, so the first popover open already has access granted.
-        if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined {
-            AVCaptureDevice.requestAccess(for: .video) { _ in }
-        }
 
         if UserSettings.shared.checkForUpdatesOnStartup {
             checkForUpdates()
