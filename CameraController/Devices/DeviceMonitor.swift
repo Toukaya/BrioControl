@@ -9,6 +9,7 @@
 import Foundation
 import Combine
 
+@MainActor
 final class DeviceMonitor {
     private var readTimer: Timer?
     private var writeTimer: Timer?

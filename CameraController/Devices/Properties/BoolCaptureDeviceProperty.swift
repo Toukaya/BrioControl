@@ -9,6 +9,7 @@
 import Foundation
 import UVC
 
+@MainActor
 final class BoolCaptureDeviceProperty: ObservableObject {
     private let control: UVCBoolControl
 

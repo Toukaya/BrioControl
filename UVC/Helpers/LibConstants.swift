@@ -8,7 +8,7 @@
 
 import Foundation
 
-let kIOUSBDeviceUserClientTypeID = CFUUIDGetConstantUUIDWithBytes(
+nonisolated(unsafe) let kIOUSBDeviceUserClientTypeID = CFUUIDGetConstantUUIDWithBytes(
     kCFAllocatorDefault,
     0x9d, 0xc7, 0xb7, 0x80,
     0x9e, 0xc0, 0x11, 0xD4,
@@ -16,7 +16,7 @@ let kIOUSBDeviceUserClientTypeID = CFUUIDGetConstantUUIDWithBytes(
     0x27, 0x05, 0x28, 0x61
 )!
 
-let kIOUSBDeviceInterfaceID = CFUUIDGetConstantUUIDWithBytes(
+nonisolated(unsafe) let kIOUSBDeviceInterfaceID = CFUUIDGetConstantUUIDWithBytes(
     kCFAllocatorDefault,
     0x5c, 0x81, 0x87, 0xd0,
     0x9e, 0xf3, 0x11, 0xD4,
@@ -24,7 +24,7 @@ let kIOUSBDeviceInterfaceID = CFUUIDGetConstantUUIDWithBytes(
     0x27, 0x05, 0x28, 0x61
 )!
 
-let kIOUSBInterfaceInterfaceID = CFUUIDGetConstantUUIDWithBytes(
+nonisolated(unsafe) let kIOUSBInterfaceInterfaceID = CFUUIDGetConstantUUIDWithBytes(
     kCFAllocatorDefault,
     0x73, 0xc9, 0x7a, 0xe8,
     0x9e, 0xf3, 0x11, 0xD4,
@@ -32,7 +32,7 @@ let kIOUSBInterfaceInterfaceID = CFUUIDGetConstantUUIDWithBytes(
     0x27, 0x05, 0x28, 0x61
 )!
 
-let kIOCFPlugInInterfaceID = CFUUIDGetConstantUUIDWithBytes(
+nonisolated(unsafe) let kIOCFPlugInInterfaceID = CFUUIDGetConstantUUIDWithBytes(
     kCFAllocatorDefault,
     0xC2, 0x44, 0xE8, 0x58,
     0x10, 0x9C, 0x11, 0xD4,
@@ -40,7 +40,7 @@ let kIOCFPlugInInterfaceID = CFUUIDGetConstantUUIDWithBytes(
     0xE4, 0xC6, 0x42, 0x6F
 )!
 
-let kIOUSBInterfaceUserClientTypeID = CFUUIDGetConstantUUIDWithBytes(
+nonisolated(unsafe) let kIOUSBInterfaceUserClientTypeID = CFUUIDGetConstantUUIDWithBytes(
     kCFAllocatorDefault,
     0x2d, 0x97, 0x86, 0xc6,
     0x9e, 0xf3, 0x11, 0xD4,

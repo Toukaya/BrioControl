@@ -9,6 +9,7 @@
 import Foundation
 import UVC
 
+@MainActor
 final class BitmapCaptureDeviceProperty: ObservableObject {
     private let control: UVCBitmapControl
 

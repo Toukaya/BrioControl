@@ -10,6 +10,7 @@ import XCTest
 import AVFoundation
 @testable import CameraController
 
+@MainActor
 class DevicesManagerTests: XCTestCase {
 
     override func setUpWithError() throws {

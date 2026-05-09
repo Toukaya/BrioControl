@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import UVC
 
+@MainActor
 protocol SliderCapableProperty {
     var sliderValue: Float { get set }
     var isCapable: Bool { get }
@@ -19,6 +20,7 @@ protocol SliderCapableProperty {
     var defaultValue: Float { get }
 }
 
+@MainActor
 final class NumberCaptureDeviceProperty: SliderCapableProperty, ObservableObject {
     private let control: UVCIntControl
 

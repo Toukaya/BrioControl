@@ -11,7 +11,7 @@ import Combine
 import ServiceManagement
 
 final class UserSettings: ObservableObject {
-    static let shared = UserSettings()
+    nonisolated(unsafe) static let shared = UserSettings()
 
     @Published var openAtLogin: Bool {
         didSet {

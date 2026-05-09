@@ -11,8 +11,15 @@ import SwiftUI
 import AVFoundation
 import Sparkle
 
-@NSApplicationMain
+@main
+@MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
+
+    static func main() {
+        let delegate = AppDelegate()
+        NSApplication.shared.delegate = delegate
+        NSApplication.shared.run()
+    }
 
     var statusBarManager: StatusBarManager = StatusBarManager()
 

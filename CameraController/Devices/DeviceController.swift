@@ -10,6 +10,7 @@ import Foundation
 import Combine
 import UVC
 
+@MainActor
 final class DeviceController: ObservableObject {
     // Exposure
     lazy var exposureMode = BitmapCaptureDeviceProperty(properties.exposureMode)

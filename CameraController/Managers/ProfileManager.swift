@@ -10,7 +10,7 @@ import Foundation
 import Combine
 
 final class ProfileManager: ObservableObject {
-    static let shared = ProfileManager()
+    nonisolated(unsafe) static let shared = ProfileManager()
 
     @Published private(set) var profiles: [Profile] = []
 

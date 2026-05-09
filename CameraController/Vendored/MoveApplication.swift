@@ -51,7 +51,7 @@ class LetsMove: NSObject {
         let infoInDownloads = NSLocalizedString("This will keep your Downloads folder uncluttered.",
                                                 tableName: "MoveApplication", comment: "")
     }
-    static let shared = LetsMove()
+    nonisolated(unsafe) static let shared = LetsMove()
 
     let useSmallAlertSuppressCheckbox = true
     let alertSuppressKey = "moveToApplicationsFolderAlertSuppress"

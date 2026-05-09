@@ -9,6 +9,7 @@
 import Foundation
 import Cocoa
 
+@MainActor
 class StatusBarManager {
     var statusBarItem: NSStatusItem!
 

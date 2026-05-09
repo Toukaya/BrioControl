@@ -13,8 +13,15 @@ enum HelperConstants {
     static let BundleIdentifier = "com.itaysoft.CameraController"
 }
 
-@NSApplicationMain
+@main
+@MainActor
 class AppDelegate: NSObject, NSApplicationDelegate {
+    static func main() {
+        let delegate = AppDelegate()
+        NSApplication.shared.delegate = delegate
+        NSApplication.shared.run()
+    }
+
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         let runningApps = NSWorkspace.shared.runningApplications
         let isRunning = runningApps.contains {

@@ -11,9 +11,10 @@ import AVFoundation
 import Combine
 import UVC
 
+@MainActor
 final class CaptureDevice: Hashable, ObservableObject {
-    let name: String
-    let avDevice: AVCaptureDevice?
+    nonisolated let name: String
+    nonisolated(unsafe) let avDevice: AVCaptureDevice?
     let uvcDevice: UVCDevice?
     var controller: DeviceController?
 
@@ -25,11 +26,11 @@ final class CaptureDevice: Hashable, ObservableObject {
                                            logitechBrio: uvcDevice?.logitechBrio)
     }
 
-    static func == (lhs: CaptureDevice, rhs: CaptureDevice) -> Bool {
+    nonisolated static func == (lhs: CaptureDevice, rhs: CaptureDevice) -> Bool {
         return lhs.avDevice == rhs.avDevice
     }
 
-    func hash(into hasher: inout Hasher) {
+    nonisolated func hash(into hasher: inout Hasher) {
         hasher.combine(avDevice)
     }
 

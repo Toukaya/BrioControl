@@ -9,6 +9,7 @@
 import Foundation
 import UVC
 
+@MainActor
 final class MultipleCaptureDeviceProperty: ObservableObject {
     private let control: UVCMultipleIntControl
 

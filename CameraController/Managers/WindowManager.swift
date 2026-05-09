@@ -10,6 +10,7 @@ import Foundation
 import AppKit
 import SwiftUI
 
+@MainActor
 class WindowManager: NSObject {
     static let shared = WindowManager()
 
