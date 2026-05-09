@@ -5,23 +5,20 @@
 //  Created by Itay Brenner on 7/19/20.
 //  Copyright © 2020 Itaysoft. All rights reserved.
 //
+//  Thin NSApplicationDelegate adopted via @NSApplicationDelegateAdaptor on
+//  CameraControllerApp. Owns Sparkle, LetsMove, the AVCaptureDevice video
+//  permission prompt, and the applicationShouldTerminateAfterLastWindowClosed
+//  override. The menu-bar item and popover-style window are now provided by
+//  SwiftUI's MenuBarExtra scene and no longer live here.
+//
 
 import Cocoa
 import SwiftUI
 import AVFoundation
 import Sparkle
 
-@main
 @MainActor
 final class AppDelegate: NSObject, NSApplicationDelegate {
-
-    static func main() {
-        let delegate = AppDelegate()
-        NSApplication.shared.delegate = delegate
-        NSApplication.shared.run()
-    }
-
-    var statusBarManager: StatusBarManager = StatusBarManager()
 
     private let updaterController = SPUStandardUpdaterController(
         startingUpdater: true,

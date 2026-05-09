@@ -28,9 +28,8 @@
 		F4260510B00201000000E353 /* LogitechXUGuids.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00200000000E353 /* LogitechXUGuids.swift */; };
 		F4260510B00301000000E353 /* LogitechXUSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00300000000E353 /* LogitechXUSelector.swift */; };
 		F4260510B00401000000E353 /* LogitechBrioDeviceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */; };
-		F42D42D627A0E3D500107DFF /* StatusBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42D527A0E3D500107DFF /* StatusBarManager.swift */; };
-		F42D42D827A0E92100107DFF /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42D727A0E92100107DFF /* WindowManager.swift */; };
 		F42D42DB27A0F0C600107DFF /* MoveApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42DA27A0F0C600107DFF /* MoveApplication.swift */; };
+		FDF3D7BC9AEC1F9B0AAFD05A /* CameraControllerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */; };
 		F42D42DD27A0F0DC00107DFF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F42D42DC27A0F0DB00107DFF /* Security.framework */; platformFilter = maccatalyst; };
 		F42D42DF27A0F0EE00107DFF /* MoveApplication.strings in Resources */ = {isa = PBXBuildFile; fileRef = F42D42DE27A0F0EE00107DFF /* MoveApplication.strings */; };
 		F42D42E227A0F68000107DFF /* NSNotificationName+Devices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42E127A0F68000107DFF /* NSNotificationName+Devices.swift */; };
@@ -184,9 +183,8 @@
 		F4260510B00200000000E353 /* LogitechXUGuids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUGuids.swift; sourceTree = "<group>"; };
 		F4260510B00300000000E353 /* LogitechXUSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUSelector.swift; sourceTree = "<group>"; };
 		F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechBrioDeviceProperties.swift; sourceTree = "<group>"; };
-		F42D42D527A0E3D500107DFF /* StatusBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarManager.swift; sourceTree = "<group>"; };
-		F42D42D727A0E92100107DFF /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 		F42D42DA27A0F0C600107DFF /* MoveApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveApplication.swift; sourceTree = "<group>"; };
+		21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControllerApp.swift; sourceTree = "<group>"; };
 		F42D42DC27A0F0DB00107DFF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F42D42DE27A0F0EE00107DFF /* MoveApplication.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = MoveApplication.strings; sourceTree = "<group>"; };
 		F42D42E127A0F68000107DFF /* NSNotificationName+Devices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotificationName+Devices.swift"; sourceTree = "<group>"; };
@@ -426,8 +424,6 @@
 		F46C25792A493E7F00FF9100 /* Managers */ = {
 			isa = PBXGroup;
 			children = (
-				F42D42D527A0E3D500107DFF /* StatusBarManager.swift */,
-				F42D42D727A0E92100107DFF /* WindowManager.swift */,
 				F469CF4624DD0D9F0092C7F9 /* ProfileManager.swift */,
 			);
 			path = Managers;
@@ -459,6 +455,7 @@
 		F47D07C624C4104300E44A22 /* CameraController */ = {
 			isa = PBXGroup;
 			children = (
+				21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */,
 				F47D07C724C4104300E44A22 /* AppDelegate.swift */,
 				F47D07ED24C4119200E44A22 /* Resources */,
 				F42D42E027A0F66D00107DFF /* Extensions */,
@@ -963,7 +960,7 @@
 				F4260510AA0001000000E353 /* PreviewQualitySettings.swift in Sources */,
 				922AC8D6DDA32B15EF84F208 /* FieldOfViewView.swift in Sources */,
 				6405A8CBF39F78469B773F5A /* RightLightView.swift in Sources */,
-				F42D42D827A0E92100107DFF /* WindowManager.swift in Sources */,
+				FDF3D7BC9AEC1F9B0AAFD05A /* CameraControllerApp.swift in Sources */,
 				F469CF4724DD0D9F0092C7F9 /* ProfileManager.swift in Sources */,
 				F44150732A882D760021ADB5 /* ProfileRow.swift in Sources */,
 				F4E5262124C7BDD400125DF9 /* CameraPreviewInternal.swift in Sources */,
@@ -979,7 +976,6 @@
 				F42460392A5A6706009108C2 /* SaturationView.swift in Sources */,
 				F454D4332A550CF8003F2872 /* AutoBadge.swift in Sources */,
 				F42460432A5A6CC0009108C2 /* CameraSection.swift in Sources */,
-				F42D42D627A0E3D500107DFF /* StatusBarManager.swift in Sources */,
 				F469CF4524DD0A3E0092C7F9 /* DeviceSettings.swift in Sources */,
 				F4E5262724C7D88800125DF9 /* BasicSettings.swift in Sources */,
 				F4D1713E2A3D4C770039E353 /* TabSelectorView.swift in Sources */,
