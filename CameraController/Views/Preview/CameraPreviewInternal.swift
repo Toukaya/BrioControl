@@ -170,12 +170,37 @@ final class CameraPreviewInternal: NSView {
 
         device.activeFormat = chosen
 
-        let achievableFps = min(preferredFps, bestFps(in: chosen))
-        if achievableFps > 0 {
-            let duration = CMTime(value: 1, timescale: CMTimeScale(achievableFps))
-            device.activeVideoMinFrameDuration = duration
-            device.activeVideoMaxFrameDuration = duration
+        // Use the device-reported AVFrameRateRange.minFrameDuration directly,
+        // never construct CMTime(value: 1, timescale: fps) ourselves: many
+        // devices (BRIO included) report supported ranges as e.g.
+        // 1000000/60000240 (60.00024 fps), and a strict 1/60 CMTime is
+        // outside that range, causing AVFoundation to throw an
+        // NSInvalidArgumentException that Swift cannot catch.
+        if let range = pickFrameRateRange(in: chosen, preferredFps: preferredFps) {
+            device.activeVideoMinFrameDuration = range.minFrameDuration
+            device.activeVideoMaxFrameDuration = range.minFrameDuration
         }
+    }
+
+    private func pickFrameRateRange(in format: AVCaptureDevice.Format,
+                                    preferredFps: Double) -> AVFrameRateRange? {
+        // Prefer the highest range that does not exceed `preferredFps`.
+        // If none qualifies, fall back to the lowest available range.
+        var bestUnderPreferred: AVFrameRateRange?
+        var lowestOverall: AVFrameRateRange?
+        for range in format.videoSupportedFrameRateRanges {
+            if range.maxFrameRate <= preferredFps + 0.5 {
+                if bestUnderPreferred == nil
+                    || range.maxFrameRate > bestUnderPreferred!.maxFrameRate {
+                    bestUnderPreferred = range
+                }
+            }
+            if lowestOverall == nil
+                || range.maxFrameRate < lowestOverall!.maxFrameRate {
+                lowestOverall = range
+            }
+        }
+        return bestUnderPreferred ?? lowestOverall
     }
 
     private func bestFps(in format: AVCaptureDevice.Format) -> Double {
