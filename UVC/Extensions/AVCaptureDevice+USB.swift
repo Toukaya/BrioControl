@@ -74,7 +74,7 @@ extension AVCaptureDevice {
             assert( code == kIOReturnSuccess )
         }
         var interfaceRef: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBInterfaceInterface190>>?
-        var configDesc: IOUSBConfigurationDescriptorPtr?
+        var descriptor: UVCDescriptor?
         try camera.ioCreatePluginInterfaceFor(service: kIOUSBDeviceUserClientTypeID) {
             let deviceInterface: DeviceInterfacePointer = try $0.getInterface(uuid: kIOUSBDeviceInterfaceID)
             defer { _ = deviceInterface.pointee.pointee.Release(deviceInterface) }
@@ -94,15 +94,24 @@ extension AVCaptureDevice {
                 return
             }
 
+            var configDesc: IOUSBConfigurationDescriptorPtr?
             returnCode = deviceInterface.pointee.pointee.GetConfigurationDescriptorPtr(deviceInterface, 0, &configDesc)
             if returnCode != kIOReturnSuccess {
                 print("unable to get config description for config 0 (index)")
                 return
             }
+
+            // Walk the descriptor while deviceInterface is still alive. The
+            // pointer returned by GetConfigurationDescriptorPtr is owned by
+            // deviceInterface and becomes dangling once Release is called by
+            // the defer above; on macOS 26+ that memory is reused aggressively
+            // and reads past the release return whatever happens to be there.
+            descriptor = configDesc!.proccessDescriptor()
         }
         guard interfaceRef != nil else { throw NSError(domain: #function, code: #line, userInfo: nil) }
-
-        let descriptor = configDesc!.proccessDescriptor()
+        guard let descriptor = descriptor else {
+            throw NSError(domain: #function, code: #line, userInfo: nil)
+        }
 
         return USBDevice(interface: interfaceRef.unsafelyUnwrapped,
                          descriptor: descriptor,
