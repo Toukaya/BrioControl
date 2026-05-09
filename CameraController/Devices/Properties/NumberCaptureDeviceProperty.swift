@@ -3,7 +3,16 @@
 //  CameraController
 //
 //  Created by Itay Brenner on 7/24/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
+//  Copyright (c) 2020 Itaysoft. All rights reserved.
+//
+//  View-model wrapper for a UVCIntControl. The underlying UVCControl
+//  lives inside UVCDeviceActor; this type holds a stable identifier
+//  (UVCControlID), an actor reference, and a @Observable cache of the
+//  control's current value so SwiftUI bindings stay synchronous.
+//
+//  Slider drags fire `Task { await actor.setInt(id, value) }`. Because
+//  the actor serializes those requests, rapid drags no longer race on
+//  the IOKit control transfer.
 //
 
 import Foundation
@@ -23,21 +32,19 @@ protocol SliderCapableProperty {
 @MainActor
 @Observable
 final class NumberCaptureDeviceProperty: SliderCapableProperty {
-    @ObservationIgnored private let control: UVCIntControl
+    @ObservationIgnored private let actor: UVCDeviceActor
+    @ObservationIgnored private let controlID: UVCControlID
+    @ObservationIgnored private let defaultValueInt: Int
 
     var sliderValue: Float {
-        get {
-            access(keyPath: \.sliderValue)
-            return Float(control.current)
-        }
-        set {
-            if Float(control.current) != newValue {
-                _ = withMutation(keyPath: \.sliderValue) {
-                    Task {
-                        control.current = Int(newValue)
-                    }
-                }
-            }
+        didSet {
+            // Forward the new value to the actor. The actor serializes
+            // calls per device, so concurrent slider drags can no longer
+            // interleave their underlying USB control transfers.
+            let newInt = Int(sliderValue)
+            let id = controlID
+            let actor = self.actor
+            Task { await actor.setInt(id, newInt) }
         }
     }
 
@@ -47,26 +54,45 @@ final class NumberCaptureDeviceProperty: SliderCapableProperty {
     let resolution: Float
     let defaultValue: Float
 
-    init(_ control: UVCIntControl) {
-        self.control = control
-        isCapable = control.isCapable
-        minimum = Float(control.minimum)
-        maximum = Float(control.maximum)
-        resolution = Float(control.resolution)
-        defaultValue = Float(control.defaultValue)
-        sliderValue = Float(control.current)
+    init(actor: UVCDeviceActor, id: UVCControlID, snapshot: UVCIntControlSnapshot) {
+        self.actor = actor
+        self.controlID = id
+        self.isCapable = snapshot.isCapable
+        self.minimum = Float(snapshot.minimum)
+        self.maximum = Float(snapshot.maximum)
+        self.resolution = Float(snapshot.resolution)
+        self.defaultValue = Float(snapshot.defaultValue)
+        self.defaultValueInt = snapshot.defaultValue
+        self.sliderValue = Float(snapshot.current)
     }
 
     func reset() {
-        control.current = control.defaultValue
+        sliderValue = defaultValue
     }
 
+    /// Re-read the current value from the device (timer-driven).
     func update() {
-        let newValue = control.getCurrent()
-        sliderValue = Float(newValue)
+        let id = controlID
+        let actor = self.actor
+        Task { @MainActor [weak self] in
+            let newValue = await actor.getInt(id)
+            guard let self = self else { return }
+            // Only mutate the @Observable cache if the value actually
+            // changed; this avoids triggering didSet (and a redundant
+            // hardware write) on every poll tick.
+            if Int(self.sliderValue) != newValue {
+                self.sliderValue = Float(newValue)
+            }
+        }
     }
 
+    /// Force-write the cached value back to the device (timer-driven).
+    /// Re-issues the slider value through the actor, providing a
+    /// last-write-wins convergence path if a previous SET failed.
     func write() {
-        sliderValue = Float(control.current)
+        let value = Int(sliderValue)
+        let id = controlID
+        let actor = self.actor
+        Task { await actor.setInt(id, value) }
     }
 }

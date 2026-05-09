@@ -81,6 +81,18 @@ public struct UVCIntControlSnapshot: Sendable {
     public let defaultValue: Int
     public let resolution: Int
     public let current: Int
+
+    /// Nonisolated factory used by call-sites that own the control
+    /// pre-handoff (e.g. DeviceController.init builds all snapshots
+    /// before constructing UVCDeviceActor and surrendering ownership).
+    public init(_ control: UVCIntControl) {
+        self.isCapable = control.isCapable
+        self.minimum = control.minimum
+        self.maximum = control.maximum
+        self.defaultValue = control.defaultValue
+        self.resolution = control.resolution
+        self.current = control.getCurrent()
+    }
 }
 
 /// Sendable snapshot of a UVCBoolControl.
@@ -88,6 +100,12 @@ public struct UVCBoolControlSnapshot: Sendable {
     public let isCapable: Bool
     public let defaultValue: Bool
     public let isEnabled: Bool
+
+    public init(_ control: UVCBoolControl) {
+        self.isCapable = control.isCapable
+        self.defaultValue = control.defaultValue
+        self.isEnabled = control.isEnabled
+    }
 }
 
 /// Sendable snapshot of a UVCBitmapControl. We use the raw Int form so
@@ -97,6 +115,12 @@ public struct UVCBitmapControlSnapshot: Sendable {
     public let isCapable: Bool
     public let defaultValueRaw: Int
     public let currentRaw: Int
+
+    public init(_ control: UVCBitmapControl) {
+        self.isCapable = control.isCapable
+        self.defaultValueRaw = control.defaultValue.rawValue
+        self.currentRaw = control.current.rawValue
+    }
 }
 
 /// Sendable snapshot of a UVCMultipleIntControl (pan/tilt).
@@ -112,6 +136,20 @@ public struct UVCMultipleIntControlSnapshot: Sendable {
     public let resolution2: Int
     public let current1: Int
     public let current2: Int
+
+    public init(_ control: UVCMultipleIntControl) {
+        self.isCapable = control.isCapable
+        self.minimum1 = control.minimum1
+        self.minimum2 = control.minimum2
+        self.maximum1 = control.maximum1
+        self.maximum2 = control.maximum2
+        self.defaultValue1 = control.defaultValue1
+        self.defaultValue2 = control.defaultValue2
+        self.resolution1 = control.resolution1
+        self.resolution2 = control.resolution2
+        self.current1 = control.current1
+        self.current2 = control.current2
+    }
 }
 
 public actor UVCDeviceActor {
@@ -185,41 +223,22 @@ public actor UVCDeviceActor {
 
     public func snapshotInt(_ id: UVCControlID) -> UVCIntControlSnapshot? {
         guard let ctl = intControls[id] else { return nil }
-        return UVCIntControlSnapshot(isCapable: ctl.isCapable,
-                                     minimum: ctl.minimum,
-                                     maximum: ctl.maximum,
-                                     defaultValue: ctl.defaultValue,
-                                     resolution: ctl.resolution,
-                                     current: ctl.getCurrent())
+        return UVCIntControlSnapshot(ctl)
     }
 
     public func snapshotBool(_ id: UVCControlID) -> UVCBoolControlSnapshot? {
         guard let ctl = boolControls[id] else { return nil }
-        return UVCBoolControlSnapshot(isCapable: ctl.isCapable,
-                                      defaultValue: ctl.defaultValue,
-                                      isEnabled: ctl.isEnabled)
+        return UVCBoolControlSnapshot(ctl)
     }
 
     public func snapshotBitmap(_ id: UVCControlID) -> UVCBitmapControlSnapshot? {
         guard let ctl = bitmapControls[id] else { return nil }
-        return UVCBitmapControlSnapshot(isCapable: ctl.isCapable,
-                                        defaultValueRaw: ctl.defaultValue.rawValue,
-                                        currentRaw: ctl.current.rawValue)
+        return UVCBitmapControlSnapshot(ctl)
     }
 
     public func snapshotMultipleInt(_ id: UVCControlID) -> UVCMultipleIntControlSnapshot? {
         guard let ctl = multipleIntControls[id] else { return nil }
-        return UVCMultipleIntControlSnapshot(isCapable: ctl.isCapable,
-                                             minimum1: ctl.minimum1,
-                                             minimum2: ctl.minimum2,
-                                             maximum1: ctl.maximum1,
-                                             maximum2: ctl.maximum2,
-                                             defaultValue1: ctl.defaultValue1,
-                                             defaultValue2: ctl.defaultValue2,
-                                             resolution1: ctl.resolution1,
-                                             resolution2: ctl.resolution2,
-                                             current1: ctl.current1,
-                                             current2: ctl.current2)
+        return UVCMultipleIntControlSnapshot(ctl)
     }
 
     // MARK: - Setters

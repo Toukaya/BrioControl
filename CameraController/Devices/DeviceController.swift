@@ -3,7 +3,17 @@
 //  CameraController
 //
 //  Created by Itay Brenner on 7/23/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
+//  Copyright (c) 2020 Itaysoft. All rights reserved.
+//
+//  Per-device view-model bundle. Owns one UVCDeviceActor (which in turn
+//  owns every UVCControl on this physical USB device) and a set of
+//  @MainActor @Observable property wrappers that SwiftUI binds against.
+//
+//  Hand-off invariant: this file constructs every snapshot synchronously
+//  from the freshly-configured UVCDeviceProperties and then transfers
+//  ownership of the property containers (and the controls inside them)
+//  into the actor. After UVCDeviceActor's init returns, no other code
+//  reads or writes any UVCControl directly.
 //
 
 import Foundation
@@ -21,60 +31,134 @@ final class DeviceController {
     // incompatible with `lazy`.
 
     // Exposure
-    @ObservationIgnored lazy var exposureMode = BitmapCaptureDeviceProperty(properties.exposureMode)
-    @ObservationIgnored lazy var exposureTime = NumberCaptureDeviceProperty(properties.exposureTime)
-    @ObservationIgnored lazy var gain = NumberCaptureDeviceProperty(properties.gain)
+    let exposureMode: BitmapCaptureDeviceProperty
+    let exposureTime: NumberCaptureDeviceProperty
+    let gain: NumberCaptureDeviceProperty
 
     // Image
-    @ObservationIgnored lazy var brightness = NumberCaptureDeviceProperty(properties.brightness)
-    @ObservationIgnored lazy var contrast = NumberCaptureDeviceProperty(properties.contrast)
-    @ObservationIgnored lazy var saturation = NumberCaptureDeviceProperty(properties.saturation)
-    @ObservationIgnored lazy var sharpness = NumberCaptureDeviceProperty(properties.sharpness)
-    @ObservationIgnored lazy var hue = NumberCaptureDeviceProperty(properties.hue)
-    @ObservationIgnored lazy var hueAuto = BoolCaptureDeviceProperty(properties.hueAuto)
+    let brightness: NumberCaptureDeviceProperty
+    let contrast: NumberCaptureDeviceProperty
+    let saturation: NumberCaptureDeviceProperty
+    let sharpness: NumberCaptureDeviceProperty
+    let hue: NumberCaptureDeviceProperty
+    let hueAuto: BoolCaptureDeviceProperty
 
     // WhiteBalance
-    @ObservationIgnored lazy var whiteBalanceAuto = BoolCaptureDeviceProperty(properties.whiteBalanceAuto)
-    @ObservationIgnored lazy var whiteBalance = NumberCaptureDeviceProperty(properties.whiteBalance)
+    let whiteBalanceAuto: BoolCaptureDeviceProperty
+    let whiteBalance: NumberCaptureDeviceProperty
 
     // PowerLine
-    @ObservationIgnored lazy var powerLineFrequency = NumberCaptureDeviceProperty(properties.powerLineFrequency)
+    let powerLineFrequency: NumberCaptureDeviceProperty
 
     // Backlight Compensation
-    @ObservationIgnored lazy var backlightCompensation = NumberCaptureDeviceProperty(properties.backlightCompensation)
+    let backlightCompensation: NumberCaptureDeviceProperty
 
     // Orientation
-    @ObservationIgnored lazy var zoomAbsolute = NumberCaptureDeviceProperty(properties.zoomAbsolute)
-    @ObservationIgnored lazy var panTiltAbsolute = MultipleCaptureDeviceProperty(properties.panTiltAbsolute)
-    @ObservationIgnored lazy var rollAbsolute = NumberCaptureDeviceProperty(properties.rollAbsolute)
+    let zoomAbsolute: NumberCaptureDeviceProperty
+    let panTiltAbsolute: MultipleCaptureDeviceProperty
+    let rollAbsolute: NumberCaptureDeviceProperty
 
     // Focus
-    @ObservationIgnored lazy var focusAuto = BoolCaptureDeviceProperty(properties.focusAuto)
-    @ObservationIgnored lazy var focusAbsolute = NumberCaptureDeviceProperty(properties.focusAbsolute)
+    let focusAuto: BoolCaptureDeviceProperty
+    let focusAbsolute: NumberCaptureDeviceProperty
 
     // Vendor-specific (currently Logitech only)
-    @ObservationIgnored let logitechBrio: LogitechBrioDeviceProperties?
-    @ObservationIgnored lazy var logitechFieldOfView: NumberCaptureDeviceProperty? = {
-        guard let control = logitechBrio?.fieldOfView else { return nil }
-        return NumberCaptureDeviceProperty(control)
-    }()
-    @ObservationIgnored lazy var logitechLed: NumberCaptureDeviceProperty? = {
-        guard let control = logitechBrio?.indicatorLed else { return nil }
-        return NumberCaptureDeviceProperty(control)
-    }()
-    @ObservationIgnored lazy var logitechRightLight: NumberCaptureDeviceProperty? = {
-        guard let control = logitechBrio?.rightLight else { return nil }
-        return NumberCaptureDeviceProperty(control)
-    }()
+    let logitechFieldOfView: NumberCaptureDeviceProperty?
+    let logitechLed: NumberCaptureDeviceProperty?
+    let logitechRightLight: NumberCaptureDeviceProperty?
 
-    @ObservationIgnored private let properties: UVCDeviceProperties
+    /// Strong reference to the per-device actor. Keeps every UVCControl
+    /// on this physical device alive for as long as the controller (and
+    /// thus the parent CaptureDevice) is alive.
+    @ObservationIgnored let uvcActor: UVCDeviceActor
 
     init?(properties: UVCDeviceProperties?, logitechBrio: LogitechBrioDeviceProperties?) {
         guard let properties = properties else {
             return nil
         }
-        self.properties = properties
-        self.logitechBrio = logitechBrio
+
+        // Build snapshots BEFORE handing the property graph to the actor.
+        // At this point we are the single owner of every UVCControl, so
+        // reading the configured min/max/default/resolution/current
+        // fields is safe and serial.
+        let exposureModeSnap = UVCBitmapControlSnapshot(properties.exposureMode)
+        let exposureTimeSnap = UVCIntControlSnapshot(properties.exposureTime)
+        let gainSnap = UVCIntControlSnapshot(properties.gain)
+        let brightnessSnap = UVCIntControlSnapshot(properties.brightness)
+        let contrastSnap = UVCIntControlSnapshot(properties.contrast)
+        let saturationSnap = UVCIntControlSnapshot(properties.saturation)
+        let sharpnessSnap = UVCIntControlSnapshot(properties.sharpness)
+        let hueSnap = UVCIntControlSnapshot(properties.hue)
+        let hueAutoSnap = UVCBoolControlSnapshot(properties.hueAuto)
+        let whiteBalanceAutoSnap = UVCBoolControlSnapshot(properties.whiteBalanceAuto)
+        let whiteBalanceSnap = UVCIntControlSnapshot(properties.whiteBalance)
+        let powerLineSnap = UVCIntControlSnapshot(properties.powerLineFrequency)
+        let backlightSnap = UVCIntControlSnapshot(properties.backlightCompensation)
+        let zoomSnap = UVCIntControlSnapshot(properties.zoomAbsolute)
+        let panTiltSnap = UVCMultipleIntControlSnapshot(properties.panTiltAbsolute)
+        let rollSnap = UVCIntControlSnapshot(properties.rollAbsolute)
+        let focusAutoSnap = UVCBoolControlSnapshot(properties.focusAuto)
+        let focusAbsoluteSnap = UVCIntControlSnapshot(properties.focusAbsolute)
+
+        // Vendor controls. Touching `fieldOfView` / `rightLight` /
+        // `indicatorLed` triggers the lazy probe described in
+        // LogitechBrioDeviceProperties. Build the snapshots here so the
+        // probe cost is paid once, on the same thread that built the
+        // controls, before the actor takes ownership.
+        let fovSnap: UVCIntControlSnapshot? = logitechBrio?.fieldOfView.map { UVCIntControlSnapshot($0) }
+        let rightLightSnap: UVCIntControlSnapshot? = logitechBrio?.rightLight.map { UVCIntControlSnapshot($0) }
+        let ledSnap: UVCIntControlSnapshot? = logitechBrio?.indicatorLed.map { UVCIntControlSnapshot($0) }
+
+        // Hand off control ownership to the actor.
+        let actor = UVCDeviceActor(properties: properties, logitechBrio: logitechBrio)
+        self.uvcActor = actor
+
+        self.exposureMode = Self.makeBitmap(actor, .exposureMode, exposureModeSnap)
+        self.exposureTime = Self.makeNumber(actor, .exposureTime, exposureTimeSnap)
+        self.gain = Self.makeNumber(actor, .gain, gainSnap)
+        self.brightness = Self.makeNumber(actor, .brightness, brightnessSnap)
+        self.contrast = Self.makeNumber(actor, .contrast, contrastSnap)
+        self.saturation = Self.makeNumber(actor, .saturation, saturationSnap)
+        self.sharpness = Self.makeNumber(actor, .sharpness, sharpnessSnap)
+        self.hue = Self.makeNumber(actor, .hue, hueSnap)
+        self.hueAuto = Self.makeBool(actor, .hueAuto, hueAutoSnap)
+        self.whiteBalanceAuto = Self.makeBool(actor, .whiteBalanceAuto, whiteBalanceAutoSnap)
+        self.whiteBalance = Self.makeNumber(actor, .whiteBalance, whiteBalanceSnap)
+        self.powerLineFrequency = Self.makeNumber(actor, .powerLineFrequency, powerLineSnap)
+        self.backlightCompensation = Self.makeNumber(actor, .backlightCompensation, backlightSnap)
+        self.zoomAbsolute = Self.makeNumber(actor, .zoomAbsolute, zoomSnap)
+        self.panTiltAbsolute = Self.makeMultiple(actor, .panTiltAbsolute, panTiltSnap)
+        self.rollAbsolute = Self.makeNumber(actor, .rollAbsolute, rollSnap)
+        self.focusAuto = Self.makeBool(actor, .focusAuto, focusAutoSnap)
+        self.focusAbsolute = Self.makeNumber(actor, .focusAbsolute, focusAbsoluteSnap)
+
+        self.logitechFieldOfView = fovSnap.map { Self.makeNumber(actor, .logitechFieldOfView, $0) }
+        self.logitechRightLight = rightLightSnap.map { Self.makeNumber(actor, .logitechRightLight, $0) }
+        self.logitechLed = ledSnap.map { Self.makeNumber(actor, .logitechIndicatorLed, $0) }
+    }
+
+    private static func makeNumber(_ actor: UVCDeviceActor,
+                                   _ id: UVCControlID,
+                                   _ snap: UVCIntControlSnapshot) -> NumberCaptureDeviceProperty {
+        return NumberCaptureDeviceProperty(actor: actor, id: id, snapshot: snap)
+    }
+
+    private static func makeBool(_ actor: UVCDeviceActor,
+                                 _ id: UVCControlID,
+                                 _ snap: UVCBoolControlSnapshot) -> BoolCaptureDeviceProperty {
+        return BoolCaptureDeviceProperty(actor: actor, id: id, snapshot: snap)
+    }
+
+    private static func makeBitmap(_ actor: UVCDeviceActor,
+                                   _ id: UVCControlID,
+                                   _ snap: UVCBitmapControlSnapshot) -> BitmapCaptureDeviceProperty {
+        return BitmapCaptureDeviceProperty(actor: actor, id: id, snapshot: snap)
+    }
+
+    private static func makeMultiple(_ actor: UVCDeviceActor,
+                                     _ id: UVCControlID,
+                                     _ snap: UVCMultipleIntControlSnapshot) -> MultipleCaptureDeviceProperty {
+        return MultipleCaptureDeviceProperty(actor: actor, id: id, snapshot: snap)
     }
 
     func writeValues() {

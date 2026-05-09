@@ -3,7 +3,10 @@
 //  CameraController
 //
 //  Created by Itay Brenner on 7/25/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
+//  Copyright (c) 2020 Itaysoft. All rights reserved.
+//
+//  View-model wrapper for a UVCMultipleIntControl (pan/tilt). See
+//  NumberCaptureDeviceProperty for the design rationale.
 //
 
 import Foundation
@@ -13,37 +16,26 @@ import UVC
 @MainActor
 @Observable
 final class MultipleCaptureDeviceProperty {
-    @ObservationIgnored private let control: UVCMultipleIntControl
+    @ObservationIgnored private let actor: UVCDeviceActor
+    @ObservationIgnored private let controlID: UVCControlID
+    @ObservationIgnored private let defaultValue1Int: Int
+    @ObservationIgnored private let defaultValue2Int: Int
 
     var sliderValue1: Float {
-        get {
-            access(keyPath: \.sliderValue1)
-            return Float(control.current1)
-        }
-        set {
-            if Float(control.current1) != newValue {
-                _ = withMutation(keyPath: \.sliderValue1) {
-                    Task {
-                        control.current1 = Int(newValue)
-                    }
-                }
-            }
+        didSet {
+            let value = Int(sliderValue1)
+            let id = controlID
+            let actor = self.actor
+            Task { await actor.setMultipleInt1(id, value) }
         }
     }
 
     var sliderValue2: Float {
-        get {
-            access(keyPath: \.sliderValue2)
-            return Float(control.current2)
-        }
-        set {
-            if Float(control.current2) != newValue {
-                _ = withMutation(keyPath: \.sliderValue2) {
-                    Task {
-                        control.current2 = Int(newValue)
-                    }
-                }
-            }
+        didSet {
+            let value = Int(sliderValue2)
+            let id = controlID
+            let actor = self.actor
+            Task { await actor.setMultipleInt2(id, value) }
         }
     }
 
@@ -57,28 +49,38 @@ final class MultipleCaptureDeviceProperty {
     let defaultValue1: Float
     let defaultValue2: Float
 
-    init(_ control: UVCMultipleIntControl) {
-        self.control = control
-        isCapable = control.isCapable
-        minimum1 = Float(control.minimum1)
-        minimum2 = Float(control.minimum2)
-        maximum1 = Float(control.maximum1)
-        maximum2 = Float(control.maximum2)
-        resolution1 = Float(control.resolution1)
-        resolution2 = Float(control.resolution2)
-        defaultValue1 = Float(control.defaultValue1)
-        defaultValue2 = Float(control.defaultValue2)
-        sliderValue1 = Float(control.current1)
-        sliderValue2 = Float(control.current2)
+    init(actor: UVCDeviceActor, id: UVCControlID, snapshot: UVCMultipleIntControlSnapshot) {
+        self.actor = actor
+        self.controlID = id
+        self.isCapable = snapshot.isCapable
+        self.minimum1 = Float(snapshot.minimum1)
+        self.minimum2 = Float(snapshot.minimum2)
+        self.maximum1 = Float(snapshot.maximum1)
+        self.maximum2 = Float(snapshot.maximum2)
+        self.resolution1 = Float(snapshot.resolution1)
+        self.resolution2 = Float(snapshot.resolution2)
+        self.defaultValue1 = Float(snapshot.defaultValue1)
+        self.defaultValue2 = Float(snapshot.defaultValue2)
+        self.defaultValue1Int = snapshot.defaultValue1
+        self.defaultValue2Int = snapshot.defaultValue2
+        self.sliderValue1 = Float(snapshot.current1)
+        self.sliderValue2 = Float(snapshot.current2)
     }
 
     func reset() {
-        control.current1 = control.defaultValue1
-        control.current2 = control.defaultValue2
+        sliderValue1 = defaultValue1
+        sliderValue2 = defaultValue2
     }
 
+    /// Force-write the cached values back to the device (timer-driven).
     func write() {
-        sliderValue1 = Float(control.current1)
-        sliderValue2 = Float(control.current2)
+        let value1 = Int(sliderValue1)
+        let value2 = Int(sliderValue2)
+        let id = controlID
+        let actor = self.actor
+        Task {
+            await actor.setMultipleInt1(id, value1)
+            await actor.setMultipleInt2(id, value2)
+        }
     }
 }
