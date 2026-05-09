@@ -28,6 +28,7 @@
 		F4260510B00201000000E353 /* LogitechXUGuids.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00200000000E353 /* LogitechXUGuids.swift */; };
 		F4260510B00301000000E353 /* LogitechXUSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00300000000E353 /* LogitechXUSelector.swift */; };
 		F4260510B00401000000E353 /* LogitechBrioDeviceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */; };
+		F4260510C00101000000E353 /* UVCDeviceActor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510C00100000000E353 /* UVCDeviceActor.swift */; };
 		F42D42DB27A0F0C600107DFF /* MoveApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42DA27A0F0C600107DFF /* MoveApplication.swift */; };
 		FDF3D7BC9AEC1F9B0AAFD05A /* CameraControllerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */; };
 		F42D42DD27A0F0DC00107DFF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F42D42DC27A0F0DB00107DFF /* Security.framework */; platformFilter = maccatalyst; };
@@ -183,6 +184,7 @@
 		F4260510B00200000000E353 /* LogitechXUGuids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUGuids.swift; sourceTree = "<group>"; };
 		F4260510B00300000000E353 /* LogitechXUSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUSelector.swift; sourceTree = "<group>"; };
 		F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechBrioDeviceProperties.swift; sourceTree = "<group>"; };
+		F4260510C00100000000E353 /* UVCDeviceActor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UVCDeviceActor.swift; sourceTree = "<group>"; };
 		F42D42DA27A0F0C600107DFF /* MoveApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveApplication.swift; sourceTree = "<group>"; };
 		21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControllerApp.swift; sourceTree = "<group>"; };
 		F42D42DC27A0F0DB00107DFF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -378,6 +380,7 @@
 				F47D07F624C417A700E44A22 /* UVC Standard */,
 				F47D081824C68C0800E44A22 /* Extensions */,
 				F4260510B00500000000E353 /* Vendor */,
+				F4260510C00100000000E353 /* UVCDeviceActor.swift */,
 			);
 			path = UVC;
 			sourceTree = "<group>";
@@ -916,6 +919,7 @@
 				F4260510B00201000000E353 /* LogitechXUGuids.swift in Sources */,
 				F4260510B00301000000E353 /* LogitechXUSelector.swift in Sources */,
 				F4260510B00401000000E353 /* LogitechBrioDeviceProperties.swift in Sources */,
+				F4260510C00101000000E353 /* UVCDeviceActor.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

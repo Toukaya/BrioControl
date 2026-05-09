@@ -48,3 +48,7 @@ public final class UVCBoolControl: UVCControl {
         defaultValue = getDataFor(type: .getDefault, length: uvcSize) != 0
     }
 }
+
+// Invariant: see UVCIntControl. Reads and writes are funneled through
+// UVCDeviceActor; the C interface pointer never crosses task boundaries.
+extension UVCBoolControl: @unchecked Sendable {}

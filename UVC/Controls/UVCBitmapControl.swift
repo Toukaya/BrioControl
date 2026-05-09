@@ -66,3 +66,7 @@ public final class UVCBitmapControl: UVCControl {
         }
     }
 }
+
+// Invariant: see UVCIntControl. Reads and writes are funneled through
+// UVCDeviceActor; the C interface pointer never crosses task boundaries.
+extension UVCBitmapControl: @unchecked Sendable {}

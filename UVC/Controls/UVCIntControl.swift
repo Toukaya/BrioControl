@@ -71,3 +71,10 @@ public final class UVCIntControl: UVCControl {
         resolution = getDataFor(type: .getRessolution, length: uvcSize)
     }
 }
+
+// Invariant: a UVCIntControl is only ever read or mutated from inside
+// UVCDeviceActor after hand-off. Pre-hand-off (UVCDeviceProperties.init
+// and the actor's own init) the instance is single-owner. The C
+// function-pointer interface (`USBInterfacePointer`) is therefore never
+// shared across tasks, which makes the @unchecked Sendable promise sound.
+extension UVCIntControl: @unchecked Sendable {}

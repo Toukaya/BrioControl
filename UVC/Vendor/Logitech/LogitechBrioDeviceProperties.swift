@@ -81,3 +81,9 @@ public final class LogitechBrioDeviceProperties {
         return nil
     }
 }
+
+// Invariant: same as UVCDeviceProperties. Container is single-owner and,
+// post-handoff, lives only inside UVCDeviceActor. The lazy `fieldOfView`
+// / `rightLight` builders mutate state but are read exactly once from
+// the actor's init before any concurrent access becomes possible.
+extension LogitechBrioDeviceProperties: @unchecked Sendable {}

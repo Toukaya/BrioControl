@@ -71,3 +71,10 @@ public final class UVCDeviceProperties {
                                           processingUnitId, interfaceId)
     }
 }
+
+// Invariant: a UVCDeviceProperties container, like its UVCControl
+// children, is single-owner. The constructor (called from UVCDevice.init)
+// runs on whichever thread calls it; once handed to UVCDeviceActor, all
+// access is actor-isolated. The @unchecked Sendable promise mirrors the
+// promise on the contained UVCControl types.
+extension UVCDeviceProperties: @unchecked Sendable {}

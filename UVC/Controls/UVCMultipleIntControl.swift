@@ -128,6 +128,10 @@ public final class UVCMultipleIntControl: UVCControl {
     }
 }
 
+// Invariant: see UVCIntControl. Reads and writes are funneled through
+// UVCDeviceActor; the C interface pointer never crosses task boundaries.
+extension UVCMultipleIntControl: @unchecked Sendable {}
+
 public extension SignedInteger {
     init(_ bytes: [UInt8]) {
         precondition(bytes.count <= MemoryLayout<Self>.size)
