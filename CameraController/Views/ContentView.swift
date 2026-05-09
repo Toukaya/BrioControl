@@ -12,7 +12,6 @@ import AVFoundation
 struct ContentView: View {
     @Environment(DevicesManager.self) private var manager
     @Environment(UserSettings.self) private var settings
-    @State var currentSection: Int?
 
     // Drives camera-preview start/stop. SwiftUI's scenePhase transitions
     // when the MenuBarExtra window becomes key / loses key, which is the
@@ -28,37 +27,30 @@ struct ContentView: View {
         @Bindable var manager = manager
         let selectedDeviceBinding = $manager.selectedDevice
 
-        HStack {
-            VStack(spacing: 0) {
-                cameraPreview(selectedDevice: selectedDeviceBinding)
-                    .animation(nil, value: settings.hideCameraPreview)
+        VStack(spacing: 0) {
+            cameraPreview(selectedDevice: selectedDeviceBinding)
+                .animation(nil, value: settings.hideCameraPreview)
 
-                TabSelectorView(selectedIndex: $currentSection)
-                    .padding(.vertical, Constants.Style.padding)
-                    .animation(nil, value: currentSection)
-
-                SettingsView(
-                    captureDevice: selectedDeviceBinding,
-                    currentSection: $currentSection
-                )
-            }.onAppear {
-                DevicesManager.shared.startMonitoring()
-            }.onDisappear {
-                DevicesManager.shared.stopMonitoring()
-            }
-            .onChange(of: scenePhase) { _, newPhase in
-                switch newPhase {
-                case .active:
-                    previewController.startSession()
-                case .inactive, .background:
-                    previewController.stopSession()
-                @unknown default:
-                    break
-                }
-            }
-            .frame(width: settings.cameraPreviewSize.getWidth() - Constants.Style.padding * 2)
+            SettingsView(captureDevice: selectedDeviceBinding)
         }
-        .fixedSize()
+        .onAppear {
+            DevicesManager.shared.startMonitoring()
+        }
+        .onDisappear {
+            DevicesManager.shared.stopMonitoring()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
+            case .active:
+                previewController.startSession()
+            case .inactive, .background:
+                previewController.stopSession()
+            @unknown default:
+                break
+            }
+        }
+        .frame(width: settings.cameraPreviewSize.getWidth())
+        .fixedSize(horizontal: true, vertical: false)
         .background(
             VisualEffectView(material: .hudWindow,
                              blendingMode: .behindWindow,
