@@ -19,11 +19,11 @@ struct ContentView: View {
         HStack {
             VStack(spacing: 0) {
                 cameraPreview()
-                    .animation(nil)
+                    .animation(nil, value: settings.hideCameraPreview)
 
                 TabSelectorView(selectedIndex: $currentSection)
                     .padding(.vertical, Constants.Style.padding)
-                    .animation(nil)
+                    .animation(nil, value: currentSection)
 
                 settingsView()
             }.onAppear {
