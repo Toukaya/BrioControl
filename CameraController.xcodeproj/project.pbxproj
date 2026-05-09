@@ -28,8 +28,6 @@
 		F4260510B00201000000E353 /* LogitechXUGuids.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00200000000E353 /* LogitechXUGuids.swift */; };
 		F4260510B00301000000E353 /* LogitechXUSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00300000000E353 /* LogitechXUSelector.swift */; };
 		F4260510B00401000000E353 /* LogitechBrioDeviceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */; };
-		F4FA1B0526010A1000000001 /* FieldOfViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FA1B0526010A1000000002 /* FieldOfViewView.swift */; };
-		F4FA1B0526010A1000000003 /* RightLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FA1B0526010A1000000004 /* RightLightView.swift */; };
 		F42D42D627A0E3D500107DFF /* StatusBarManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42D527A0E3D500107DFF /* StatusBarManager.swift */; };
 		F42D42D827A0E92100107DFF /* WindowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42D727A0E92100107DFF /* WindowManager.swift */; };
 		F42D42DB27A0F0C600107DFF /* MoveApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42DA27A0F0C600107DFF /* MoveApplication.swift */; };
@@ -112,6 +110,8 @@
 		F4E5262D24C7DDB000125DF9 /* CaptureDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5262C24C7DDB000125DF9 /* CaptureDevice.swift */; };
 		F4E5263024C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5262F24C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift */; };
 		F4E5263224C93A3400125DF9 /* DeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5263124C93A3400125DF9 /* DeviceController.swift */; };
+		F4FA1B0526010A1000000001 /* FieldOfViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FA1B0526010A1000000002 /* FieldOfViewView.swift */; };
+		F4FA1B0526010A1000000003 /* RightLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FA1B0526010A1000000004 /* RightLightView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -184,8 +184,6 @@
 		F4260510B00200000000E353 /* LogitechXUGuids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUGuids.swift; sourceTree = "<group>"; };
 		F4260510B00300000000E353 /* LogitechXUSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUSelector.swift; sourceTree = "<group>"; };
 		F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechBrioDeviceProperties.swift; sourceTree = "<group>"; };
-		F4FA1B0526010A1000000002 /* FieldOfViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOfViewView.swift; sourceTree = "<group>"; };
-		F4FA1B0526010A1000000004 /* RightLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightLightView.swift; sourceTree = "<group>"; };
 		F42D42D527A0E3D500107DFF /* StatusBarManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarManager.swift; sourceTree = "<group>"; };
 		F42D42D727A0E92100107DFF /* WindowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WindowManager.swift; sourceTree = "<group>"; };
 		F42D42DA27A0F0C600107DFF /* MoveApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveApplication.swift; sourceTree = "<group>"; };
@@ -274,6 +272,8 @@
 		F4E5262C24C7DDB000125DF9 /* CaptureDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureDevice.swift; sourceTree = "<group>"; };
 		F4E5262F24C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmapCaptureDeviceProperty.swift; sourceTree = "<group>"; };
 		F4E5263124C93A3400125DF9 /* DeviceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceController.swift; sourceTree = "<group>"; };
+		F4FA1B0526010A1000000002 /* FieldOfViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOfViewView.swift; sourceTree = "<group>"; };
+		F4FA1B0526010A1000000004 /* RightLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightLightView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -786,7 +786,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1150;
-				LastUpgradeCheck = 1430;
+				LastUpgradeCheck = 2640;
 				ORGANIZATIONNAME = Itaysoft;
 				TargetAttributes = {
 					F4508ACB2A43E477003C44F1 = {
@@ -1052,7 +1052,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1091,7 +1091,7 @@
 			buildSettings = {
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
@@ -1162,6 +1162,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1181,6 +1182,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -1224,6 +1226,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1236,6 +1239,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
+				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 			};
@@ -1244,7 +1248,6 @@
 		F47D07E624C4104600E44A22 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CameraController/Resources/CameraController.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1274,7 +1277,6 @@
 		F47D07E724C4104600E44A22 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = CameraController/Resources/CameraController.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
@@ -1306,7 +1308,6 @@
 		F47D07E924C4104600E44A22 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -1329,7 +1330,6 @@
 		F47D07EA24C4104600E44A22 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
