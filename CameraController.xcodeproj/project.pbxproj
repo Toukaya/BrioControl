@@ -110,8 +110,8 @@
 		F4E5262D24C7DDB000125DF9 /* CaptureDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5262C24C7DDB000125DF9 /* CaptureDevice.swift */; };
 		F4E5263024C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5262F24C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift */; };
 		F4E5263224C93A3400125DF9 /* DeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5263124C93A3400125DF9 /* DeviceController.swift */; };
-		F4FA1B0526010A1000000001 /* FieldOfViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FA1B0526010A1000000002 /* FieldOfViewView.swift */; };
-		F4FA1B0526010A1000000003 /* RightLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FA1B0526010A1000000004 /* RightLightView.swift */; };
+		922AC8D6DDA32B15EF84F208 /* FieldOfViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180ACBB54F486B98C03D341 /* FieldOfViewView.swift */; };
+		6405A8CBF39F78469B773F5A /* RightLightView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D7F8AD59FC33D071A9A89E31 /* RightLightView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -272,8 +272,8 @@
 		F4E5262C24C7DDB000125DF9 /* CaptureDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureDevice.swift; sourceTree = "<group>"; };
 		F4E5262F24C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmapCaptureDeviceProperty.swift; sourceTree = "<group>"; };
 		F4E5263124C93A3400125DF9 /* DeviceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceController.swift; sourceTree = "<group>"; };
-		F4FA1B0526010A1000000002 /* FieldOfViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOfViewView.swift; sourceTree = "<group>"; };
-		F4FA1B0526010A1000000004 /* RightLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightLightView.swift; sourceTree = "<group>"; };
+		A180ACBB54F486B98C03D341 /* FieldOfViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOfViewView.swift; sourceTree = "<group>"; };
+		D7F8AD59FC33D071A9A89E31 /* RightLightView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RightLightView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -597,7 +597,7 @@
 				F424604C2A5A7969009108C2 /* RollView.swift */,
 				F424604A2A5A77E6009108C2 /* ZoomView.swift */,
 				F4D4C6D724CBDA5700581E05 /* FocusView.swift */,
-				F4FA1B0526010A1000000002 /* FieldOfViewView.swift */,
+				A180ACBB54F486B98C03D341 /* FieldOfViewView.swift */,
 			);
 			path = Advanced;
 			sourceTree = "<group>";
@@ -671,7 +671,7 @@
 				F424603A2A5A673F009108C2 /* SharpnessView.swift */,
 				F424603C2A5A678C009108C2 /* HueView.swift */,
 				F4D4C6CA24CBD27600581E05 /* WhiteBalanceView.swift */,
-				F4FA1B0526010A1000000004 /* RightLightView.swift */,
+				D7F8AD59FC33D071A9A89E31 /* RightLightView.swift */,
 			);
 			path = Basic;
 			sourceTree = "<group>";
@@ -961,8 +961,8 @@
 				F42460352A5A65A0009108C2 /* BrightnessView.swift in Sources */,
 				F4D1714A2A3EBC740039E353 /* PreviewSizeSettings.swift in Sources */,
 				F4260510AA0001000000E353 /* PreviewQualitySettings.swift in Sources */,
-				F4FA1B0526010A1000000001 /* FieldOfViewView.swift in Sources */,
-				F4FA1B0526010A1000000003 /* RightLightView.swift in Sources */,
+				922AC8D6DDA32B15EF84F208 /* FieldOfViewView.swift in Sources */,
+				6405A8CBF39F78469B773F5A /* RightLightView.swift in Sources */,
 				F42D42D827A0E92100107DFF /* WindowManager.swift in Sources */,
 				F469CF4724DD0D9F0092C7F9 /* ProfileManager.swift in Sources */,
 				F44150732A882D760021ADB5 /* ProfileRow.swift in Sources */,
@@ -1070,7 +1070,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
@@ -1080,7 +1080,7 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = UVC/USBHeaders.h;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1109,7 +1109,7 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 1.0;
 				MODULE_VERIFIER_SUPPORTED_LANGUAGES = "objective-c objective-c++";
 				MODULE_VERIFIER_SUPPORTED_LANGUAGE_STANDARDS = "gnu11 gnu++20";
@@ -1118,7 +1118,7 @@
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OBJC_BRIDGING_HEADER = UVC/USBHeaders.h;
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				VERSIONING_SYSTEM = "apple-generic";
 				VERSION_INFO_PREFIX = "";
 			};
@@ -1177,7 +1177,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -1235,7 +1235,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				MACOSX_DEPLOYMENT_TARGET = 11.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = macosx;
@@ -1265,12 +1265,14 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -1295,13 +1297,15 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
@@ -1319,10 +1323,10 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraControllerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraController.app/Contents/MacOS/CameraController";
 			};
 			name = Debug;
@@ -1341,10 +1345,10 @@
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraControllerTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 5.0;
+				SWIFT_VERSION = 6.0;
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraController.app/Contents/MacOS/CameraController";
 			};
 			name = Release;
@@ -1369,13 +1373,15 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Debug;
 		};
@@ -1399,13 +1405,15 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 12.0;
+				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
-				SWIFT_VERSION = 5.0;
+				SWIFT_STRICT_CONCURRENCY = complete;
+				SWIFT_TREAT_WARNINGS_AS_ERRORS = NO;
+				SWIFT_VERSION = 6.0;
 			};
 			name = Release;
 		};
