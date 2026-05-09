@@ -12,4 +12,6 @@ import IOKit.usb
 struct USBDevice {
     let interface: UnsafeMutablePointer<UnsafeMutablePointer<IOUSBInterfaceInterface190>>
     let descriptor: UVCDescriptor
+    let vendorID: UInt16
+    let productID: UInt16
 }

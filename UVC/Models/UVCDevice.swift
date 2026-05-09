@@ -15,6 +15,9 @@ public final class UVCDevice {
     let interface: USBInterfacePointer
     let processingUnitID: Int
     let cameraTerminalID: Int
+    public let vendorID: UInt16
+    public let productID: UInt16
+    public let extensionUnits: [ExtensionUnit]
     public let properties: UVCDeviceProperties
 
     public init(device: AVCaptureDevice) throws {
@@ -23,6 +26,9 @@ public final class UVCDevice {
         interface = deviceInfo.interface
         processingUnitID = deviceInfo.descriptor.processingUnitID
         cameraTerminalID = deviceInfo.descriptor.cameraTerminalID
+        vendorID = deviceInfo.vendorID
+        productID = deviceInfo.productID
+        extensionUnits = deviceInfo.descriptor.extensionUnits
         properties = UVCDeviceProperties(deviceInfo)
     }
 

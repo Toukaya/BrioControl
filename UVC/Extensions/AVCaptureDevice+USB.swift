@@ -67,6 +67,7 @@ extension AVCaptureDevice {
 
     func usbDevice() throws -> USBDevice {
 
+        let cameraInformation = try self.modelID.extractCameraInformation()
         let camera = try self.getIOService()
         defer {
             let code: kern_return_t = IOObjectRelease(camera)
@@ -104,6 +105,8 @@ extension AVCaptureDevice {
         let descriptor = configDesc!.proccessDescriptor()
 
         return USBDevice(interface: interfaceRef.unsafelyUnwrapped,
-                         descriptor: descriptor)
+                         descriptor: descriptor,
+                         vendorID: UInt16(truncatingIfNeeded: cameraInformation.vendorId),
+                         productID: UInt16(truncatingIfNeeded: cameraInformation.productId))
     }
 }
