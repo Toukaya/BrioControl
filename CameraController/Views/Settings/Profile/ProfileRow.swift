@@ -14,6 +14,9 @@ enum ProfileType {
 }
 
 struct ProfileRow: View {
+    @Environment(DevicesManager.self) private var devicesManager
+    @Environment(ProfileManager.self) private var profileManager
+
     var name: String
     var profile: ProfileType
     @State private var showIcons = false
@@ -50,7 +53,7 @@ struct ProfileRow: View {
     }
 
     private func applyProfile() {
-        guard let device = DevicesManager.shared.selectedDevice else {
+        guard let device = devicesManager.selectedDevice else {
             return
         }
 
@@ -67,7 +70,7 @@ struct ProfileRow: View {
             return
         }
         withAnimation {
-            ProfileManager.shared.deleteProfile(profile)
+            profileManager.deleteProfile(profile)
         }
     }
 }
