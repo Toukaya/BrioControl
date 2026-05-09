@@ -54,6 +54,10 @@
 		F4508AEB2A43E4D7003C44F1 /* CameraInformation.swift in Sources */ = {isa = PBXBuildFile; fileRef = F47D080724C50DD700E44A22 /* CameraInformation.swift */; };
 		F4508AF72A43F186003C44F1 /* LibConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4508AF62A43F186003C44F1 /* LibConstants.swift */; };
 		F4508AFA2A43F2C0003C44F1 /* Typealiases.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4508AF92A43F2C0003C44F1 /* Typealiases.swift */; };
+		F4260510B00101000000E353 /* LogitechVendor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00100000000E353 /* LogitechVendor.swift */; };
+		F4260510B00201000000E353 /* LogitechXUGuids.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00200000000E353 /* LogitechXUGuids.swift */; };
+		F4260510B00301000000E353 /* LogitechXUSelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00300000000E353 /* LogitechXUSelector.swift */; };
+		F4260510B00401000000E353 /* LogitechBrioDeviceProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */; };
 		F454D4312A550C5A003F2872 /* SectionTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F454D4302A550C5A003F2872 /* SectionTitle.swift */; };
 		F454D4332A550CF8003F2872 /* AutoBadge.swift in Sources */ = {isa = PBXBuildFile; fileRef = F454D4322A550CF8003F2872 /* AutoBadge.swift */; };
 		F45B7ABA24D545B3004C4420 /* DeviceMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = F45B7AB924D545B3004C4420 /* DeviceMonitor.swift */; };
@@ -184,6 +188,10 @@
 		F4508ACC2A43E477003C44F1 /* UVC.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = UVC.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F4508AF62A43F186003C44F1 /* LibConstants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibConstants.swift; sourceTree = "<group>"; };
 		F4508AF92A43F2C0003C44F1 /* Typealiases.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Typealiases.swift; sourceTree = "<group>"; };
+		F4260510B00100000000E353 /* LogitechVendor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechVendor.swift; sourceTree = "<group>"; };
+		F4260510B00200000000E353 /* LogitechXUGuids.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUGuids.swift; sourceTree = "<group>"; };
+		F4260510B00300000000E353 /* LogitechXUSelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechXUSelector.swift; sourceTree = "<group>"; };
+		F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogitechBrioDeviceProperties.swift; sourceTree = "<group>"; };
 		F454D4302A550C5A003F2872 /* SectionTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SectionTitle.swift; sourceTree = "<group>"; };
 		F454D4322A550CF8003F2872 /* AutoBadge.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoBadge.swift; sourceTree = "<group>"; };
 		F45B7AB924D545B3004C4420 /* DeviceMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceMonitor.swift; sourceTree = "<group>"; };
@@ -348,8 +356,28 @@
 				F47D081924C68CB100E44A22 /* Controls */,
 				F47D07F624C417A700E44A22 /* UVC Standard */,
 				F47D081824C68C0800E44A22 /* Extensions */,
+				F4260510B00500000000E353 /* Vendor */,
 			);
 			path = UVC;
+			sourceTree = "<group>";
+		};
+		F4260510B00500000000E353 /* Vendor */ = {
+			isa = PBXGroup;
+			children = (
+				F4260510B00600000000E353 /* Logitech */,
+			);
+			path = Vendor;
+			sourceTree = "<group>";
+		};
+		F4260510B00600000000E353 /* Logitech */ = {
+			isa = PBXGroup;
+			children = (
+				F4260510B00100000000E353 /* LogitechVendor.swift */,
+				F4260510B00200000000E353 /* LogitechXUGuids.swift */,
+				F4260510B00300000000E353 /* LogitechXUSelector.swift */,
+				F4260510B00400000000E353 /* LogitechBrioDeviceProperties.swift */,
+			);
+			path = Logitech;
 			sourceTree = "<group>";
 		};
 		F4508AF82A43F234003C44F1 /* Helpers */ = {
@@ -881,6 +909,10 @@
 				F4508AEB2A43E4D7003C44F1 /* CameraInformation.swift in Sources */,
 				F4508AEA2A43E4D3003C44F1 /* USBDevice.swift in Sources */,
 				F4508AE72A43E4C5003C44F1 /* UVCDeviceProperties.swift in Sources */,
+				F4260510B00101000000E353 /* LogitechVendor.swift in Sources */,
+				F4260510B00201000000E353 /* LogitechXUGuids.swift in Sources */,
+				F4260510B00301000000E353 /* LogitechXUSelector.swift in Sources */,
+				F4260510B00401000000E353 /* LogitechBrioDeviceProperties.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
