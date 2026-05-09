@@ -15,6 +15,13 @@ struct ContentView: View {
     @ObservedObject var settings = UserSettings.shared
     @State var currentSection: Int?
 
+    // Drives camera-preview start/stop. SwiftUI's scenePhase transitions
+    // when the MenuBarExtra window becomes key / loses key, which is the
+    // lifecycle signal we use to suspend the AVCaptureSession while the
+    // popover is hidden.
+    @Environment(\.scenePhase) private var scenePhase
+    @State private var previewController = CameraPreviewController()
+
     var body: some View {
         HStack {
             VStack(spacing: 0) {
@@ -31,6 +38,16 @@ struct ContentView: View {
             }.onDisappear {
                 DevicesManager.shared.stopMonitoring()
             }
+            .onChange(of: scenePhase) { newPhase in
+                switch newPhase {
+                case .active:
+                    previewController.startSession()
+                case .inactive, .background:
+                    previewController.stopSession()
+                @unknown default:
+                    break
+                }
+            }
             .frame(width: settings.cameraPreviewSize.getWidth() - Constants.Style.padding * 2)
         }
         .fixedSize()
@@ -46,7 +63,8 @@ struct ContentView: View {
         if settings.hideCameraPreview {
             EmptyView()
         } else if $manager.selectedDevice.wrappedValue != nil {
-            CameraPreview(captureDevice: $manager.selectedDevice)
+            CameraPreview(captureDevice: $manager.selectedDevice,
+                          controller: previewController)
                 .frame(
                     width: settings.cameraPreviewSize.getWidth(),
                     height: settings.cameraPreviewSize.getHeight()

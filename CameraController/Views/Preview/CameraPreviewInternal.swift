@@ -29,14 +29,9 @@ final class CameraPreviewInternal: NSView {
             applyConfiguration(for: device)
         }
 
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(windowClosed),
-                                               name: .windowClose,
-                                               object: nil)
-        NotificationCenter.default.addObserver(self,
-                                               selector: #selector(windowOpen),
-                                               name: .windowOpen,
-                                               object: nil)
+        // Show / hide of the MenuBarExtra window is observed by the
+        // SwiftUI wrapper (CameraPreview), which drives
+        // startSession() / stopRunning() through CameraPreviewController.
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(qualityChanged),
                                                name: .cameraPreviewQualityChanged,
@@ -236,13 +231,10 @@ final class CameraPreviewInternal: NSView {
         captureDevice = device
     }
 
-    @objc
-    func windowClosed() {
-        stopRunning()
-    }
-
-    @objc
-    func windowOpen() {
+    // Re-entry point used by the SwiftUI wrapper when the MenuBarExtra
+    // window becomes visible again. No-op when the user disabled the
+    // preview, or when the session is already running.
+    func startSession() {
         if UserSettings.shared.cameraPreviewQuality == .disabled {
             return
         }
