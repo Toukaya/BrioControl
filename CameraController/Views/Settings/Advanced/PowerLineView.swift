@@ -16,18 +16,19 @@ struct PowerLineView: View {
     }
 
     var body: some View {
-        SectionView {
-            SectionTitle(title: "Antibanding",
-                         image: Image(systemName: "bolt"))
-
-            Picker(selection: $powerLineFrequency.sliderValue, label: EmptyView()) {
-                Text("Disabled").frame(width: 100).tag(0 as Float)
-                Text("50 Hz").frame(width: 100).tag(1 as Float)
-                Text("60 Hz").frame(width: 100).tag(2 as Float)
-                Text("Auto").frame(width: 100).tag(3 as Float)
+        LabeledContent {
+            Picker("Power Line", selection: $powerLineFrequency.sliderValue) {
+                Text("Disabled").tag(0 as Float)
+                Text("50 Hz").tag(1 as Float)
+                Text("60 Hz").tag(2 as Float)
+                Text("Auto").tag(3 as Float)
             }
-            .disabled(!powerLineFrequency.isCapable)
+            .labelsHidden()
             .pickerStyle(.segmented)
+            .disabled(!powerLineFrequency.isCapable)
+        } label: {
+            Label("Power Line", systemImage: "bolt")
+                .symbolRenderingMode(.hierarchical)
         }
     }
 }

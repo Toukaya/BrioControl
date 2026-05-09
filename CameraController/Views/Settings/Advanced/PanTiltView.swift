@@ -15,31 +15,27 @@ struct PanTiltView: View {
         self.panTiltAbsolute = controller.panTiltAbsolute
     }
 
+    // Render PanTilt as two separate LabeledContent rows ("Pan" and
+    // "Tilt"). The two-axis pad alternative would require a custom
+    // gesture-driven view; two sliders mirror the legacy layout, are
+    // keyboard-navigable for free, and read naturally to VoiceOver.
     var body: some View {
-        VStack(spacing: Constants.Style.controlsSpacing) {
-            SectionView {
-                SectionTitle(title: "Tilt",
-                             image: Image(systemName: "arrow.up.and.down"))
-                HStack {
-                    Toggle(isOn: .constant(false))
-                        .hidden()
-                    Slider(value: $panTiltAbsolute.sliderValue1,
-                              step: panTiltAbsolute.resolution1,
-                              sliderRange: panTiltAbsolute.minimum1...panTiltAbsolute.maximum1)
-                }
-            }
+        LabeledContent {
+            SwiftUI.Slider(value: $panTiltAbsolute.sliderValue2,
+                           in: panTiltAbsolute.minimum2...panTiltAbsolute.maximum2,
+                           step: panTiltAbsolute.resolution2)
+        } label: {
+            Label("Pan", systemImage: "arrow.left.and.right")
+                .symbolRenderingMode(.hierarchical)
+        }
 
-            SectionView {
-                SectionTitle(title: "Pan",
-                             image: Image(systemName: "arrow.left.and.right"))
-                HStack {
-                    Toggle(isOn: .constant(false))
-                        .hidden()
-                    Slider(value: $panTiltAbsolute.sliderValue2,
-                              step: panTiltAbsolute.resolution2,
-                              sliderRange: panTiltAbsolute.minimum2...panTiltAbsolute.maximum2)
-                }
-            }
+        LabeledContent {
+            SwiftUI.Slider(value: $panTiltAbsolute.sliderValue1,
+                           in: panTiltAbsolute.minimum1...panTiltAbsolute.maximum1,
+                           step: panTiltAbsolute.resolution1)
+        } label: {
+            Label("Tilt", systemImage: "arrow.up.and.down")
+                .symbolRenderingMode(.hierarchical)
         }
     }
 }

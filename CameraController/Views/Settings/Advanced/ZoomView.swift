@@ -16,11 +16,13 @@ struct ZoomView: View {
     }
 
     var body: some View {
-        GenericControl(value: $zoomAbsolute.sliderValue,
-                       step: zoomAbsolute.resolution,
-                       range: zoomAbsolute.minimum...zoomAbsolute.maximum,
-                       title: "Zoom",
-                       imageName: "plus.magnifyingglass",
-                       auto: nil)
+        LabeledContent {
+            SwiftUI.Slider(value: $zoomAbsolute.sliderValue,
+                           in: zoomAbsolute.minimum...zoomAbsolute.maximum,
+                           step: zoomAbsolute.resolution)
+        } label: {
+            Label("Zoom", systemImage: "plus.magnifyingglass")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

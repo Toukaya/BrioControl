@@ -16,11 +16,13 @@ struct RollView: View {
     }
 
     var body: some View {
-        GenericControl(value: $rollAbsolute.sliderValue,
-                       step: rollAbsolute.resolution,
-                       range: rollAbsolute.minimum...rollAbsolute.maximum,
-                       title: "Roll",
-                       imageName: "arrow.counterclockwise",
-                       auto: nil)
+        LabeledContent {
+            SwiftUI.Slider(value: $rollAbsolute.sliderValue,
+                           in: rollAbsolute.minimum...rollAbsolute.maximum,
+                           step: rollAbsolute.resolution)
+        } label: {
+            Label("Roll", systemImage: "arrow.counterclockwise")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

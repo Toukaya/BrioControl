@@ -12,8 +12,8 @@ struct AdvancedView: View {
     @Bindable var controller: DeviceController
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: Constants.Style.controlsSpacing) {
+        Form {
+            Section("Camera") {
                 if controller.powerLineFrequency.isCapable {
                     PowerLineView(controller: controller)
                 }
@@ -21,30 +21,39 @@ struct AdvancedView: View {
                 if controller.backlightCompensation.isCapable {
                     BacklightView(controller: controller)
                 }
+            }
 
-                if controller.zoomAbsolute.isCapable {
-                    ZoomView(controller: controller)
+            if controller.zoomAbsolute.isCapable
+                || controller.panTiltAbsolute.isCapable
+                || controller.rollAbsolute.isCapable {
+                Section("Orientation") {
+                    if controller.zoomAbsolute.isCapable {
+                        ZoomView(controller: controller)
+                    }
+
+                    if controller.panTiltAbsolute.isCapable {
+                        PanTiltView(controller: controller)
+                    }
+
+                    if controller.rollAbsolute.isCapable {
+                        RollView(controller: controller)
+                    }
                 }
+            }
 
-                if controller.panTiltAbsolute.isCapable {
-                    PanTiltView(controller: controller)
-                }
-
-                if controller.rollAbsolute.isCapable {
-                    RollView(controller: controller)
-                }
-
-                if controller.focusAbsolute.isCapable {
+            if controller.focusAbsolute.isCapable {
+                Section("Focus") {
                     FocusView(controller: controller)
                 }
+            }
 
-                if let fov = controller.logitechFieldOfView, fov.isCapable {
+            if let fov = controller.logitechFieldOfView, fov.isCapable {
+                Section("Logitech BRIO") {
                     FieldOfViewView(fieldOfView: fov)
                 }
             }
-            .padding(.top, 2)
-            .padding(.bottom, Constants.Style.topSpacing)
         }
-        .frame(maxHeight: 300)
+        .formStyle(.grouped)
+        .frame(maxHeight: 360)
     }
 }

@@ -27,17 +27,18 @@ struct FieldOfViewView: View {
     }
 
     var body: some View {
-        SectionView {
-            SectionTitle(title: "Field of View",
-                         image: Image(systemName: "viewfinder"))
-
-            Picker(selection: selection, label: EmptyView()) {
-                Text("90°").frame(width: 100).tag(0 as Float)
-                Text("78°").frame(width: 100).tag(1 as Float)
-                Text("65°").frame(width: 100).tag(2 as Float)
+        LabeledContent {
+            Picker("Field of View", selection: selection) {
+                Text("90°").tag(0 as Float)
+                Text("78°").tag(1 as Float)
+                Text("65°").tag(2 as Float)
             }
-            .disabled(!fieldOfView.isCapable)
+            .labelsHidden()
             .pickerStyle(.segmented)
+            .disabled(!fieldOfView.isCapable)
+        } label: {
+            Label("Field of View", systemImage: "viewfinder")
+                .symbolRenderingMode(.hierarchical)
         }
     }
 }

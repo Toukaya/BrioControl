@@ -15,20 +15,25 @@ struct BacklightView: View {
         self.backlightCompensation = controller.backlightCompensation
     }
 
-    var body: some View {
-        SectionView {
-            SectionTitle(title: "Backlight Compensation",
-                         image: Image(systemName: "light.beacon.max")) {
-                Toggle(isOn: backightEnabled)
-            }
-        }
-    }
-
+    // Bridges the integer backlight-compensation control to a Bool for the
+    // SwiftUI Toggle. Preserved verbatim from the previous implementation
+    // -- TASK-06 reviewer flagged this derivation as load-bearing.
     var backightEnabled: Binding<Bool> {
         Binding(get: {
             backlightCompensation.sliderValue > 0
         }, set: {
             backlightCompensation.sliderValue = $0 ? backlightCompensation.maximum : 0
         })
+    }
+
+    var body: some View {
+        LabeledContent {
+            SwiftUI.Toggle("Backlight Compensation", isOn: backightEnabled)
+                .toggleStyle(.switch)
+                .labelsHidden()
+        } label: {
+            Label("Backlight Compensation", systemImage: "light.beacon.max")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

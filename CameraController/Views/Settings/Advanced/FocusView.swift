@@ -18,11 +18,19 @@ struct FocusView: View {
     }
 
     var body: some View {
-        GenericControl(value: $focusAbsolute.sliderValue,
-                       step: focusAbsolute.resolution,
-                       range: focusAbsolute.minimum...focusAbsolute.maximum,
-                       title: "Focus",
-                       imageName: "camera.aperture",
-                       auto: $focusAuto.isEnabled)
+        LabeledContent {
+            HStack {
+                SwiftUI.Slider(value: $focusAbsolute.sliderValue,
+                               in: focusAbsolute.minimum...focusAbsolute.maximum,
+                               step: focusAbsolute.resolution)
+                    .disabled(focusAuto.isEnabled)
+                SwiftUI.Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+            }
+        } label: {
+            Label("Focus", systemImage: "camera.aperture")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }
