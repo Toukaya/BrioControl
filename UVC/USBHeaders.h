@@ -51,3 +51,22 @@ struct UVC_ProcessingUnitDescriptor {
     uint8_t  bmControls;    /* TODO: array, but we're not using this (yet). */
     /* TODO: iProcessing and bmVideoStandards */
 } __attribute__((packed));
+
+/*
+ * Class-Specific VC Extension Unit Descriptor (UVC 1.5 spec, section 3.7.2.6).
+ * The trailing fields are variable-length; this struct only covers the fixed
+ * prefix up to and including guidExtensionCode and bNumControls. The remaining
+ * fields (baSourceID[bNrInPins], bControlSize, bmControls[bControlSize],
+ * bIExtension) must be parsed by walking from a byte pointer.
+ */
+struct UVC_ExtensionUnitDescriptor {
+    uint8_t  bLength;
+    uint8_t  bDescriptorType;
+    uint8_t  bDescriptorSubType;
+    uint8_t  bUnitID;
+    uint8_t  guidExtensionCode[16];
+    uint8_t  bNumControls;
+    uint8_t  bNrInPins;
+    /* Variable tail follows: baSourceID[bNrInPins], bControlSize,
+     * bmControls[bControlSize], bIExtension. */
+} __attribute__((packed));

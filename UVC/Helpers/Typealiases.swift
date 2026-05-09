@@ -13,3 +13,4 @@ typealias PluginInterfacePointer = UnsafeMutablePointer<UnsafeMutablePointer<IOC
 typealias InterfaceDescriptorPointer = UnsafeMutablePointer<UVC_InterfaceDescriptorHdr>
 typealias ProcessingUnitDescriptorPointer = UnsafeMutablePointer<UVC_ProcessingUnitDescriptor>
 typealias CameraTerminalDescriptorPointer = UnsafeMutablePointer<UVC_CameraTerminalDescriptor>
+typealias ExtensionUnitDescriptorPointer = UnsafeMutablePointer<UVC_ExtensionUnitDescriptor>
