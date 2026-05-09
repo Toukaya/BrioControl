@@ -9,6 +9,7 @@
 import Foundation
 import Cocoa
 import AVFoundation
+import CoreMedia
 
 final class CameraPreviewInternal: NSView {
     var captureDevice: AVCaptureDevice?
@@ -25,15 +26,7 @@ final class CameraPreviewInternal: NSView {
         setupPreviewLayer(captureSession)
 
         Task {
-            configureDevice(device)
-            // lock configuration to keep device.activeFormat
-           do {
-               try captureDevice?.lockForConfiguration()
-                captureSession.startRunning()
-               captureDevice?.unlockForConfiguration()
-           } catch {
-                // Handle error.
-           }
+            applyConfiguration(for: device)
         }
 
         NotificationCenter.default.addObserver(self,
@@ -43,6 +36,10 @@ final class CameraPreviewInternal: NSView {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(windowOpen),
                                                name: .windowOpen,
+                                               object: nil)
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(qualityChanged),
+                                               name: .cameraPreviewQualityChanged,
                                                object: nil)
     }
 
@@ -68,7 +65,10 @@ final class CameraPreviewInternal: NSView {
     override func layout() {
         super.layout()
         previewLayer.frame = bounds
-        layer?.addSublayer(previewLayer)
+        if previewLayer.superlayer == nil {
+            layer?.addSublayer(previewLayer)
+        }
+        previewLayer.isHidden = (UserSettings.shared.cameraPreviewQuality == .disabled)
     }
 
     func stopRunning() {
@@ -79,20 +79,111 @@ final class CameraPreviewInternal: NSView {
 
     func updateCamera(_ cam: AVCaptureDevice?) {
         if captureDevice != cam {
-            captureSession.stopRunning()
+            if captureSession.isRunning {
+                captureSession.stopRunning()
+            }
 
             Task {
-                configureDevice(cam)
-                // lock configuration to keep device.activeFormat
-                do {
-                    try captureDevice?.lockForConfiguration()
-                    captureSession.startRunning()
-                    captureDevice?.unlockForConfiguration()
-                } catch {
-                    // Handle error.
+                applyConfiguration(for: cam)
+            }
+        }
+    }
+
+    // Apply the input device, the preview-quality format, and start the
+    // session. If the user selected Disabled, the session is left stopped
+    // and the preview layer is hidden. Format selection happens BEFORE
+    // startRunning while the device is locked, so activeFormat changes
+    // do not race with running session state.
+    private func applyConfiguration(for aDevice: AVCaptureDevice?) {
+        let quality = UserSettings.shared.cameraPreviewQuality
+
+        configureDevice(aDevice)
+
+        if quality == .disabled {
+            if captureSession.isRunning {
+                captureSession.stopRunning()
+            }
+            DispatchQueue.main.async { [weak self] in
+                self?.previewLayer?.isHidden = true
+            }
+            return
+        }
+
+        DispatchQueue.main.async { [weak self] in
+            self?.previewLayer?.isHidden = false
+        }
+
+        guard let device = captureDevice else {
+            return
+        }
+
+        do {
+            try device.lockForConfiguration()
+            applyPreviewFormat(on: device, quality: quality)
+            captureSession.startRunning()
+            device.unlockForConfiguration()
+        } catch {
+            // Locking can fail if another process holds the device. In that
+            // case, fall back to whatever format the device exposes by
+            // default and still start the session.
+            if !captureSession.isRunning {
+                captureSession.startRunning()
+            }
+        }
+    }
+
+    // Pick the AVCaptureDeviceFormat that best matches the requested
+    // resolution. If no exact match exists, choose the largest supported
+    // format whose width and height are both <= the requested resolution
+    // (graceful downgrade). Then set the min/max frame duration to the
+    // highest fps that the chosen format and the user's preferred fps
+    // both support.
+    private func applyPreviewFormat(on device: AVCaptureDevice,
+                                    quality: PreviewQualitySettings) {
+        let targetWidth = Int32(quality.width)
+        let targetHeight = Int32(quality.height)
+        let preferredFps = Double(quality.preferredFrameRate)
+
+        var exactMatch: AVCaptureDevice.Format?
+        var fallback: AVCaptureDevice.Format?
+        var fallbackArea: Int32 = 0
+
+        for format in device.formats {
+            let dims = CMVideoFormatDescriptionGetDimensions(format.formatDescription)
+            if dims.width == targetWidth && dims.height == targetHeight {
+                if exactMatch == nil ||
+                    bestFps(in: format) > bestFps(in: exactMatch!) {
+                    exactMatch = format
+                }
+            } else if dims.width <= targetWidth && dims.height <= targetHeight {
+                let area = dims.width * dims.height
+                if area > fallbackArea {
+                    fallbackArea = area
+                    fallback = format
                 }
             }
         }
+
+        guard let chosen = exactMatch ?? fallback else {
+            return
+        }
+
+        device.activeFormat = chosen
+
+        let achievableFps = min(preferredFps, bestFps(in: chosen))
+        if achievableFps > 0 {
+            let duration = CMTime(value: 1, timescale: CMTimeScale(achievableFps))
+            device.activeVideoMinFrameDuration = duration
+            device.activeVideoMaxFrameDuration = duration
+        }
+    }
+
+    private func bestFps(in format: AVCaptureDevice.Format) -> Double {
+        var maxFps: Double = 0
+        for range in format.videoSupportedFrameRateRanges where range.maxFrameRate > maxFps {
+            maxFps = range.maxFrameRate
+        }
+        return maxFps
     }
 
     private func configureDevice(_ aDevice: AVCaptureDevice?) {
@@ -127,8 +218,18 @@ final class CameraPreviewInternal: NSView {
 
     @objc
     func windowOpen() {
+        if UserSettings.shared.cameraPreviewQuality == .disabled {
+            return
+        }
         if !captureSession.isRunning {
             captureSession.startRunning()
+        }
+    }
+
+    @objc
+    func qualityChanged() {
+        Task {
+            applyConfiguration(for: captureDevice)
         }
     }
 }

@@ -78,7 +78,8 @@ final class UserSettings: ObservableObject {
             rawValue: UserDefaults.standard.double(forKey: "cameraPreviewSize")
         ) ?? .small
         let storedQuality = UserDefaults.standard.object(forKey: "cameraPreviewQuality") as? Int
-        cameraPreviewQuality = PreviewQualitySettings(rawValue: storedQuality ?? PreviewQualitySettings.fhd1080.rawValue) ?? .fhd1080
+        let qualityRaw = storedQuality ?? PreviewQualitySettings.fhd1080.rawValue
+        cameraPreviewQuality = PreviewQualitySettings(rawValue: qualityRaw) ?? .fhd1080
         checkForUpdatesOnStartup = UserDefaults.standard.bool(forKey: "checkForUpdatesOnStartup")
         mirrorPreview = UserDefaults.standard.bool(forKey: "mirrorPreview")
     }
