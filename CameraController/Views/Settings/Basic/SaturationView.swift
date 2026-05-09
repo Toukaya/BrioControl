@@ -16,11 +16,13 @@ struct SaturationView: View {
     }
 
     var body: some View {
-        GenericControl(value: $saturation.sliderValue,
-                       step: saturation.resolution,
-                       range: saturation.minimum...saturation.maximum,
-                       title: "Saturation",
-                       imageName: "eyedropper.halffull",
-                       auto: nil)
+        LabeledContent {
+            SwiftUI.Slider(value: $saturation.sliderValue,
+                           in: saturation.minimum...saturation.maximum,
+                           step: saturation.resolution)
+        } label: {
+            Label("Saturation", systemImage: "drop.fill")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

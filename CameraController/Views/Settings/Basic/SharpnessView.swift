@@ -16,11 +16,13 @@ struct SharpnessView: View {
     }
 
     var body: some View {
-        GenericControl(value: $sharpness.sliderValue,
-                       step: sharpness.resolution,
-                       range: sharpness.minimum...sharpness.maximum,
-                       title: "Sharpness",
-                       imageName: "triangle.fill",
-                       auto: nil)
+        LabeledContent {
+            SwiftUI.Slider(value: $sharpness.sliderValue,
+                           in: sharpness.minimum...sharpness.maximum,
+                           step: sharpness.resolution)
+        } label: {
+            Label("Sharpness", systemImage: "triangle.fill")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

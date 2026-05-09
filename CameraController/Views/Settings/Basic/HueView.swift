@@ -18,11 +18,19 @@ struct HueView: View {
     }
 
     var body: some View {
-        GenericControl(value: $hue.sliderValue,
-                       step: hue.resolution,
-                       range: hue.minimum...hue.maximum,
-                       title: "Hue",
-                       imageName: "hue",
-                       auto: $hueAuto.isEnabled)
+        LabeledContent {
+            HStack {
+                SwiftUI.Slider(value: $hue.sliderValue,
+                               in: hue.minimum...hue.maximum,
+                               step: hue.resolution)
+                    .disabled(hueAuto.isEnabled)
+                SwiftUI.Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+            }
+        } label: {
+            Label("Hue", systemImage: "paintpalette.fill")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

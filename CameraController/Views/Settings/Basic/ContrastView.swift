@@ -16,11 +16,13 @@ struct ContrastView: View {
     }
 
     var body: some View {
-        GenericControl(value: $contrast.sliderValue,
-                       step: contrast.resolution,
-                       range: contrast.minimum...contrast.maximum,
-                       title: "Contrast",
-                       imageName: "moonphase.first.quarter",
-                       auto: nil)
+        LabeledContent {
+            SwiftUI.Slider(value: $contrast.sliderValue,
+                           in: contrast.minimum...contrast.maximum,
+                           step: contrast.resolution)
+        } label: {
+            Label("Contrast", systemImage: "circle.lefthalf.filled")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

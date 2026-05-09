@@ -18,11 +18,19 @@ struct WhiteBalanceView: View {
     }
 
     var body: some View {
-        GenericControl(value: $whiteBalance.sliderValue,
-                       step: whiteBalance.resolution,
-                       range: whiteBalance.minimum...whiteBalance.maximum,
-                       title: "White Balance",
-                       imageName: "slider.horizontal.3",
-                       auto: $whiteBalanceAuto.isEnabled)
+        LabeledContent {
+            HStack {
+                SwiftUI.Slider(value: $whiteBalance.sliderValue,
+                               in: whiteBalance.minimum...whiteBalance.maximum,
+                               step: whiteBalance.resolution)
+                    .disabled(whiteBalanceAuto.isEnabled)
+                SwiftUI.Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
+                    .toggleStyle(.switch)
+                    .labelsHidden()
+            }
+        } label: {
+            Label("White Balance", systemImage: "thermometer.sun.fill")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

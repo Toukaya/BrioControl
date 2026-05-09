@@ -12,8 +12,8 @@ struct BasicSettings: View {
     @Bindable var controller: DeviceController
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: Constants.Style.controlsSpacing) {
+        Form {
+            Section("Image") {
                 if controller.exposureTime.isCapable {
                     ExposureView(controller: controller)
                 }
@@ -41,14 +41,15 @@ struct BasicSettings: View {
                 if controller.whiteBalance.isCapable {
                     WhiteBalanceView(controller: controller)
                 }
+            }
 
-                if let rightLight = controller.logitechRightLight, rightLight.isCapable {
+            if let rightLight = controller.logitechRightLight, rightLight.isCapable {
+                Section("Logitech BRIO") {
                     RightLightView(rightLight: rightLight)
                 }
             }
-            .padding(.top, 2)
-            .padding(.bottom, Constants.Style.topSpacing)
         }
-        .frame(maxHeight: 300)
+        .formStyle(.grouped)
+        .frame(maxHeight: 360)
     }
 }

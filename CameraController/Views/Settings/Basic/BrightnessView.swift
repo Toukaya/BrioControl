@@ -16,11 +16,13 @@ struct BrightnessView: View {
     }
 
     var body: some View {
-        GenericControl(value: $brightness.sliderValue,
-                       step: brightness.resolution,
-                       range: brightness.minimum...brightness.maximum,
-                       title: "Brightness",
-                       imageName: "sun.max.fill",
-                       auto: nil)
+        LabeledContent {
+            SwiftUI.Slider(value: $brightness.sliderValue,
+                           in: brightness.minimum...brightness.maximum,
+                           step: brightness.resolution)
+        } label: {
+            Label("Brightness", systemImage: "sun.max.fill")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }

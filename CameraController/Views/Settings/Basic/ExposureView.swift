@@ -14,6 +14,10 @@ struct ExposureView: View {
     @Bindable var exposureTime: NumberCaptureDeviceProperty
     @Bindable var gain: NumberCaptureDeviceProperty
 
+    // Bridges the BitmapCaptureDeviceProperty's exposureMode (UVC bitmap
+    // selector with .aperturePriority / .manual) to a Bool for the SwiftUI
+    // Toggle. Preserved verbatim from the previous implementation -- TASK-06
+    // reviewer flagged this derivation as load-bearing.
     var auto: Binding<Bool> {
         Binding(get: {
             exposureMode.selected == .aperturePriority
@@ -31,41 +35,29 @@ struct ExposureView: View {
     }
 
     var body: some View {
-        SectionView {
-            SectionTitle(title: "Exposure",
-                         image: Image(systemName: "clock.fill")) {
-                if auto.wrappedValue {
-                    AutoBadge()
-                        .transition(.opacity)
-                }
-            }
-
+        LabeledContent {
             HStack {
-                Toggle(isOn: auto.animation())
-                Slider(value: $exposureTime.sliderValue,
-                          step: exposureTime.resolution,
-                          sliderRange: exposureTime.minimum...exposureTime.maximum)
+                SwiftUI.Slider(value: $exposureTime.sliderValue,
+                               in: exposureTime.minimum...exposureTime.maximum,
+                               step: exposureTime.resolution)
                     .disabled(auto.wrappedValue)
+                SwiftUI.Toggle("Auto", isOn: auto)
+                    .toggleStyle(.switch)
+                    .labelsHidden()
             }
+        } label: {
+            Label("Exposure", systemImage: "clock.fill")
+                .symbolRenderingMode(.hierarchical)
+        }
 
-            if !auto.wrappedValue {
-                HStack {
-                    Toggle(isOn: .constant(false))
-                        .hidden()
-                    VStack {
-                        HStack {
-                            Text("Gain")
-                                .fontWeight(.heavy)
-                            Spacer()
-                        }
-                        HStack {
-                            Slider(value: $gain.sliderValue,
-                                      step: gain.resolution,
-                                      sliderRange: gain.minimum...gain.maximum)
-                            .disabled(auto.wrappedValue)
-                        }
-                    }
-                }
+        if !auto.wrappedValue {
+            LabeledContent {
+                SwiftUI.Slider(value: $gain.sliderValue,
+                               in: gain.minimum...gain.maximum,
+                               step: gain.resolution)
+            } label: {
+                Label("Gain", systemImage: "dial.medium.fill")
+                    .symbolRenderingMode(.hierarchical)
             }
         }
     }

@@ -19,11 +19,13 @@ struct RightLightView: View {
         let lower = min(rightLight.minimum, rightLight.maximum)
         let upper = max(rightLight.minimum, rightLight.maximum)
         let step = rightLight.resolution > 0 ? rightLight.resolution : 1
-        GenericControl(value: $rightLight.sliderValue,
-                       step: step,
-                       range: lower...upper,
-                       title: "RightLight",
-                       imageName: "sun.max",
-                       auto: nil)
+        LabeledContent {
+            SwiftUI.Slider(value: $rightLight.sliderValue,
+                           in: lower...upper,
+                           step: step)
+        } label: {
+            Label("RightLight", systemImage: "sun.max")
+                .symbolRenderingMode(.hierarchical)
+        }
     }
 }
