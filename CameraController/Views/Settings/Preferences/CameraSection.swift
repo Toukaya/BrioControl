@@ -9,9 +9,10 @@
 import SwiftUI
 
 struct CameraSection: View {
-    @ObservedObject var manager = DevicesManager.shared
+    @Environment(DevicesManager.self) private var manager
 
     var body: some View {
+        @Bindable var manager = manager
         SectionView {
             SectionTitle(title: "Camera",
                          image: Image(systemName: "web.camera"))
@@ -34,6 +35,7 @@ struct CameraSection: View {
 struct CameraSection_Previews: PreviewProvider {
     static var previews: some View {
         CameraSection()
+            .environment(DevicesManager.shared)
     }
 }
 #endif

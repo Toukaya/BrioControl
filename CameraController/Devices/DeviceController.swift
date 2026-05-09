@@ -7,59 +7,67 @@
 //
 
 import Foundation
-import Combine
+import Observation
 import UVC
 
 @MainActor
-final class DeviceController: ObservableObject {
+@Observable
+final class DeviceController {
+    // The lazy sub-properties are stored references to objects that are
+    // themselves @Observable. SwiftUI views observe each property's own
+    // state directly (via @Bindable), so DeviceController does not need
+    // to participate in observation tracking for these handles -- and
+    // @ObservationIgnored is required because the @Observable macro is
+    // incompatible with `lazy`.
+
     // Exposure
-    lazy var exposureMode = BitmapCaptureDeviceProperty(properties.exposureMode)
-    lazy var exposureTime = NumberCaptureDeviceProperty(properties.exposureTime)
-    lazy var gain = NumberCaptureDeviceProperty(properties.gain)
+    @ObservationIgnored lazy var exposureMode = BitmapCaptureDeviceProperty(properties.exposureMode)
+    @ObservationIgnored lazy var exposureTime = NumberCaptureDeviceProperty(properties.exposureTime)
+    @ObservationIgnored lazy var gain = NumberCaptureDeviceProperty(properties.gain)
 
     // Image
-    lazy var brightness = NumberCaptureDeviceProperty(properties.brightness)
-    lazy var contrast = NumberCaptureDeviceProperty(properties.contrast)
-    lazy var saturation = NumberCaptureDeviceProperty(properties.saturation)
-    lazy var sharpness = NumberCaptureDeviceProperty(properties.sharpness)
-    lazy var hue = NumberCaptureDeviceProperty(properties.hue)
-    lazy var hueAuto = BoolCaptureDeviceProperty(properties.hueAuto)
+    @ObservationIgnored lazy var brightness = NumberCaptureDeviceProperty(properties.brightness)
+    @ObservationIgnored lazy var contrast = NumberCaptureDeviceProperty(properties.contrast)
+    @ObservationIgnored lazy var saturation = NumberCaptureDeviceProperty(properties.saturation)
+    @ObservationIgnored lazy var sharpness = NumberCaptureDeviceProperty(properties.sharpness)
+    @ObservationIgnored lazy var hue = NumberCaptureDeviceProperty(properties.hue)
+    @ObservationIgnored lazy var hueAuto = BoolCaptureDeviceProperty(properties.hueAuto)
 
     // WhiteBalance
-    lazy var whiteBalanceAuto = BoolCaptureDeviceProperty(properties.whiteBalanceAuto)
-    lazy var whiteBalance = NumberCaptureDeviceProperty(properties.whiteBalance)
+    @ObservationIgnored lazy var whiteBalanceAuto = BoolCaptureDeviceProperty(properties.whiteBalanceAuto)
+    @ObservationIgnored lazy var whiteBalance = NumberCaptureDeviceProperty(properties.whiteBalance)
 
     // PowerLine
-    lazy var powerLineFrequency = NumberCaptureDeviceProperty(properties.powerLineFrequency)
+    @ObservationIgnored lazy var powerLineFrequency = NumberCaptureDeviceProperty(properties.powerLineFrequency)
 
     // Backlight Compensation
-    lazy var backlightCompensation = NumberCaptureDeviceProperty(properties.backlightCompensation)
+    @ObservationIgnored lazy var backlightCompensation = NumberCaptureDeviceProperty(properties.backlightCompensation)
 
     // Orientation
-    lazy var zoomAbsolute = NumberCaptureDeviceProperty(properties.zoomAbsolute)
-    lazy var panTiltAbsolute = MultipleCaptureDeviceProperty(properties.panTiltAbsolute)
-    lazy var rollAbsolute = NumberCaptureDeviceProperty(properties.rollAbsolute)
+    @ObservationIgnored lazy var zoomAbsolute = NumberCaptureDeviceProperty(properties.zoomAbsolute)
+    @ObservationIgnored lazy var panTiltAbsolute = MultipleCaptureDeviceProperty(properties.panTiltAbsolute)
+    @ObservationIgnored lazy var rollAbsolute = NumberCaptureDeviceProperty(properties.rollAbsolute)
 
     // Focus
-    lazy var focusAuto = BoolCaptureDeviceProperty(properties.focusAuto)
-    lazy var focusAbsolute = NumberCaptureDeviceProperty(properties.focusAbsolute)
+    @ObservationIgnored lazy var focusAuto = BoolCaptureDeviceProperty(properties.focusAuto)
+    @ObservationIgnored lazy var focusAbsolute = NumberCaptureDeviceProperty(properties.focusAbsolute)
 
     // Vendor-specific (currently Logitech only)
-    let logitechBrio: LogitechBrioDeviceProperties?
-    lazy var logitechFieldOfView: NumberCaptureDeviceProperty? = {
+    @ObservationIgnored let logitechBrio: LogitechBrioDeviceProperties?
+    @ObservationIgnored lazy var logitechFieldOfView: NumberCaptureDeviceProperty? = {
         guard let control = logitechBrio?.fieldOfView else { return nil }
         return NumberCaptureDeviceProperty(control)
     }()
-    lazy var logitechLed: NumberCaptureDeviceProperty? = {
+    @ObservationIgnored lazy var logitechLed: NumberCaptureDeviceProperty? = {
         guard let control = logitechBrio?.indicatorLed else { return nil }
         return NumberCaptureDeviceProperty(control)
     }()
-    lazy var logitechRightLight: NumberCaptureDeviceProperty? = {
+    @ObservationIgnored lazy var logitechRightLight: NumberCaptureDeviceProperty? = {
         guard let control = logitechBrio?.rightLight else { return nil }
         return NumberCaptureDeviceProperty(control)
     }()
 
-    private let properties: UVCDeviceProperties
+    @ObservationIgnored private let properties: UVCDeviceProperties
 
     init?(properties: UVCDeviceProperties?, logitechBrio: LogitechBrioDeviceProperties?) {
         guard let properties = properties else {

@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct FocusView: View {
-    @ObservedObject var focusAuto: BoolCaptureDeviceProperty
-    @ObservedObject var focusAbsolute: NumberCaptureDeviceProperty
+    @Bindable var focusAuto: BoolCaptureDeviceProperty
+    @Bindable var focusAbsolute: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.focusAuto = controller.focusAuto

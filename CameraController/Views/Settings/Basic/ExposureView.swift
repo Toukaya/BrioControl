@@ -10,9 +10,9 @@ import SwiftUI
 import UVC
 
 struct ExposureView: View {
-    @ObservedObject var exposureMode: BitmapCaptureDeviceProperty
-    @ObservedObject var exposureTime: NumberCaptureDeviceProperty
-    @ObservedObject var gain: NumberCaptureDeviceProperty
+    @Bindable var exposureMode: BitmapCaptureDeviceProperty
+    @Bindable var exposureTime: NumberCaptureDeviceProperty
+    @Bindable var gain: NumberCaptureDeviceProperty
 
     var auto: Binding<Bool> {
         Binding(get: {

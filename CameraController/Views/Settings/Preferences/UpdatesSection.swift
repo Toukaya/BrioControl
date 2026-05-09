@@ -9,9 +9,10 @@
 import SwiftUI
 
 struct UpdatesSection: View {
-    @ObservedObject var settings = UserSettings.shared
+    @Environment(UserSettings.self) private var settings
 
     var body: some View {
+        @Bindable var settings = settings
         SectionView {
             SectionTitle(title: "Updates",
                          image: Image(systemName: "icloud"))
@@ -45,6 +46,7 @@ struct UpdatesSection: View {
 struct UpdatesSection_Previews: PreviewProvider {
     static var previews: some View {
         UpdatesSection()
+            .environment(UserSettings.shared)
     }
 }
 #endif

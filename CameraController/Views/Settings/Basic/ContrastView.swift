@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ContrastView: View {
-    @ObservedObject var contrast: NumberCaptureDeviceProperty
+    @Bindable var contrast: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.contrast = controller.contrast

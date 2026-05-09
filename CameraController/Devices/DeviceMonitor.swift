@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Combine
+import Observation
 
 @MainActor
 final class DeviceMonitor {
@@ -16,19 +16,30 @@ final class DeviceMonitor {
     private var readInterval: Double = 0
     private var writeInterval: Double = 0
     private var lastDevice: CaptureDevice?
-    private var readCancellable: AnyCancellable?
-    private var writeCancellable: AnyCancellable?
 
     init() {
-        readCancellable = UserSettings.shared.$readRate.sink { [weak self] (newValue) in
-            self?.readInterval = newValue.rawValue
-            self?.recreateTimers()
-        }
+        // Seed initial intervals from UserSettings and re-arm an Observation
+        // tracker so that whenever readRate / writeRate change we recompute
+        // the timers. withObservationTracking fires once per change, so we
+        // call observeRates() recursively from inside the onChange block.
+        observeRates()
+    }
 
-        writeCancellable = UserSettings.shared.$writeRate.sink { [weak self] (newValue) in
-            self?.writeInterval = newValue.rawValue
-            self?.recreateTimers()
+    private func observeRates() {
+        withObservationTracking {
+            self.readInterval = UserSettings.shared.readRate.rawValue
+            self.writeInterval = UserSettings.shared.writeRate.rawValue
+        } onChange: { [weak self] in
+            // The onChange callback runs on the thread that mutated the
+            // observed value (here always the main actor, since UserSettings
+            // is configured from views). Hop explicitly to be safe.
+            Task { @MainActor [weak self] in
+                guard let self = self else { return }
+                self.observeRates()
+                self.recreateTimers()
+            }
         }
+        recreateTimers()
     }
 
     private func recreateTimers() {

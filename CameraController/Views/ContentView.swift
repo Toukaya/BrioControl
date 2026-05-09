@@ -7,12 +7,11 @@
 //
 
 import SwiftUI
-import Combine
 import AVFoundation
 
 struct ContentView: View {
-    @ObservedObject var manager = DevicesManager.shared
-    @ObservedObject var settings = UserSettings.shared
+    @Environment(DevicesManager.self) private var manager
+    @Environment(UserSettings.self) private var settings
     @State var currentSection: Int?
 
     // Drives camera-preview start/stop. SwiftUI's scenePhase transitions
@@ -23,16 +22,25 @@ struct ContentView: View {
     @State private var previewController = CameraPreviewController()
 
     var body: some View {
+        // Local @Bindable shadow so we can hand out bindings ($manager.foo)
+        // to subviews. @Environment alone does not expose Bindings; this is
+        // the canonical Observation-framework idiom.
+        @Bindable var manager = manager
+        let selectedDeviceBinding = $manager.selectedDevice
+
         HStack {
             VStack(spacing: 0) {
-                cameraPreview()
+                cameraPreview(selectedDevice: selectedDeviceBinding)
                     .animation(nil, value: settings.hideCameraPreview)
 
                 TabSelectorView(selectedIndex: $currentSection)
                     .padding(.vertical, Constants.Style.padding)
                     .animation(nil, value: currentSection)
 
-                settingsView()
+                SettingsView(
+                    captureDevice: selectedDeviceBinding,
+                    currentSection: $currentSection
+                )
             }.onAppear {
                 DevicesManager.shared.startMonitoring()
             }.onDisappear {
@@ -59,11 +67,11 @@ struct ContentView: View {
     }
 
     @ViewBuilder
-    func cameraPreview() -> some View {
+    private func cameraPreview(selectedDevice: Binding<CaptureDevice?>) -> some View {
         if settings.hideCameraPreview {
             EmptyView()
-        } else if $manager.selectedDevice.wrappedValue != nil {
-            CameraPreview(captureDevice: $manager.selectedDevice,
+        } else if selectedDevice.wrappedValue != nil {
+            CameraPreview(captureDevice: selectedDevice,
                           controller: previewController)
                 .frame(
                     width: settings.cameraPreviewSize.getWidth(),
@@ -79,20 +87,15 @@ struct ContentView: View {
                 .background(Color.gray)
         }
     }
-
-    @ViewBuilder
-    func settingsView() -> some View {
-        SettingsView(
-            captureDevice: $manager.selectedDevice,
-            currentSection: $currentSection
-        )
-    }
 }
 
 #if DEBUG
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environment(DevicesManager.shared)
+            .environment(UserSettings.shared)
+            .environment(ProfileManager.shared)
     }
 }
 #endif

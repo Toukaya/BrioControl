@@ -6,19 +6,20 @@
 //  Copyright © 2020 Itaysoft. All rights reserved.
 //
 
-import Combine
 import Foundation
+import Observation
 import AVFoundation
 
 @MainActor
-final class DevicesManager: ObservableObject {
+@Observable
+final class DevicesManager {
     static let shared = DevicesManager()
 
-    private let deviceMonitor = DeviceMonitor()
+    @ObservationIgnored private let deviceMonitor = DeviceMonitor()
 
-    @Published var devices: [CaptureDevice] = []
+    var devices: [CaptureDevice] = []
 
-    @Published var selectedDevice: CaptureDevice? {
+    var selectedDevice: CaptureDevice? {
         willSet {
             if newValue != nil && selectedDevice != newValue {
                 UserSettings.shared.lastSelectedDevice = newValue?.avDevice?.uniqueID

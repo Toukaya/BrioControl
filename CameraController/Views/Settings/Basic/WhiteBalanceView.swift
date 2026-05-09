@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct WhiteBalanceView: View {
-    @ObservedObject var whiteBalanceAuto: BoolCaptureDeviceProperty
-    @ObservedObject var whiteBalance: NumberCaptureDeviceProperty
+    @Bindable var whiteBalanceAuto: BoolCaptureDeviceProperty
+    @Bindable var whiteBalance: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.whiteBalanceAuto = controller.whiteBalanceAuto

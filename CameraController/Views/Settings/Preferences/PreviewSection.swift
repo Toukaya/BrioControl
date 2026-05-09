@@ -11,10 +11,11 @@ import AVFoundation
 import CoreMedia
 
 struct PreviewSection: View {
-    @ObservedObject var settings = UserSettings.shared
-    @ObservedObject var devices = DevicesManager.shared
+    @Environment(UserSettings.self) private var settings
+    @Environment(DevicesManager.self) private var devices
 
     var body: some View {
+        @Bindable var settings = settings
         SectionView {
             SectionTitle(title: "Preview",
                          image: Image(systemName: "photo"))

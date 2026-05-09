@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RollView: View {
-    @ObservedObject var rollAbsolute: NumberCaptureDeviceProperty
+    @Bindable var rollAbsolute: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.rollAbsolute = controller.rollAbsolute

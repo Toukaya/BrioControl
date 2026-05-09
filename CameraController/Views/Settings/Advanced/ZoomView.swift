@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ZoomView: View {
-    @ObservedObject var zoomAbsolute: NumberCaptureDeviceProperty
+    @Bindable var zoomAbsolute: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.zoomAbsolute = controller.zoomAbsolute

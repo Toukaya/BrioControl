@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct ProfilesView: View {
-    @ObservedObject var profileManager = ProfileManager.shared
+    @Environment(ProfileManager.self) private var profileManager
 
     @State private var isAddingProfile = false
     @State private var profileName = ""
@@ -60,6 +60,7 @@ struct ProfilesView: View {
 struct ProfilesView_Previews: PreviewProvider {
     static var previews: some View {
         ProfilesView()
+            .environment(ProfileManager.shared)
     }
 }
 #endif

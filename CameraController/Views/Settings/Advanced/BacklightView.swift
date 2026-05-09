@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct BacklightView: View {
-    @ObservedObject var backlightCompensation: NumberCaptureDeviceProperty
+    @Bindable var backlightCompensation: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.backlightCompensation = controller.backlightCompensation

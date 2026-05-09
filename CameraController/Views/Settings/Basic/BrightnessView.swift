@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct BrightnessView: View {
-    @ObservedObject var brightness: NumberCaptureDeviceProperty
+    @Bindable var brightness: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.brightness = controller.brightness

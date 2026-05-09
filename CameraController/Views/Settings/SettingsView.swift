@@ -48,6 +48,9 @@ struct SettingsView_Previews: PreviewProvider {
             captureDevice: .constant(nil),
             currentSection: .constant(nil)
         )
+        .environment(UserSettings.shared)
+        .environment(DevicesManager.shared)
+        .environment(ProfileManager.shared)
     }
 }
 #endif

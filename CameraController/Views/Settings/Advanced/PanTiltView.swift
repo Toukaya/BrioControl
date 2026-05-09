@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PanTiltView: View {
-    @ObservedObject var panTiltAbsolute: MultipleCaptureDeviceProperty
+    @Bindable var panTiltAbsolute: MultipleCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.panTiltAbsolute = controller.panTiltAbsolute

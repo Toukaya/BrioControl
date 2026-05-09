@@ -9,8 +9,8 @@
 import SwiftUI
 
 struct HueView: View {
-    @ObservedObject var hueAuto: BoolCaptureDeviceProperty
-    @ObservedObject var hue: NumberCaptureDeviceProperty
+    @Bindable var hueAuto: BoolCaptureDeviceProperty
+    @Bindable var hue: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.hueAuto = controller.hueAuto

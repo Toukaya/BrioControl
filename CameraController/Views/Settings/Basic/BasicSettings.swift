@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct BasicSettings: View {
-    @ObservedObject var controller: DeviceController
+    @Bindable var controller: DeviceController
 
     var body: some View {
         ScrollView(.vertical, showsIndicators: false) {

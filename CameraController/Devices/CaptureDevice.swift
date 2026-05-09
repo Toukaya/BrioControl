@@ -8,14 +8,15 @@
 
 import Foundation
 import AVFoundation
-import Combine
+import Observation
 import UVC
 
 @MainActor
-final class CaptureDevice: Hashable, ObservableObject {
+@Observable
+final class CaptureDevice: Hashable {
     nonisolated let name: String
-    nonisolated(unsafe) let avDevice: AVCaptureDevice?
-    let uvcDevice: UVCDevice?
+    @ObservationIgnored nonisolated(unsafe) let avDevice: AVCaptureDevice?
+    @ObservationIgnored let uvcDevice: UVCDevice?
     var controller: DeviceController?
 
     init(avDevice: AVCaptureDevice) {

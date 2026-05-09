@@ -22,6 +22,9 @@ struct CameraControllerApp: App {
             // contents (camera preview + tabs + active settings panel),
             // so MenuBarExtra's window sizes to fit.
             ContentView()
+                .environment(DevicesManager.shared)
+                .environment(UserSettings.shared)
+                .environment(ProfileManager.shared)
         }
         .menuBarExtraStyle(.window)
 
@@ -33,6 +36,9 @@ struct CameraControllerApp: App {
             PreferencesView()
                 .frame(width: UserSettings.shared.cameraPreviewSize.getWidth())
                 .padding(.horizontal, Constants.Style.padding)
+                .environment(DevicesManager.shared)
+                .environment(UserSettings.shared)
+                .environment(ProfileManager.shared)
         }
     }
 }

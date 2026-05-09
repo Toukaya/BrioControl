@@ -27,6 +27,9 @@ struct PreferencesView: View {
 struct PreferencesView_Previews: PreviewProvider {
     static var previews: some View {
         PreferencesView()
+            .environment(UserSettings.shared)
+            .environment(DevicesManager.shared)
+            .environment(ProfileManager.shared)
     }
 }
 #endif

@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct RightLightView: View {
-    @ObservedObject var rightLight: NumberCaptureDeviceProperty
+    @Bindable var rightLight: NumberCaptureDeviceProperty
 
     init(rightLight: NumberCaptureDeviceProperty) {
         self.rightLight = rightLight

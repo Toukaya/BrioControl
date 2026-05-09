@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct PowerLineView: View {
-    @ObservedObject var powerLineFrequency: NumberCaptureDeviceProperty
+    @Bindable var powerLineFrequency: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.powerLineFrequency = controller.powerLineFrequency

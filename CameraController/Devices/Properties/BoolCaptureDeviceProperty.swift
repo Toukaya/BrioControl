@@ -7,26 +7,27 @@
 //
 
 import Foundation
+import Observation
 import UVC
 
 @MainActor
-final class BoolCaptureDeviceProperty: ObservableObject {
-    private let control: UVCBoolControl
+@Observable
+final class BoolCaptureDeviceProperty {
+    @ObservationIgnored private let control: UVCBoolControl
 
     let isCapable: Bool
 
-    @Published private var internalValue: Bool
-
     var isEnabled: Bool {
         get {
+            access(keyPath: \.isEnabled)
             return control.isEnabled
         }
         set {
-            if newValue != isEnabled {
-                internalValue = newValue
-
-                Task {
-                    control.isEnabled = newValue
+            if newValue != control.isEnabled {
+                _ = withMutation(keyPath: \.isEnabled) {
+                    Task {
+                        control.isEnabled = newValue
+                    }
                 }
             }
         }
@@ -35,7 +36,6 @@ final class BoolCaptureDeviceProperty: ObservableObject {
     init(_ control: UVCBoolControl) {
         self.control = control
         isCapable = control.isCapable
-        internalValue = control.isEnabled
         isEnabled = control.isEnabled
     }
 

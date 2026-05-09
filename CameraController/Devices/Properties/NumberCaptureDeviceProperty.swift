@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Combine
+import Observation
 import UVC
 
 @MainActor
@@ -21,22 +21,21 @@ protocol SliderCapableProperty {
 }
 
 @MainActor
-final class NumberCaptureDeviceProperty: SliderCapableProperty, ObservableObject {
-    private let control: UVCIntControl
+@Observable
+final class NumberCaptureDeviceProperty: SliderCapableProperty {
+    @ObservationIgnored private let control: UVCIntControl
 
     var sliderValue: Float {
         get {
+            access(keyPath: \.sliderValue)
             return Float(control.current)
         }
         set {
-            if sliderValue != newValue {
-                // Defer the change notification so SwiftUI does not see a
-                // publish during a view-update cycle.
-                DispatchQueue.main.async { [weak self] in
-                    self?.objectWillChange.send()
-                }
-                Task {
-                    control.current = Int(newValue)
+            if Float(control.current) != newValue {
+                _ = withMutation(keyPath: \.sliderValue) {
+                    Task {
+                        control.current = Int(newValue)
+                    }
                 }
             }
         }

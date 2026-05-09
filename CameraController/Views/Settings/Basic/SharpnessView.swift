@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SharpnessView: View {
-    @ObservedObject var sharpness: NumberCaptureDeviceProperty
+    @Bindable var sharpness: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.sharpness = controller.sharpness

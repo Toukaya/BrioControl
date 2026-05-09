@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct FieldOfViewView: View {
-    @ObservedObject var fieldOfView: NumberCaptureDeviceProperty
+    @Bindable var fieldOfView: NumberCaptureDeviceProperty
 
     init(fieldOfView: NumberCaptureDeviceProperty) {
         self.fieldOfView = fieldOfView

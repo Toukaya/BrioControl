@@ -7,12 +7,13 @@
 //
 
 import Foundation
-import Combine
+import Observation
 
-final class ProfileManager: ObservableObject {
+@Observable
+final class ProfileManager {
     nonisolated(unsafe) static let shared = ProfileManager()
 
-    @Published private(set) var profiles: [Profile] = []
+    private(set) var profiles: [Profile] = []
 
     private init() {
         if let savedProfiles = UserDefaults.standard.object(forKey: "profiles") as? Data {

@@ -9,9 +9,10 @@
 import SwiftUI
 
 struct ReadWriteSection: View {
-    @ObservedObject var settings = UserSettings.shared
+    @Environment(UserSettings.self) private var settings
 
     var body: some View {
+        @Bindable var settings = settings
         SectionView {
             SectionTitle(title: "Read / Write settings from device",
                          image: Image(systemName: "arrow.left.arrow.right"))
@@ -46,6 +47,7 @@ struct ReadWriteSection: View {
 struct ReadWriteSection_Previews: PreviewProvider {
     static var previews: some View {
         ReadWriteSection()
+            .environment(UserSettings.shared)
     }
 }
 #endif

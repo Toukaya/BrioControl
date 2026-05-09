@@ -7,13 +7,14 @@
 //
 
 import Foundation
-import Combine
+import Observation
 import ServiceManagement
 
-final class UserSettings: ObservableObject {
+@Observable
+final class UserSettings {
     nonisolated(unsafe) static let shared = UserSettings()
 
-    @Published var openAtLogin: Bool {
+    var openAtLogin: Bool {
         didSet {
             let success = SMLoginItemSetEnabled("com.itaysoft.CameraController.Helper" as CFString, openAtLogin)
             if success {
@@ -22,19 +23,19 @@ final class UserSettings: ObservableObject {
         }
     }
 
-    @Published var readRate: RefreshSettingsRate {
+    var readRate: RefreshSettingsRate {
         didSet {
             UserDefaults.standard.set(readRate.rawValue, forKey: "readRate")
         }
     }
 
-    @Published var writeRate: RefreshSettingsRate {
+    var writeRate: RefreshSettingsRate {
         didSet {
             UserDefaults.standard.set(writeRate.rawValue, forKey: "writeRate")
         }
     }
 
-    @Published var lastSelectedDevice: String? {
+    var lastSelectedDevice: String? {
         didSet {
             UserDefaults.standard.set(lastSelectedDevice, forKey: "lastDevice")
         }
@@ -44,26 +45,26 @@ final class UserSettings: ObservableObject {
         cameraPreviewSize == .disabled
     }
 
-    @Published var cameraPreviewSize: PreviewSizeSettings {
+    var cameraPreviewSize: PreviewSizeSettings {
         didSet {
             UserDefaults.standard.set(cameraPreviewSize.rawValue, forKey: "cameraPreviewSize")
         }
     }
 
-    @Published var cameraPreviewQuality: PreviewQualitySettings {
+    var cameraPreviewQuality: PreviewQualitySettings {
         didSet {
             UserDefaults.standard.set(cameraPreviewQuality.rawValue, forKey: "cameraPreviewQuality")
             NotificationCenter.default.post(name: .cameraPreviewQualityChanged, object: nil)
         }
     }
 
-    @Published var checkForUpdatesOnStartup: Bool {
+    var checkForUpdatesOnStartup: Bool {
         didSet {
             UserDefaults.standard.set(checkForUpdatesOnStartup, forKey: "checkForUpdatesOnStartup")
         }
     }
 
-    @Published var mirrorPreview: Bool {
+    var mirrorPreview: Bool {
         didSet {
             UserDefaults.standard.set(mirrorPreview, forKey: "mirrorPreview")
         }

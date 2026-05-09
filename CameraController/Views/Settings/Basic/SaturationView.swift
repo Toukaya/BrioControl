@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct SaturationView: View {
-    @ObservedObject var saturation: NumberCaptureDeviceProperty
+    @Bindable var saturation: NumberCaptureDeviceProperty
 
     init(controller: DeviceController) {
         self.saturation = controller.saturation
