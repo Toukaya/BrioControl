@@ -22,19 +22,14 @@ struct TabSelectorView: View {
 
     @Binding var selectedIndex: Int?
     @State var displayedIndex: Int?
-    var showLogitechTab: Bool = false
 
     private var optionsImages: [TabOptions] {
-        var options: [TabOptions] = [
+        return [
             TabOptions(text: "Basic", image: "video", index: 0),
             TabOptions(text: "Advanced", image: "camera.filters", index: 1),
             TabOptions(text: "Profiles", image: "bookmark", index: 2),
             TabOptions(text: "Settings", image: "gearshape", index: 3)
         ]
-        if showLogitechTab {
-            options.append(TabOptions(text: "Logitech", image: "web.camera", index: 4))
-        }
-        return options
     }
 
     var body: some View {

@@ -21,8 +21,7 @@ struct ContentView: View {
                 cameraPreview()
                     .animation(nil)
 
-                TabSelectorView(selectedIndex: $currentSection,
-                                showLogitechTab: shouldShowLogitechTab())
+                TabSelectorView(selectedIndex: $currentSection)
                     .padding(.vertical, Constants.Style.padding)
                     .animation(nil)
 
@@ -69,14 +68,6 @@ struct ContentView: View {
             captureDevice: $manager.selectedDevice,
             currentSection: $currentSection
         )
-    }
-
-    private func shouldShowLogitechTab() -> Bool {
-        // Show the Logitech tab whenever the selected device exposes the
-        // Logitech vendor wrapper. The tab includes a diagnostics section
-        // that is useful even when no individual control turned out to be
-        // capable, so per-control isCapable is intentionally not required.
-        return manager.selectedDevice?.controller?.logitechBrio != nil
     }
 }
 

@@ -41,6 +41,10 @@ struct BasicSettings: View {
                 if controller.whiteBalance.isCapable {
                     WhiteBalanceView(controller: controller)
                 }
+
+                if let rightLight = controller.logitechRightLight, rightLight.isCapable {
+                    RightLightView(rightLight: rightLight)
+                }
             }
             .padding(.top, 2)
             .padding(.bottom, Constants.Style.topSpacing)

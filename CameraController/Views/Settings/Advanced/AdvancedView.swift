@@ -37,6 +37,10 @@ struct AdvancedView: View {
                 if controller.focusAbsolute.isCapable {
                     FocusView(controller: controller)
                 }
+
+                if let fov = controller.logitechFieldOfView, fov.isCapable {
+                    FieldOfViewView(fieldOfView: fov)
+                }
             }
             .padding(.top, 2)
             .padding(.bottom, Constants.Style.topSpacing)
