@@ -27,30 +27,35 @@ struct ContentView: View {
         @Bindable var manager = manager
         let selectedDeviceBinding = $manager.selectedDevice
 
-        VStack(spacing: 0) {
-            cameraPreview(selectedDevice: selectedDeviceBinding)
-                .animation(nil, value: settings.hideCameraPreview)
+        // GlassEffectContainer batches the Liquid Glass passes for every
+        // descendant that calls .glassEffect(_:in:), so the camera-preview
+        // frame and any future glass surfaces share a single render pass.
+        GlassEffectContainer(spacing: 0) {
+            VStack(spacing: 0) {
+                cameraPreview(selectedDevice: selectedDeviceBinding)
+                    .animation(nil, value: settings.hideCameraPreview)
 
-            SettingsView(captureDevice: selectedDeviceBinding)
-        }
-        .onAppear {
-            DevicesManager.shared.startMonitoring()
-        }
-        .onDisappear {
-            DevicesManager.shared.stopMonitoring()
-        }
-        .onChange(of: scenePhase) { _, newPhase in
-            switch newPhase {
-            case .active:
-                previewController.startSession()
-            case .inactive, .background:
-                previewController.stopSession()
-            @unknown default:
-                break
+                SettingsView(captureDevice: selectedDeviceBinding)
             }
+            .onAppear {
+                DevicesManager.shared.startMonitoring()
+            }
+            .onDisappear {
+                DevicesManager.shared.stopMonitoring()
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                switch newPhase {
+                case .active:
+                    previewController.startSession()
+                case .inactive, .background:
+                    previewController.stopSession()
+                @unknown default:
+                    break
+                }
+            }
+            .frame(width: settings.cameraPreviewSize.getWidth())
+            .fixedSize(horizontal: true, vertical: false)
         }
-        .frame(width: settings.cameraPreviewSize.getWidth())
-        .fixedSize(horizontal: true, vertical: false)
         .background(.ultraThinMaterial)
     }
 
@@ -66,6 +71,9 @@ struct ContentView: View {
                     height: settings.cameraPreviewSize.getHeight()
                 )
                 .scaleEffect(CGSize(width: settings.mirrorPreview ? -1 : 1, height: 1))
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                .padding(8)
         } else {
             Image("video.slash")
                 .frame(
@@ -73,6 +81,9 @@ struct ContentView: View {
                     height: settings.cameraPreviewSize.getHeight()
                 )
                 .background(Color.gray)
+                .clipShape(RoundedRectangle(cornerRadius: 12))
+                .glassEffect(.regular, in: .rect(cornerRadius: 12))
+                .padding(8)
         }
     }
 }
