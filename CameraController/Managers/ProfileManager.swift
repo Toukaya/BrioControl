@@ -9,9 +9,10 @@
 import Foundation
 import Observation
 
+@MainActor
 @Observable
 final class ProfileManager {
-    nonisolated(unsafe) static let shared = ProfileManager()
+    static let shared = ProfileManager()
 
     private(set) var profiles: [Profile] = []
 

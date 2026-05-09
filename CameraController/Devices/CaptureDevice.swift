@@ -15,6 +15,15 @@ import UVC
 @Observable
 final class CaptureDevice: Hashable {
     nonisolated let name: String
+    // AVCaptureDevice's `Sendable` conformance is not yet declared in
+    // the AVFoundation overlay this project targets, but the instance
+    // we hold is treated as opaque from Swift's side: we never mutate
+    // it; we only forward to its `==`/`hashValue` for identity and
+    // `uniqueID` for persistence. `nonisolated(unsafe)` is the
+    // narrowest escape hatch that keeps the static `==` / `hash(into:)`
+    // implementations accessible from Equatable/Hashable's nonisolated
+    // requirements without lifting the entire CaptureDevice type off
+    // @MainActor.
     @ObservationIgnored nonisolated(unsafe) let avDevice: AVCaptureDevice?
     @ObservationIgnored let uvcDevice: UVCDevice?
     var controller: DeviceController?

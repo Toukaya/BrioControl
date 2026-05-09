@@ -32,6 +32,15 @@
 import AppKit
 import Security
 
+// LetsMove is touched exclusively from AppDelegate.applicationDidFinishLaunching
+// on the main actor. The vendored implementation calls NSAlert / NSApp /
+// NSWorkspace APIs that are themselves @MainActor under Swift 6 strict
+// concurrency. Annotating the class @MainActor lets every method body
+// remain unchanged from the upstream LetsMove sources while satisfying
+// strict-concurrency checks. The sole `static let shared` becomes
+// MainActor-isolated for free, removing the previous nonisolated(unsafe)
+// escape hatch.
+@MainActor
 class LetsMove: NSObject {
     struct MoveStrings {
         let couldNotMove = NSLocalizedString("Could not move to Applications folder",
@@ -51,7 +60,7 @@ class LetsMove: NSObject {
         let infoInDownloads = NSLocalizedString("This will keep your Downloads folder uncluttered.",
                                                 tableName: "MoveApplication", comment: "")
     }
-    nonisolated(unsafe) static let shared = LetsMove()
+    static let shared = LetsMove()
 
     let useSmallAlertSuppressCheckbox = true
     let alertSuppressKey = "moveToApplicationsFolderAlertSuppress"

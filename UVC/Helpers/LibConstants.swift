@@ -8,6 +8,16 @@
 
 import Foundation
 
+// CFUUID is a CoreFoundation reference type and is not formally
+// Sendable, so Swift 6 strict-concurrency rejects module-level `let`
+// CFUUID values without a concurrency annotation. The instances below
+// are read-only IOKit type identifiers that CFUUIDGetConstantUUIDWithBytes
+// vends from a per-process cache; the underlying memory is immutable
+// for the lifetime of the process and is the standard pattern for
+// IOKit GUID lookups. `nonisolated(unsafe)` is the narrowest escape
+// hatch that does not require relocating these constants into an actor
+// or wrapping each one in a Sendable holder.
+
 nonisolated(unsafe) let kIOUSBDeviceUserClientTypeID = CFUUIDGetConstantUUIDWithBytes(
     kCFAllocatorDefault,
     0x9d, 0xc7, 0xb7, 0x80,

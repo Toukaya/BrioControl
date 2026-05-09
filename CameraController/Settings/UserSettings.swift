@@ -10,9 +10,10 @@ import Foundation
 import Observation
 import ServiceManagement
 
+@MainActor
 @Observable
 final class UserSettings {
-    nonisolated(unsafe) static let shared = UserSettings()
+    static let shared = UserSettings()
 
     var openAtLogin: Bool {
         didSet {
