@@ -2,45 +2,35 @@
 //  CameraPreview.swift
 //  CameraController
 //
-//  Created by Itay Brenner on 7/21/20.
-//  Copyright © 2020 Itaysoft. All rights reserved.
+//  Thin NSViewRepresentable that hosts the AVCaptureVideoPreviewLayer
+//  produced by PreviewSession. Owns no AVFoundation state itself: the
+//  AVCaptureSession, format selection, and start/stop lifecycle all
+//  live in PreviewSession (CameraController/Devices/PreviewSession.swift).
+//
+//  This view only:
+//   - mounts the provided layer as the NSView's backing CALayer sublayer,
+//   - keeps the layer frame in sync with the NSView bounds during layout,
+//   - forwards mouse events so the menu-bar popover can be dragged and
+//     the cursor changes to .contextualMenu while hovering the preview.
 //
 
 import SwiftUI
 import AVFoundation
 
-// External controller used by ContentView to drive
-// startSession() / stopRunning() in response to SwiftUI lifecycle
-// transitions (scenePhase active <-> inactive).
-@MainActor
-final class CameraPreviewController {
-    fileprivate weak var view: CameraPreviewInternal?
-
-    func startSession() {
-        view?.startSession()
-    }
-
-    func stopSession() {
-        view?.stopRunning()
-    }
-}
-
 struct CameraPreview: NSViewRepresentable {
-    @Binding var captureDevice: CaptureDevice?
-    let controller: CameraPreviewController
+    // The preview layer to display. Sourced from
+    // PreviewSession.previewLayer in ContentView. nil while no device
+    // is attached or before the first attach() completes.
+    let layer: AVCaptureVideoPreviewLayer?
 
-    func makeNSView(context: Context) -> CameraPreviewInternal {
-        let view = CameraPreviewInternal(frame: .zero, device: captureDevice?.avDevice)
-        controller.view = view
+    func makeNSView(context: Context) -> CameraPreviewHostingView {
+        let view = CameraPreviewHostingView(frame: .zero)
+        view.mount(previewLayer: layer)
         return view
     }
 
-    func updateNSView(_ nsView: CameraPreviewInternal, context: NSViewRepresentableContext<CameraPreview>) {
-        nsView.updateCamera(captureDevice?.avDevice)
-        controller.view = nsView
-    }
-
-    static func dismantleNSView(_ nsView: CameraPreviewInternal, coordinator: ()) {
-        nsView.stopRunning()
+    func updateNSView(_ nsView: CameraPreviewHostingView,
+                      context: NSViewRepresentableContext<CameraPreview>) {
+        nsView.mount(previewLayer: layer)
     }
 }

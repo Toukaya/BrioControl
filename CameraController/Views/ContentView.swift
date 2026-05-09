@@ -13,12 +13,18 @@ struct ContentView: View {
     @Environment(DevicesManager.self) private var manager
     @Environment(UserSettings.self) private var settings
 
-    // Drives camera-preview start/stop. SwiftUI's scenePhase transitions
-    // when the MenuBarExtra window becomes key / loses key, which is the
-    // lifecycle signal we use to suspend the AVCaptureSession while the
-    // popover is hidden.
+    // SwiftUI's scenePhase transitions when the MenuBarExtra window
+    // becomes key / loses key. We use those transitions to suspend the
+    // AVCaptureSession (and turn the camera LED off) while the popover
+    // is hidden, then resume on re-show.
     @Environment(\.scenePhase) private var scenePhase
-    @State private var previewController = CameraPreviewController()
+
+    // The single source of truth for the AVCaptureSession lifecycle.
+    // Created once per ContentView instance and driven declaratively
+    // via .task(id:) and .onChange(of:) modifiers below. See
+    // CameraController/Devices/PreviewSession.swift for the lifecycle
+    // contract.
+    @State private var preview = PreviewSession()
 
     var body: some View {
         // Local @Bindable shadow so we can hand out bindings ($manager.foo)
@@ -32,7 +38,7 @@ struct ContentView: View {
         // frame and any future glass surfaces share a single render pass.
         GlassEffectContainer(spacing: 0) {
             VStack(spacing: 0) {
-                cameraPreview(selectedDevice: selectedDeviceBinding)
+                cameraPreview()
                     .animation(nil, value: settings.hideCameraPreview)
 
                 SettingsView(captureDevice: selectedDeviceBinding)
@@ -43,12 +49,25 @@ struct ContentView: View {
             .onDisappear {
                 DevicesManager.shared.stopMonitoring()
             }
+            // Drive PreviewSession from the selected-device identity. A
+            // change to selectedDevice cancels the previous task body and
+            // runs this one, so a rapid sequence of switches collapses
+            // to "detach prior, attach latest" with the intermediate
+            // attaches superseded.
+            .task(id: manager.selectedDevice?.avDevice?.uniqueID) {
+                if let device = manager.selectedDevice?.avDevice {
+                    await preview.attach(device: device,
+                                         quality: settings.cameraPreviewQuality)
+                } else {
+                    await preview.detach()
+                }
+            }
             .onChange(of: scenePhase) { _, newPhase in
                 switch newPhase {
                 case .active:
-                    previewController.startSession()
+                    Task { await preview.resume() }
                 case .inactive, .background:
-                    previewController.stopSession()
+                    Task { await preview.suspend() }
                 @unknown default:
                     break
                 }
@@ -60,12 +79,11 @@ struct ContentView: View {
     }
 
     @ViewBuilder
-    private func cameraPreview(selectedDevice: Binding<CaptureDevice?>) -> some View {
+    private func cameraPreview() -> some View {
         if settings.hideCameraPreview {
             EmptyView()
-        } else if selectedDevice.wrappedValue != nil {
-            CameraPreview(captureDevice: selectedDevice,
-                          controller: previewController)
+        } else if manager.selectedDevice != nil {
+            CameraPreview(layer: preview.previewLayer)
                 .frame(
                     width: settings.cameraPreviewSize.getWidth(),
                     height: settings.cameraPreviewSize.getHeight()

@@ -4,12 +4,12 @@
 //
 //  Owns the AVCaptureSession lifecycle for the menu-bar preview.
 //
-//  Before TASK-09 the AVCaptureSession was created inside
-//  CameraPreviewInternal (an NSView), and start/stop was driven from
-//  CameraPreviewController + view-lifecycle callbacks. That made it
-//  impossible to coordinate device-switch / quality-change / scenePhase
-//  transitions atomically and leaked sessions when the user switched
-//  devices rapidly.
+//  Before TASK-09 the AVCaptureSession was created inside the preview
+//  NSView, and start/stop was driven from a transitional reference-type
+//  bridge plus view-lifecycle callbacks. That made it impossible to
+//  coordinate device-switch / quality-change / scenePhase transitions
+//  atomically and leaked sessions when the user switched devices
+//  rapidly.
 //
 //  After TASK-09 the AVCaptureSession is owned by this single
 //  @MainActor @Observable type. Views drive it declaratively via
