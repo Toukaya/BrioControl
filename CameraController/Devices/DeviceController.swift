@@ -231,7 +231,6 @@ final class DeviceController {
         self.backlightCompensation.reset()
         self.zoomAbsolute.reset()
         self.panTiltAbsolute.reset()
-        self.panTiltAbsolute.reset()
         self.focusAuto.reset()
         self.focusAbsolute.reset()
     }
