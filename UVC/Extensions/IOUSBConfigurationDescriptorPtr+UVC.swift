@@ -38,9 +38,40 @@ extension IOUSBConfigurationDescriptorPtr {
                                   _ interfaceID: inout Int) {
         var remaining = memory
         var currentPointer = pointer
+        #if DEBUG
+        print("[UVC walk] start: wTotalLength-bLength=\(memory)")
+        var iteration = 0
+        let iterationLimit = 100_000
+        #endif
 
         while remaining > 0 {
+            #if DEBUG
+            iteration += 1
+            if iteration > iterationLimit {
+                print("[UVC walk] hard stop: iteration limit \(iterationLimit) hit, "
+                      + "remaining=\(remaining)")
+                break
+            }
+            #endif
+
             var descriptorPointer = InterfaceDescriptorPointer(OpaquePointer(currentPointer))
+
+            #if DEBUG
+            if iteration <= 50 || iteration % 1000 == 0 {
+                print("[UVC walk] iter=\(iteration) "
+                      + "type=0x\(String(descriptorPointer.pointee.bDescriptorType, radix: 16)) "
+                      + "bLength=\(descriptorPointer.pointee.bLength) "
+                      + "remaining=\(remaining)")
+            }
+            #endif
+
+            // Defensive: bLength == 0 would never advance the pointer.
+            if descriptorPointer.pointee.bLength == 0 {
+                #if DEBUG
+                print("[UVC walk] break on bLength==0 at iter=\(iteration)")
+                #endif
+                break
+            }
 
             if descriptorPointer.pointee.bDescriptorType == kUSBInterfaceDesc {
                 let intDesc = UnsafeMutablePointer<IOUSBInterfaceDescriptor>(OpaquePointer(descriptorPointer))
