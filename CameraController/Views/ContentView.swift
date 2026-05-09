@@ -27,21 +27,22 @@ struct ContentView: View {
     @State private var preview = PreviewSession()
 
     var body: some View {
-        // Local @Bindable shadow so we can hand out bindings ($manager.foo)
-        // to subviews. @Environment alone does not expose Bindings; this is
-        // the canonical Observation-framework idiom.
-        @Bindable var manager = manager
-        let selectedDeviceBinding = $manager.selectedDevice
-
         // GlassEffectContainer batches the Liquid Glass passes for every
         // descendant that calls .glassEffect(_:in:), so the camera-preview
         // frame and any future glass surfaces share a single render pass.
+        //
+        // SettingsView no longer takes a captureDevice binding: it now
+        // reads selectedDevice straight from @Environment(DevicesManager).
+        // The picker that mutates that selection (CameraSection in
+        // PreferencesView) builds its own @Bindable shadow locally, so
+        // ContentView no longer needs to construct $manager.selectedDevice
+        // here.
         GlassEffectContainer(spacing: 0) {
             VStack(spacing: 0) {
                 cameraPreview()
                     .animation(nil, value: settings.hideCameraPreview)
 
-                SettingsView(captureDevice: selectedDeviceBinding)
+                SettingsView()
             }
             .onAppear {
                 DevicesManager.shared.startMonitoring()

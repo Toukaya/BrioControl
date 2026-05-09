@@ -9,19 +9,26 @@
 import SwiftUI
 
 struct SettingsView: View {
-    @Binding var captureDevice: CaptureDevice?
+    // The selected device is read straight from the @Environment-injected
+    // DevicesManager instead of being threaded through as a Binding.
+    // SettingsView never mutates the selection — it only branches on
+    // selectedDevice?.controller — so a binding here was unnecessary
+    // ceremony and forced ContentView to construct $manager.selectedDevice
+    // just to hand the binding straight back into a child that ignored
+    // its writability.
+    @Environment(DevicesManager.self) private var manager
 
     var body: some View {
         TabView {
             Tab("Basic", systemImage: "video") {
-                if let controller = captureDevice?.controller {
+                if let controller = manager.selectedDevice?.controller {
                     BasicSettings(controller: controller)
                 } else {
                     UnsupportedView()
                 }
             }
             Tab("Advanced", systemImage: "camera.filters") {
-                if let controller = captureDevice?.controller {
+                if let controller = manager.selectedDevice?.controller {
                     AdvancedView(controller: controller)
                 } else {
                     UnsupportedView()
@@ -40,7 +47,7 @@ struct SettingsView: View {
 #if DEBUG
 struct SettingsView_Previews: PreviewProvider {
     static var previews: some View {
-        SettingsView(captureDevice: .constant(nil))
+        SettingsView()
             .environment(UserSettings.shared)
             .environment(DevicesManager.shared)
             .environment(ProfileManager.shared)
