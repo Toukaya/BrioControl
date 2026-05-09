@@ -34,6 +34,8 @@ struct SettingsView: View {
                 AdvancedView(controller: controller)
             } else if currentSection == 2 {
                 ProfilesView()
+            } else if currentSection == 4 {
+                LogitechView(controller: controller)
             }
         } else {
             UnsupportedView()

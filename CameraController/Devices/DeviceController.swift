@@ -45,6 +45,14 @@ final class DeviceController: ObservableObject {
 
     // Vendor-specific (currently Logitech only)
     let logitechBrio: LogitechBrioDeviceProperties?
+    lazy var logitechFieldOfView: NumberCaptureDeviceProperty? = {
+        guard let control = logitechBrio?.fieldOfView else { return nil }
+        return NumberCaptureDeviceProperty(control)
+    }()
+    lazy var logitechLed: NumberCaptureDeviceProperty? = {
+        guard let control = logitechBrio?.indicatorLed else { return nil }
+        return NumberCaptureDeviceProperty(control)
+    }()
 
     private let properties: UVCDeviceProperties
 
