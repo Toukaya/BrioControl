@@ -21,18 +21,18 @@ struct PanTiltView: View {
     // keyboard-navigable for free, and read naturally to VoiceOver.
     var body: some View {
         LabeledContent {
-            SwiftUI.Slider(value: $panTiltAbsolute.sliderValue2,
-                           in: panTiltAbsolute.minimum2...panTiltAbsolute.maximum2,
-                           step: panTiltAbsolute.resolution2)
+            Slider(value: $panTiltAbsolute.sliderValue2,
+                   in: panTiltAbsolute.minimum2...panTiltAbsolute.maximum2,
+                   step: panTiltAbsolute.resolution2)
         } label: {
             Label("Pan", systemImage: "arrow.left.and.right")
                 .symbolRenderingMode(.hierarchical)
         }
 
         LabeledContent {
-            SwiftUI.Slider(value: $panTiltAbsolute.sliderValue1,
-                           in: panTiltAbsolute.minimum1...panTiltAbsolute.maximum1,
-                           step: panTiltAbsolute.resolution1)
+            Slider(value: $panTiltAbsolute.sliderValue1,
+                   in: panTiltAbsolute.minimum1...panTiltAbsolute.maximum1,
+                   step: panTiltAbsolute.resolution1)
         } label: {
             Label("Tilt", systemImage: "arrow.up.and.down")
                 .symbolRenderingMode(.hierarchical)

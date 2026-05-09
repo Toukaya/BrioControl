@@ -17,9 +17,9 @@ struct ZoomView: View {
 
     var body: some View {
         LabeledContent {
-            SwiftUI.Slider(value: $zoomAbsolute.sliderValue,
-                           in: zoomAbsolute.minimum...zoomAbsolute.maximum,
-                           step: zoomAbsolute.resolution)
+            Slider(value: $zoomAbsolute.sliderValue,
+                   in: zoomAbsolute.minimum...zoomAbsolute.maximum,
+                   step: zoomAbsolute.resolution)
         } label: {
             Label("Zoom", systemImage: "plus.magnifyingglass")
                 .symbolRenderingMode(.hierarchical)

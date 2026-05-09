@@ -17,9 +17,9 @@ struct SaturationView: View {
 
     var body: some View {
         LabeledContent {
-            SwiftUI.Slider(value: $saturation.sliderValue,
-                           in: saturation.minimum...saturation.maximum,
-                           step: saturation.resolution)
+            Slider(value: $saturation.sliderValue,
+                   in: saturation.minimum...saturation.maximum,
+                   step: saturation.resolution)
         } label: {
             Label("Saturation", systemImage: "drop.fill")
                 .symbolRenderingMode(.hierarchical)

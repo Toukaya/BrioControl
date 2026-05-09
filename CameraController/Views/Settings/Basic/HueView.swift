@@ -20,11 +20,11 @@ struct HueView: View {
     var body: some View {
         LabeledContent {
             HStack {
-                SwiftUI.Slider(value: $hue.sliderValue,
-                               in: hue.minimum...hue.maximum,
-                               step: hue.resolution)
+                Slider(value: $hue.sliderValue,
+                       in: hue.minimum...hue.maximum,
+                       step: hue.resolution)
                     .disabled(hueAuto.isEnabled)
-                SwiftUI.Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
+                Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
                     .toggleStyle(.switch)
                     .labelsHidden()
             }

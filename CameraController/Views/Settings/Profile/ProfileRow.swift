@@ -19,18 +19,15 @@ struct ProfileRow: View {
     @State private var showIcons = false
 
     var body: some View {
-        SectionView {
+        LabeledContent {
             HStack {
-                Text(name)
-                    .fontWeight(.bold)
-                Spacer()
-
                 if showIcons {
                     Button {
                         applyProfile()
                     } label: {
                         Image(systemName: "checkmark")
                     }
+                    .buttonStyle(.borderless)
 
                     if case .custom = profile {
                         Button {
@@ -38,13 +35,15 @@ struct ProfileRow: View {
                         } label: {
                             Image(systemName: "trash")
                         }
+                        .buttonStyle(.borderless)
                     }
-                } else {
-                    Button("") {}
-                        .hidden()
                 }
             }
+        } label: {
+            Text(name)
+                .fontWeight(.bold)
         }
+        .contentShape(Rectangle())
         .onHover { isHovering in
             showIcons = isHovering
         }

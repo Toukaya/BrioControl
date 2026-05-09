@@ -17,9 +17,9 @@ struct RollView: View {
 
     var body: some View {
         LabeledContent {
-            SwiftUI.Slider(value: $rollAbsolute.sliderValue,
-                           in: rollAbsolute.minimum...rollAbsolute.maximum,
-                           step: rollAbsolute.resolution)
+            Slider(value: $rollAbsolute.sliderValue,
+                   in: rollAbsolute.minimum...rollAbsolute.maximum,
+                   step: rollAbsolute.resolution)
         } label: {
             Label("Roll", systemImage: "arrow.counterclockwise")
                 .symbolRenderingMode(.hierarchical)

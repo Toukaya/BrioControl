@@ -17,9 +17,9 @@ struct ContrastView: View {
 
     var body: some View {
         LabeledContent {
-            SwiftUI.Slider(value: $contrast.sliderValue,
-                           in: contrast.minimum...contrast.maximum,
-                           step: contrast.resolution)
+            Slider(value: $contrast.sliderValue,
+                   in: contrast.minimum...contrast.maximum,
+                   step: contrast.resolution)
         } label: {
             Label("Contrast", systemImage: "circle.lefthalf.filled")
                 .symbolRenderingMode(.hierarchical)

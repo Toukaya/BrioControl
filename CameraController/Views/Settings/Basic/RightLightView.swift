@@ -20,9 +20,9 @@ struct RightLightView: View {
         let upper = max(rightLight.minimum, rightLight.maximum)
         let step = rightLight.resolution > 0 ? rightLight.resolution : 1
         LabeledContent {
-            SwiftUI.Slider(value: $rightLight.sliderValue,
-                           in: lower...upper,
-                           step: step)
+            Slider(value: $rightLight.sliderValue,
+                   in: lower...upper,
+                   step: step)
         } label: {
             Label("RightLight", systemImage: "sun.max")
                 .symbolRenderingMode(.hierarchical)

@@ -15,7 +15,7 @@ struct ApplicationSection: View {
         @Bindable var settings = settings
         Section("Application") {
             LabeledContent {
-                SwiftUI.Toggle("Open at login", isOn: $settings.openAtLogin)
+                Toggle("Open at login", isOn: $settings.openAtLogin)
                     .toggleStyle(.switch)
                     .labelsHidden()
             } label: {

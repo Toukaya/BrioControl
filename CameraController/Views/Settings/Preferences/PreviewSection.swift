@@ -44,7 +44,7 @@ struct PreviewSection: View {
             }
 
             LabeledContent {
-                SwiftUI.Toggle("Mirror Preview", isOn: $settings.mirrorPreview)
+                Toggle("Mirror Preview", isOn: $settings.mirrorPreview)
                     .toggleStyle(.switch)
                     .labelsHidden()
             } label: {

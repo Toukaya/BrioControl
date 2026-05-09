@@ -20,11 +20,11 @@ struct WhiteBalanceView: View {
     var body: some View {
         LabeledContent {
             HStack {
-                SwiftUI.Slider(value: $whiteBalance.sliderValue,
-                               in: whiteBalance.minimum...whiteBalance.maximum,
-                               step: whiteBalance.resolution)
+                Slider(value: $whiteBalance.sliderValue,
+                       in: whiteBalance.minimum...whiteBalance.maximum,
+                       step: whiteBalance.resolution)
                     .disabled(whiteBalanceAuto.isEnabled)
-                SwiftUI.Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
+                Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
                     .toggleStyle(.switch)
                     .labelsHidden()
             }

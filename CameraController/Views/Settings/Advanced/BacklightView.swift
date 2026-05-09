@@ -28,7 +28,7 @@ struct BacklightView: View {
 
     var body: some View {
         LabeledContent {
-            SwiftUI.Toggle("Backlight Compensation", isOn: backightEnabled)
+            Toggle("Backlight Compensation", isOn: backightEnabled)
                 .toggleStyle(.switch)
                 .labelsHidden()
         } label: {

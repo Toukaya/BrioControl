@@ -20,11 +20,11 @@ struct FocusView: View {
     var body: some View {
         LabeledContent {
             HStack {
-                SwiftUI.Slider(value: $focusAbsolute.sliderValue,
-                               in: focusAbsolute.minimum...focusAbsolute.maximum,
-                               step: focusAbsolute.resolution)
+                Slider(value: $focusAbsolute.sliderValue,
+                       in: focusAbsolute.minimum...focusAbsolute.maximum,
+                       step: focusAbsolute.resolution)
                     .disabled(focusAuto.isEnabled)
-                SwiftUI.Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
+                Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
                     .toggleStyle(.switch)
                     .labelsHidden()
             }

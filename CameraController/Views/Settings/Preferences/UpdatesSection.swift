@@ -15,7 +15,7 @@ struct UpdatesSection: View {
         @Bindable var settings = settings
         Section("Updates") {
             LabeledContent {
-                SwiftUI.Toggle("Check For Updates On Startup", isOn: $settings.checkForUpdatesOnStartup)
+                Toggle("Check For Updates On Startup", isOn: $settings.checkForUpdatesOnStartup)
                     .toggleStyle(.switch)
                     .labelsHidden()
             } label: {

@@ -15,32 +15,42 @@ struct ProfilesView: View {
     @State private var profileName = ""
 
     var body: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            VStack(spacing: Constants.Style.controlsSpacing) {
+        Form {
+            Section("Default") {
                 ProfileRow(name: "Camera Default", profile: .defaultProfile)
-                Divider()
-                ForEach(profileManager.profiles, id: \.self) { profile in
-                    ProfileRow(name: profile.name, profile: .custom(profile))
+            }
+
+            if !profileManager.profiles.isEmpty {
+                Section("Saved Profiles") {
+                    ForEach(profileManager.profiles, id: \.self) { profile in
+                        ProfileRow(name: profile.name, profile: .custom(profile))
+                    }
                 }
             }
-            .padding(.top, 2)
-            .padding(.bottom, Constants.Style.topSpacing)
 
-            Button("Save Current Profile") {
-                isAddingProfile.toggle()
-            }
-            .alert("Save Profile", isPresented: $isAddingProfile) {
-                TextField("Name", text: $profileName)
-                Button("Save", action: {
-                    addNewProfile()
-                    isAddingProfile = false
-                })
-                Button("Cancel", role: .cancel) { }
-            } message: {
-                Text("Please enter the name for your profile")
+            Section {
+                HStack {
+                    Spacer()
+                    Button("Save Current Profile") {
+                        isAddingProfile.toggle()
+                    }
+                    .buttonStyle(.bordered)
+                    Spacer()
+                }
             }
         }
-        .frame(maxHeight: 300)
+        .formStyle(.grouped)
+        .frame(maxHeight: 360)
+        .alert("Save Profile", isPresented: $isAddingProfile) {
+            TextField("Name", text: $profileName)
+            Button("Save", action: {
+                addNewProfile()
+                isAddingProfile = false
+            })
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Please enter the name for your profile")
+        }
     }
 
     private func addNewProfile() {
@@ -61,6 +71,7 @@ struct ProfilesView_Previews: PreviewProvider {
     static var previews: some View {
         ProfilesView()
             .environment(ProfileManager.shared)
+            .environment(DevicesManager.shared)
     }
 }
 #endif

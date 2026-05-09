@@ -37,11 +37,11 @@ struct ExposureView: View {
     var body: some View {
         LabeledContent {
             HStack {
-                SwiftUI.Slider(value: $exposureTime.sliderValue,
-                               in: exposureTime.minimum...exposureTime.maximum,
-                               step: exposureTime.resolution)
+                Slider(value: $exposureTime.sliderValue,
+                       in: exposureTime.minimum...exposureTime.maximum,
+                       step: exposureTime.resolution)
                     .disabled(auto.wrappedValue)
-                SwiftUI.Toggle("Auto", isOn: auto)
+                Toggle("Auto", isOn: auto)
                     .toggleStyle(.switch)
                     .labelsHidden()
             }
@@ -52,9 +52,9 @@ struct ExposureView: View {
 
         if !auto.wrappedValue {
             LabeledContent {
-                SwiftUI.Slider(value: $gain.sliderValue,
-                               in: gain.minimum...gain.maximum,
-                               step: gain.resolution)
+                Slider(value: $gain.sliderValue,
+                       in: gain.minimum...gain.maximum,
+                       step: gain.resolution)
             } label: {
                 Label("Gain", systemImage: "dial.medium.fill")
                     .symbolRenderingMode(.hierarchical)

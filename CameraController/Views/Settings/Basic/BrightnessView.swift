@@ -17,9 +17,9 @@ struct BrightnessView: View {
 
     var body: some View {
         LabeledContent {
-            SwiftUI.Slider(value: $brightness.sliderValue,
-                           in: brightness.minimum...brightness.maximum,
-                           step: brightness.resolution)
+            Slider(value: $brightness.sliderValue,
+                   in: brightness.minimum...brightness.maximum,
+                   step: brightness.resolution)
         } label: {
             Label("Brightness", systemImage: "sun.max.fill")
                 .symbolRenderingMode(.hierarchical)

@@ -17,9 +17,9 @@ struct SharpnessView: View {
 
     var body: some View {
         LabeledContent {
-            SwiftUI.Slider(value: $sharpness.sliderValue,
-                           in: sharpness.minimum...sharpness.maximum,
-                           step: sharpness.resolution)
+            Slider(value: $sharpness.sliderValue,
+                   in: sharpness.minimum...sharpness.maximum,
+                   step: sharpness.resolution)
         } label: {
             Label("Sharpness", systemImage: "triangle.fill")
                 .symbolRenderingMode(.hierarchical)
