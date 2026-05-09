@@ -21,7 +21,8 @@ final class CaptureDevice: Hashable, ObservableObject {
         self.avDevice = avDevice
         self.name = avDevice.localizedName
         self.uvcDevice = try? UVCDevice(device: avDevice)
-        self.controller = DeviceController(properties: uvcDevice?.properties)
+        self.controller = DeviceController(properties: uvcDevice?.properties,
+                                           logitechBrio: uvcDevice?.logitechBrio)
     }
 
     static func == (lhs: CaptureDevice, rhs: CaptureDevice) -> Bool {

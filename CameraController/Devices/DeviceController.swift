@@ -43,13 +43,17 @@ final class DeviceController: ObservableObject {
     lazy var focusAuto = BoolCaptureDeviceProperty(properties.focusAuto)
     lazy var focusAbsolute = NumberCaptureDeviceProperty(properties.focusAbsolute)
 
+    // Vendor-specific (currently Logitech only)
+    let logitechBrio: LogitechBrioDeviceProperties?
+
     private let properties: UVCDeviceProperties
 
-    init?(properties: UVCDeviceProperties?) {
+    init?(properties: UVCDeviceProperties?, logitechBrio: LogitechBrioDeviceProperties?) {
         guard let properties = properties else {
             return nil
         }
         self.properties = properties
+        self.logitechBrio = logitechBrio
     }
 
     func writeValues() {

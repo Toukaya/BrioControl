@@ -19,6 +19,7 @@ public final class UVCDevice {
     public let productID: UInt16
     public let extensionUnits: [ExtensionUnit]
     public let properties: UVCDeviceProperties
+    public let logitechBrio: LogitechBrioDeviceProperties?
 
     public init(device: AVCaptureDevice) throws {
         let deviceInfo = try device.usbDevice()
@@ -30,6 +31,12 @@ public final class UVCDevice {
         productID = deviceInfo.productID
         extensionUnits = deviceInfo.descriptor.extensionUnits
         properties = UVCDeviceProperties(deviceInfo)
+
+        if LogitechVendor.isLogitech(vendorID: deviceInfo.vendorID) {
+            logitechBrio = LogitechBrioDeviceProperties(deviceInfo)
+        } else {
+            logitechBrio = nil
+        }
     }
 
     deinit { _ = interface.pointee.pointee.Release(interface) }
