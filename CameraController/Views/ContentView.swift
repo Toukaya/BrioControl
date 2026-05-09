@@ -51,11 +51,7 @@ struct ContentView: View {
         }
         .frame(width: settings.cameraPreviewSize.getWidth())
         .fixedSize(horizontal: true, vertical: false)
-        .background(
-            VisualEffectView(material: .hudWindow,
-                             blendingMode: .behindWindow,
-                             state: .active)
-        )
+        .background(.ultraThinMaterial)
     }
 
     @ViewBuilder
