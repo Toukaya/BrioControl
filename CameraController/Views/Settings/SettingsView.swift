@@ -9,45 +9,71 @@
 import SwiftUI
 
 struct SettingsView: View {
-    // The selected device is read straight from the @Environment-injected
-    // DevicesManager instead of being threaded through as a Binding.
-    // SettingsView never mutates the selection — it only branches on
-    // selectedDevice?.controller — so a binding here was unnecessary
-    // ceremony and forced ContentView to construct $manager.selectedDevice
-    // just to hand the binding straight back into a child that ignored
-    // its writability.
     @Environment(DevicesManager.self) private var manager
+    @State private var section: Section = .basic
 
-    var body: some View {
-        TabView {
-            Tab("Basic", systemImage: "video") {
-                if let controller = manager.selectedDevice?.controller {
-                    BasicSettings(controller: controller)
-                } else {
-                    UnsupportedView()
-                }
-            }
-            Tab("Advanced", systemImage: "camera.filters") {
-                if let controller = manager.selectedDevice?.controller {
-                    AdvancedView(controller: controller)
-                } else {
-                    UnsupportedView()
-                }
-            }
-            Tab("Profiles", systemImage: "bookmark") {
-                ProfilesView()
-            }
-            Tab("Settings", systemImage: "gearshape") {
-                PreferencesView()
+    private let bodyHeight: CGFloat = 360
+
+    enum Section: String, CaseIterable, Identifiable, Hashable {
+        case basic, advanced, profiles, settings
+
+        var id: String { rawValue }
+
+        var title: String {
+            switch self {
+            case .basic: return "Basic"
+            case .advanced: return "Advanced"
+            case .profiles: return "Profiles"
+            case .settings: return "Settings"
             }
         }
-        // The new macOS 26 TabView { Tab(...) } API has no intrinsic
-        // vertical size when its container uses .fixedSize(vertical:
-        // false) — the tab bar renders but the content area collapses
-        // to 0 because each Form inside only sets a maxHeight. Pin a
-        // fixed height here so the popover stays stable across tab
-        // switches and matches the Forms' maxHeight: 360.
-        .frame(height: 360)
+    }
+
+    var body: some View {
+        VStack(spacing: 0) {
+            // Top segmented Picker is the native macOS pattern for
+            // popover-internal navigation. SwiftUI's TabView pulls in
+            // either default segmented chrome (visually similar but
+            // bottom-anchored) or window-frame chrome (.tabBarOnly),
+            // neither of which sits cleanly inside an NSPopover. Driving
+            // the body off a @State Section enum gives us full control
+            // over spacing, ordering and conditional content.
+            Picker("Section", selection: $section) {
+                ForEach(Section.allCases) { tab in
+                    Text(tab.title).tag(tab)
+                }
+            }
+            .pickerStyle(.segmented)
+            .labelsHidden()
+            .padding(.horizontal, 12)
+            .padding(.top, 6)
+            .padding(.bottom, 8)
+
+            sectionBody()
+                .frame(height: bodyHeight)
+        }
+    }
+
+    @ViewBuilder
+    private func sectionBody() -> some View {
+        switch section {
+        case .basic:
+            if let controller = manager.selectedDevice?.controller {
+                BasicSettings(controller: controller)
+            } else {
+                UnsupportedView()
+            }
+        case .advanced:
+            if let controller = manager.selectedDevice?.controller {
+                AdvancedView(controller: controller)
+            } else {
+                UnsupportedView()
+            }
+        case .profiles:
+            ProfilesView()
+        case .settings:
+            PreferencesView()
+        }
     }
 }
 
