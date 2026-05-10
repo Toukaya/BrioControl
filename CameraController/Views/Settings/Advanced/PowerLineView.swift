@@ -17,7 +17,7 @@ struct PowerLineView: View {
 
     var body: some View {
         LabeledContent {
-            Picker("Power Line", selection: $powerLineFrequency.sliderValue) {
+            Picker("Anti-Flicker", selection: $powerLineFrequency.sliderValue) {
                 Text("Disabled").tag(0 as Float)
                 Text("50 Hz").tag(1 as Float)
                 Text("60 Hz").tag(2 as Float)
@@ -27,7 +27,7 @@ struct PowerLineView: View {
             .pickerStyle(.segmented)
             .disabled(!powerLineFrequency.isCapable)
         } label: {
-            Label("Power Line", systemImage: "bolt")
+            Label("Anti-Flicker", systemImage: "bolt")
                 .symbolRenderingMode(.hierarchical)
         }
     }
