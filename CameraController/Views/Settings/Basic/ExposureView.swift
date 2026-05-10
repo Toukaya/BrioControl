@@ -39,11 +39,11 @@ struct ExposureView: View {
             HStack {
                 Slider(value: $exposureTime.sliderValue,
                        in: exposureTime.minimum...exposureTime.maximum,
-                       step: exposureTime.resolution)
+                       step: exposureTime.tickStep)
                     .disabled(auto.wrappedValue)
                 Toggle("Auto", isOn: auto)
-                    .toggleStyle(.switch)
-                    .labelsHidden()
+                    .toggleStyle(.button)
+                    .controlSize(.small)
             }
         } label: {
             Label("Exposure", systemImage: "clock.fill")
@@ -54,7 +54,7 @@ struct ExposureView: View {
             LabeledContent {
                 Slider(value: $gain.sliderValue,
                        in: gain.minimum...gain.maximum,
-                       step: gain.resolution)
+                       step: gain.tickStep)
             } label: {
                 Label("Gain", systemImage: "dial.medium.fill")
                     .symbolRenderingMode(.hierarchical)

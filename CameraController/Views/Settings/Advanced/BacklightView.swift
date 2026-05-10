@@ -27,11 +27,7 @@ struct BacklightView: View {
     }
 
     var body: some View {
-        LabeledContent {
-            Toggle("Backlight Compensation", isOn: backightEnabled)
-                .toggleStyle(.switch)
-                .labelsHidden()
-        } label: {
+        Toggle(isOn: backightEnabled) {
             Label("Backlight Compensation", systemImage: "light.beacon.max")
                 .symbolRenderingMode(.hierarchical)
         }

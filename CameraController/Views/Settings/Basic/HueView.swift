@@ -22,11 +22,11 @@ struct HueView: View {
             HStack {
                 Slider(value: $hue.sliderValue,
                        in: hue.minimum...hue.maximum,
-                       step: hue.resolution)
+                       step: hue.tickStep)
                     .disabled(hueAuto.isEnabled)
                 Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
-                    .toggleStyle(.switch)
-                    .labelsHidden()
+                    .toggleStyle(.button)
+                    .controlSize(.small)
             }
         } label: {
             Label("Hue", systemImage: "paintpalette.fill")

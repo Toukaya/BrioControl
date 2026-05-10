@@ -22,11 +22,11 @@ struct FocusView: View {
             HStack {
                 Slider(value: $focusAbsolute.sliderValue,
                        in: focusAbsolute.minimum...focusAbsolute.maximum,
-                       step: focusAbsolute.resolution)
+                       step: focusAbsolute.tickStep)
                     .disabled(focusAuto.isEnabled)
                 Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
-                    .toggleStyle(.switch)
-                    .labelsHidden()
+                    .toggleStyle(.button)
+                    .controlSize(.small)
             }
         } label: {
             Label("Focus", systemImage: "camera.aperture")

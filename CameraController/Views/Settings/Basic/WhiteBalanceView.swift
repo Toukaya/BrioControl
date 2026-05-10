@@ -22,11 +22,11 @@ struct WhiteBalanceView: View {
             HStack {
                 Slider(value: $whiteBalance.sliderValue,
                        in: whiteBalance.minimum...whiteBalance.maximum,
-                       step: whiteBalance.resolution)
+                       step: whiteBalance.tickStep)
                     .disabled(whiteBalanceAuto.isEnabled)
                 Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
-                    .toggleStyle(.switch)
-                    .labelsHidden()
+                    .toggleStyle(.button)
+                    .controlSize(.small)
             }
         } label: {
             Label("White Balance", systemImage: "thermometer.sun.fill")
