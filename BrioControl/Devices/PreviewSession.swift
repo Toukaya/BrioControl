@@ -98,6 +98,13 @@ final class PreviewSession {
     // preview layer; this matches the legacy behavior so users who
     // previously selected "Disabled" continue to see no preview.
     func attach(device: AVCaptureDevice, quality: PreviewQualitySettings) async {
+        // Lazy permission ask: only fires the first time a preview is
+        // actually requested, not at app launch. If the user has
+        // already granted/denied, this is a non-blocking no-op.
+        if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined {
+            _ = await AVCaptureDevice.requestAccess(for: .video)
+        }
+
         ensurePreviewLayer()
 
         // Stop first; on a fresh PreviewSession this is a no-op and

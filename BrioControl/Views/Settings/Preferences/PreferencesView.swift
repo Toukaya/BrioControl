@@ -15,7 +15,10 @@ struct PreferencesView: View {
             CameraSection()
             PreviewSection()
             ReadWriteSection()
-            UpdatesSection()
+            // UpdatesSection hidden by user request; the section file
+            // and all of its Sparkle plumbing remain so it can be
+            // re-added with a single line later.
+            // UpdatesSection()
             QuitButton()
         }
         .formStyle(.grouped)

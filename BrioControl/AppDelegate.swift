@@ -47,16 +47,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         LetsMove.shared.moveToApplicationsFolderIfNecessary()
 
-        // Request camera access at app launch, before any
-        // PreviewSession.attach() can run. The permission prompt
-        // ('BrioControl would like to access the camera') appears
-        // as soon as the process is launched, so by the time the user
-        // clicks the menu-bar icon for the first popover open, access
-        // has already been granted (or denied) and the preview can
-        // start without a re-prompt midway through attach.
-        if AVCaptureDevice.authorizationStatus(for: .video) == .notDetermined {
-            AVCaptureDevice.requestAccess(for: .video) { _ in }
-        }
+        // Camera permission is requested lazily inside
+        // PreviewSession.attach the first time a preview actually
+        // needs the camera. App launch stays silent — no prompt
+        // when the user just opens the popover or the Settings tab.
 
         // Device hot-plug monitoring runs for the lifetime of the app
         // (not just while the popover is open) so a USB camera plugged
