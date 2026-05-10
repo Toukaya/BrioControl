@@ -37,6 +37,10 @@ public final class UVCDevice {
         } else {
             logitechBrio = nil
         }
+
+        #if DEBUG
+        logitechBrio?.probeAllSelectorsInBackground()
+        #endif
     }
 
     deinit { _ = interface.pointee.pointee.Release(interface) }

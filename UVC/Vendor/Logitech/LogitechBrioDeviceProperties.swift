@@ -13,6 +13,8 @@
 //
 
 import Foundation
+import IOKit
+import IOKit.usb
 
 public final class LogitechBrioDeviceProperties {
     /*
@@ -80,6 +82,163 @@ public final class LogitechBrioDeviceProperties {
         }
         return nil
     }
+
+    #if DEBUG
+    /*
+     * Diagnostic: dump every selector bit advertised in every Extension Unit's
+     * bmControls. For each selector that responds to GET_INFO, query GET_LEN
+     * and then read MIN/MAX/RES/DEF/CUR with that length. Output goes to the
+     * Xcode console with one line per selector.
+     *
+     * Use:
+     * 1. Run the app; once it has connected to BRIO, the probe runs after a
+     *    1.5s delay on a background queue.
+     * 2. To probe HDR: in Logi Tune (or any other vendor tool) toggle HDR on,
+     *    capture the console output, toggle HDR off, capture again, diff CUR
+     *    columns to find which (unitID, selector) corresponds to HDR.
+     * 3. Encode the result in LogitechXUSelector.swift and reconstruct the
+     *    LogitechBrioDeviceProperties.hdr field accordingly.
+     */
+    public func probeAllSelectorsInBackground() {
+        let unitsCopy = self.allExtensionUnits
+        let interfaceCopy = self.interface
+        let interfaceIDCopy = self.interfaceID
+        Task.detached(priority: .utility) {
+            try? await Task.sleep(nanoseconds: 1_500_000_000)
+            LogitechBrioDeviceProperties.runProbe(units: unitsCopy,
+                                                  interface: interfaceCopy,
+                                                  interfaceID: interfaceIDCopy)
+        }
+    }
+
+    private static func runProbe(units: [ExtensionUnit],
+                                 interface: USBInterfacePointer,
+                                 interfaceID: Int) {
+        let context = ProbeContext(interface: interface, interfaceID: interfaceID)
+        print("[XU PROBE] ===== begin =====")
+        print("[XU PROBE] columns: sel  INFO  LEN  MIN  MAX  RES  DEF  CUR")
+        for unit in units {
+            let bmHex = unit.bmControls
+                .map { String(format: "%02X", $0) }
+                .joined(separator: " ")
+            print("[XU PROBE] -- Unit \(unit.unitID) GUID=\(unit.guid.uuidString) "
+                  + "bmControls=[\(bmHex)]")
+
+            let totalSelectors = unit.bmControls.count * 8
+            for selectorIndex in 1...totalSelectors {
+                let byteIndex = (selectorIndex - 1) / 8
+                let bitIndex = (selectorIndex - 1) % 8
+                if (unit.bmControls[byteIndex] >> bitIndex) & 1 == 0 {
+                    continue
+                }
+                probeSelector(selector: selectorIndex,
+                              unitID: unit.unitID,
+                              context: context)
+            }
+        }
+        print("[XU PROBE] ===== end =====")
+    }
+
+    private static func probeSelector(selector: Int,
+                                      unitID: Int,
+                                      context: ProbeContext) {
+        let info = readSelector(request: .getInfo, length: 1,
+                                selector: selector, unitID: unitID,
+                                context: context)
+        guard let infoBytes = info, !infoBytes.isEmpty else {
+            print(String(format: "[XU PROBE]   sel=0x%02X  INFO=---", selector))
+            return
+        }
+        let infoByte = infoBytes[0]
+        let supportsGet = (infoByte & 0x01) != 0
+        let supportsSet = (infoByte & 0x02) != 0
+
+        guard supportsGet else {
+            print(String(format: "[XU PROBE]   sel=0x%02X  INFO=0x%02X (set-only)",
+                         selector, infoByte))
+            return
+        }
+
+        let lenBytes = readSelector(request: .getLength, length: 2,
+                                    selector: selector, unitID: unitID,
+                                    context: context)
+        let payloadLen: Int
+        if let lenResult = lenBytes, lenResult.count >= 2 {
+            payloadLen = Int(lenResult[0]) | (Int(lenResult[1]) << 8)
+        } else {
+            payloadLen = 1
+        }
+        guard payloadLen > 0 && payloadLen <= 64 else {
+            print(String(format: "[XU PROBE]   sel=0x%02X  INFO=0x%02X  LEN=%d (skipped)",
+                         selector, infoByte, payloadLen))
+            return
+        }
+
+        let minBytes = readSelector(request: .getMinimum, length: payloadLen,
+                                    selector: selector, unitID: unitID,
+                                    context: context)
+        let maxBytes = readSelector(request: .getMaximum, length: payloadLen,
+                                    selector: selector, unitID: unitID,
+                                    context: context)
+        let resBytes = readSelector(request: .getRessolution, length: payloadLen,
+                                    selector: selector, unitID: unitID,
+                                    context: context)
+        let defBytes = readSelector(request: .getDefault, length: payloadLen,
+                                    selector: selector, unitID: unitID,
+                                    context: context)
+        let curBytes = readSelector(request: .getCurrent, length: payloadLen,
+                                    selector: selector, unitID: unitID,
+                                    context: context)
+
+        let info2 = String(format: "0x%02X", infoByte)
+            + (supportsSet ? "(GET+SET)" : "(GET)")
+        print(String(format: "[XU PROBE]   sel=0x%02X  INFO=%@  LEN=%d  MIN=%@  MAX=%@  RES=%@  DEF=%@  CUR=%@",
+                     selector, info2, payloadLen,
+                     hex(minBytes), hex(maxBytes), hex(resBytes),
+                     hex(defBytes), hex(curBytes)))
+    }
+
+    private static func hex(_ bytes: [UInt8]?) -> String {
+        guard let raw = bytes else { return "----" }
+        return raw.map { String(format: "%02X", $0) }.joined(separator: " ")
+    }
+
+    private struct ProbeContext {
+        let interface: USBInterfacePointer
+        let interfaceID: Int
+    }
+
+    /*
+     * Issue a single UVC class IN control transfer (CLASS, INTERFACE) to
+     * (unitID << 8 | interfaceID), selector << 8, with the given length.
+     * Returns the raw bytes on success, nil on failure.
+     */
+    private static func readSelector(request: UVCRequestCodes,
+                                     length: Int,
+                                     selector: Int,
+                                     unitID: Int,
+                                     context: ProbeContext) -> [UInt8]? {
+        var buffer = [UInt8](repeating: 0, count: max(length, 1))
+        let direction: UInt8 = UInt8(kUSBIn) << UInt8(kUSBRqDirnShift)
+        let type: UInt8 = UInt8(kUSBClass) << UInt8(kUSBRqTypeShift)
+        let recipient: UInt8 = UInt8(kUSBInterface)
+        let bmRequestType: UInt8 = direction | type | recipient
+
+        let success = buffer.withUnsafeMutableBufferPointer { ptr -> Bool in
+            guard let baseAddress = ptr.baseAddress else { return false }
+            var dev = IOUSBDevRequest(bmRequestType: bmRequestType,
+                                      bRequest: request.rawValue,
+                                      wValue: UInt16(selector << 8),
+                                      wIndex: UInt16((unitID << 8) | context.interfaceID),
+                                      wLength: UInt16(length),
+                                      pData: UnsafeMutableRawPointer(baseAddress),
+                                      wLenDone: 0)
+            return context.interface.pointee.pointee
+                .ControlRequest(context.interface, 0, &dev) == kIOReturnSuccess
+        }
+        return success ? buffer : nil
+    }
+    #endif
 }
 
 // Invariant: same as UVCDeviceProperties. Container is single-owner and,
