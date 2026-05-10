@@ -51,7 +51,7 @@ struct ReadWriteSection_Previews: PreviewProvider {
         Form {
             ReadWriteSection()
         }
-        .formStyle(.columns)
+        .formStyle(.grouped)
         .environment(UserSettings.shared)
     }
 }

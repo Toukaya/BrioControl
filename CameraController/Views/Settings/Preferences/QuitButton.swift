@@ -29,7 +29,7 @@ struct QuitButton_Previews: PreviewProvider {
         Form {
             QuitButton()
         }
-        .formStyle(.columns)
+        .formStyle(.grouped)
     }
 }
 #endif
