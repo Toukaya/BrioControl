@@ -19,7 +19,7 @@ struct ContrastView: View {
         LabeledContent {
             Slider(value: $contrast.sliderValue,
                    in: contrast.minimum...contrast.maximum,
-                   step: contrast.resolution)
+                   step: contrast.tickStep)
         } label: {
             Label("Contrast", systemImage: "circle.lefthalf.filled")
                 .symbolRenderingMode(.hierarchical)

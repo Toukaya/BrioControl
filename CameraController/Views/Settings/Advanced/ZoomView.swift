@@ -19,7 +19,7 @@ struct ZoomView: View {
         LabeledContent {
             Slider(value: $zoomAbsolute.sliderValue,
                    in: zoomAbsolute.minimum...zoomAbsolute.maximum,
-                   step: zoomAbsolute.resolution)
+                   step: zoomAbsolute.tickStep)
         } label: {
             Label("Zoom", systemImage: "plus.magnifyingglass")
                 .symbolRenderingMode(.hierarchical)

@@ -11,6 +11,7 @@
 
 import Foundation
 import Observation
+import SwiftUI
 import UVC
 
 @MainActor
@@ -46,6 +47,12 @@ final class MultipleCaptureDeviceProperty {
     let maximum2: Float
     let resolution1: Float
     let resolution2: Float
+    var tickStep1: Float {
+        Self.tickStep(minimum: minimum1, maximum: maximum1, resolution: resolution1)
+    }
+    var tickStep2: Float {
+        Self.tickStep(minimum: minimum2, maximum: maximum2, resolution: resolution2)
+    }
     let defaultValue1: Float
     let defaultValue2: Float
 
@@ -72,6 +79,22 @@ final class MultipleCaptureDeviceProperty {
         sliderValue2 = defaultValue2
     }
 
+    func update() {
+        let id = controlID
+        let actor = self.actor
+        Task { @MainActor [weak self] in
+            let (newValue1, newValue2) = await actor.getMultipleInt(id)
+            guard let self = self else { return }
+
+            if Int(self.sliderValue1) != newValue1 {
+                self.sliderValue1 = Float(newValue1)
+            }
+            if Int(self.sliderValue2) != newValue2 {
+                self.sliderValue2 = Float(newValue2)
+            }
+        }
+    }
+
     /// Force-write the cached values back to the device (timer-driven).
     func write() {
         let value1 = Int(sliderValue1)
@@ -83,4 +106,13 @@ final class MultipleCaptureDeviceProperty {
             await actor.setMultipleInt2(id, value2)
         }
     }
+
+    private static func tickStep(minimum: Float, maximum: Float, resolution: Float) -> Float {
+        let resolvedResolution = max(abs(resolution), 1)
+        let span = abs(maximum - minimum)
+        let tenth = span / 10
+        guard tenth > 0 else { return resolvedResolution }
+        return max(tenth, resolvedResolution)
+    }
+
 }

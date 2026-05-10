@@ -19,7 +19,7 @@ struct SaturationView: View {
         LabeledContent {
             Slider(value: $saturation.sliderValue,
                    in: saturation.minimum...saturation.maximum,
-                   step: saturation.resolution)
+                   step: saturation.tickStep)
         } label: {
             Label("Saturation", systemImage: "drop.fill")
                 .symbolRenderingMode(.hierarchical)

@@ -19,7 +19,7 @@ struct RollView: View {
         LabeledContent {
             Slider(value: $rollAbsolute.sliderValue,
                    in: rollAbsolute.minimum...rollAbsolute.maximum,
-                   step: rollAbsolute.resolution)
+                   step: rollAbsolute.tickStep)
         } label: {
             Label("Roll", systemImage: "arrow.counterclockwise")
                 .symbolRenderingMode(.hierarchical)

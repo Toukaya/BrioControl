@@ -23,7 +23,7 @@ struct PanTiltView: View {
         LabeledContent {
             Slider(value: $panTiltAbsolute.sliderValue2,
                    in: panTiltAbsolute.minimum2...panTiltAbsolute.maximum2,
-                   step: panTiltAbsolute.resolution2)
+                   step: panTiltAbsolute.tickStep2)
         } label: {
             Label("Pan", systemImage: "arrow.left.and.right")
                 .symbolRenderingMode(.hierarchical)
@@ -32,7 +32,7 @@ struct PanTiltView: View {
         LabeledContent {
             Slider(value: $panTiltAbsolute.sliderValue1,
                    in: panTiltAbsolute.minimum1...panTiltAbsolute.maximum1,
-                   step: panTiltAbsolute.resolution1)
+                   step: panTiltAbsolute.tickStep1)
         } label: {
             Label("Tilt", systemImage: "arrow.up.and.down")
                 .symbolRenderingMode(.hierarchical)

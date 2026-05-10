@@ -17,6 +17,7 @@
 
 import Foundation
 import Observation
+import SwiftUI
 import UVC
 
 @MainActor
@@ -26,6 +27,7 @@ protocol SliderCapableProperty {
     var minimum: Float { get }
     var maximum: Float { get }
     var resolution: Float { get }
+    var tickStep: Float { get }
     var defaultValue: Float { get }
 }
 
@@ -36,15 +38,22 @@ final class NumberCaptureDeviceProperty: SliderCapableProperty {
     @ObservationIgnored private let controlID: UVCControlID
     @ObservationIgnored private let defaultValueInt: Int
 
+    @ObservationIgnored private var resolvedStep: Float {
+        let step = abs(resolution)
+        return step > 0 ? step : 1
+    }
+
+    @ObservationIgnored private var span: Float {
+        abs(maximum - minimum)
+    }
+
+    @ObservationIgnored private var clampedBounds: ClosedRange<Float> {
+        min(minimum, maximum)...max(minimum, maximum)
+    }
+
     var sliderValue: Float {
         didSet {
-            // Forward the new value to the actor. The actor serializes
-            // calls per device, so concurrent slider drags can no longer
-            // interleave their underlying USB control transfers.
-            let newInt = Int(sliderValue)
-            let id = controlID
-            let actor = self.actor
-            Task { await actor.setInt(id, newInt) }
+            writeValue(sliderValue)
         }
     }
 
@@ -52,6 +61,11 @@ final class NumberCaptureDeviceProperty: SliderCapableProperty {
     let minimum: Float
     var maximum: Float
     let resolution: Float
+    var tickStep: Float {
+        let tenth = span / 10
+        guard tenth > 0 else { return resolvedStep }
+        return max(tenth, resolvedStep)
+    }
     let defaultValue: Float
 
     init(actor: UVCDeviceActor, id: UVCControlID, snapshot: UVCIntControlSnapshot) {
@@ -68,6 +82,14 @@ final class NumberCaptureDeviceProperty: SliderCapableProperty {
 
     func reset() {
         sliderValue = defaultValue
+    }
+
+    func quantizedValue(for value: Float) -> Float {
+        let bounds = clampedBounds
+        let clamped = min(max(value, bounds.lowerBound), bounds.upperBound)
+        let step = resolvedStep
+        let snapped = ((clamped - minimum) / step).rounded() * step + minimum
+        return min(max(snapped, bounds.lowerBound), bounds.upperBound)
     }
 
     /// Re-read the current value from the device (timer-driven).
@@ -90,9 +112,17 @@ final class NumberCaptureDeviceProperty: SliderCapableProperty {
     /// Re-issues the slider value through the actor, providing a
     /// last-write-wins convergence path if a previous SET failed.
     func write() {
-        let value = Int(sliderValue)
+        let value = Int(quantizedValue(for: sliderValue))
         let id = controlID
         let actor = self.actor
         Task { await actor.setInt(id, value) }
     }
+
+    private func writeValue(_ value: Float) {
+        let newInt = Int(quantizedValue(for: value))
+        let id = controlID
+        let actor = self.actor
+        Task { await actor.setInt(id, newInt) }
+    }
+
 }

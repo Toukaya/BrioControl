@@ -19,7 +19,7 @@ struct SharpnessView: View {
         LabeledContent {
             Slider(value: $sharpness.sliderValue,
                    in: sharpness.minimum...sharpness.maximum,
-                   step: sharpness.resolution)
+                   step: sharpness.tickStep)
         } label: {
             Label("Sharpness", systemImage: "triangle.fill")
                 .symbolRenderingMode(.hierarchical)
