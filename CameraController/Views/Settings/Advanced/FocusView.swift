@@ -19,18 +19,22 @@ struct FocusView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
-                Slider(value: $focusAbsolute.sliderValue,
-                       in: focusAbsolute.minimum...focusAbsolute.maximum,
-                       step: focusAbsolute.tickStep)
-                    .disabled(focusAuto.isEnabled)
-                Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
-                    .toggleStyle(.button)
-                    .controlSize(.small)
-            }
+            Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
+                .toggleStyle(.switch)
         } label: {
             Label("Focus", systemImage: "camera.aperture")
                 .symbolRenderingMode(.hierarchical)
+        }
+
+        if !focusAuto.isEnabled {
+            LabeledContent {
+                Slider(value: $focusAbsolute.sliderValue,
+                       in: focusAbsolute.minimum...focusAbsolute.maximum,
+                       step: focusAbsolute.tickStep)
+            } label: {
+                Label("Distance", systemImage: "scope")
+                    .symbolRenderingMode(.hierarchical)
+            }
         }
     }
 }

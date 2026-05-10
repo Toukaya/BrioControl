@@ -19,18 +19,22 @@ struct HueView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
-                Slider(value: $hue.sliderValue,
-                       in: hue.minimum...hue.maximum,
-                       step: hue.tickStep)
-                    .disabled(hueAuto.isEnabled)
-                Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
-                    .toggleStyle(.button)
-                    .controlSize(.small)
-            }
+            Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
+                .toggleStyle(.switch)
         } label: {
             Label("Hue", systemImage: "paintpalette.fill")
                 .symbolRenderingMode(.hierarchical)
+        }
+
+        if !hueAuto.isEnabled {
+            LabeledContent {
+                Slider(value: $hue.sliderValue,
+                       in: hue.minimum...hue.maximum,
+                       step: hue.tickStep)
+            } label: {
+                Label("Shift", systemImage: "swatchpalette.fill")
+                    .symbolRenderingMode(.hierarchical)
+            }
         }
     }
 }

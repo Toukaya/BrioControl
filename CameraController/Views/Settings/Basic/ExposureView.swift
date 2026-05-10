@@ -36,21 +36,23 @@ struct ExposureView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
-                Slider(value: $exposureTime.sliderValue,
-                       in: exposureTime.minimum...exposureTime.maximum,
-                       step: exposureTime.tickStep)
-                    .disabled(auto.wrappedValue)
-                Toggle("Auto", isOn: auto)
-                    .toggleStyle(.button)
-                    .controlSize(.small)
-            }
+            Toggle("Auto", isOn: auto)
+                .toggleStyle(.switch)
         } label: {
             Label("Exposure", systemImage: "clock.fill")
                 .symbolRenderingMode(.hierarchical)
         }
 
         if !auto.wrappedValue {
+            LabeledContent {
+                Slider(value: $exposureTime.sliderValue,
+                       in: exposureTime.minimum...exposureTime.maximum,
+                       step: exposureTime.tickStep)
+            } label: {
+                Label("Time", systemImage: "timer")
+                    .symbolRenderingMode(.hierarchical)
+            }
+
             LabeledContent {
                 Slider(value: $gain.sliderValue,
                        in: gain.minimum...gain.maximum,

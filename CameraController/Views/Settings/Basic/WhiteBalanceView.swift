@@ -19,18 +19,22 @@ struct WhiteBalanceView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
-                Slider(value: $whiteBalance.sliderValue,
-                       in: whiteBalance.minimum...whiteBalance.maximum,
-                       step: whiteBalance.tickStep)
-                    .disabled(whiteBalanceAuto.isEnabled)
-                Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
-                    .toggleStyle(.button)
-                    .controlSize(.small)
-            }
+            Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
+                .toggleStyle(.switch)
         } label: {
             Label("White Balance", systemImage: "thermometer.sun.fill")
                 .symbolRenderingMode(.hierarchical)
+        }
+
+        if !whiteBalanceAuto.isEnabled {
+            LabeledContent {
+                Slider(value: $whiteBalance.sliderValue,
+                       in: whiteBalance.minimum...whiteBalance.maximum,
+                       step: whiteBalance.tickStep)
+            } label: {
+                Label("Temperature", systemImage: "drop.fill")
+                    .symbolRenderingMode(.hierarchical)
+            }
         }
     }
 }
