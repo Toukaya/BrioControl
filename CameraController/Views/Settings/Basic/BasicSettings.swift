@@ -43,6 +43,7 @@ struct BasicSettings: View {
                 }
             }
         }
-        .formStyle(.columns)
+        .formStyle(.grouped)
+        .frame(maxHeight: 360)
     }
 }

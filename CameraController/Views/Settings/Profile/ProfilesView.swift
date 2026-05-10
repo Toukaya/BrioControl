@@ -45,7 +45,8 @@ struct ProfilesView: View {
                 }
             }
         }
-        .formStyle(.columns)
+        .formStyle(.grouped)
+        .frame(maxHeight: 360)
         .alert("Save Profile", isPresented: $isAddingProfile) {
             TextField("Name", text: $profileName)
             Button("Save", action: {
