@@ -19,36 +19,30 @@ struct ProfileRow: View {
 
     var name: String
     var profile: ProfileType
-    @State private var showIcons = false
 
     var body: some View {
         LabeledContent {
-            HStack {
-                if showIcons {
-                    Button {
-                        applyProfile()
-                    } label: {
-                        Image(systemName: "checkmark")
-                    }
-                    .buttonStyle(.borderless)
+            Menu {
+                Button {
+                    applyProfile()
+                } label: {
+                    Label("Apply", systemImage: "checkmark")
+                }
 
-                    if case .custom = profile {
-                        Button {
-                            deleteProfile()
-                        } label: {
-                            Image(systemName: "trash")
-                        }
-                        .buttonStyle(.borderless)
+                if case .custom = profile {
+                    Divider()
+                    Button {
+                        deleteProfile()
+                    } label: {
+                        Label("Delete", systemImage: "trash")
                     }
                 }
+            } label: {
+                Image(systemName: "ellipsis.circle")
             }
         } label: {
             Text(name)
                 .fontWeight(.bold)
-        }
-        .contentShape(Rectangle())
-        .onHover { isHovering in
-            showIcons = isHovering
         }
     }
 

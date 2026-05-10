@@ -14,18 +14,24 @@ struct ProfilesView: View {
     @State private var isAddingProfile = false
     @State private var profileName = ""
 
+    private let profileListHeight: CGFloat = 176
+
     var body: some View {
         Form {
-            Section("Default") {
-                ProfileRow(name: "Camera Default", profile: .defaultProfile)
-            }
+            Section("Profiles") {
+                List {
+                    ProfileRow(name: "Camera Default", profile: .defaultProfile)
 
-            if !profileManager.profiles.isEmpty {
-                Section("Saved Profiles") {
-                    ForEach(profileManager.profiles, id: \.self) { profile in
-                        ProfileRow(name: profile.name, profile: .custom(profile))
+                    if !profileManager.profiles.isEmpty {
+                        Section("Saved Profiles") {
+                            ForEach(profileManager.profiles, id: \.self) { profile in
+                                ProfileRow(name: profile.name, profile: .custom(profile))
+                            }
+                        }
                     }
                 }
+                .listStyle(.inset)
+                .frame(minHeight: profileListHeight, maxHeight: profileListHeight)
             }
 
             Section {
