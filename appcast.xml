@@ -1,7 +1,7 @@
 <?xml version="1.0" standalone="yes"?>
 <rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
     <channel>
-        <title>CameraController</title>
+        <title>BrioControl</title>
         <item>
             <title>1.4.0</title>
             <pubDate>Wed, 21 Jun 2023 20:50:11 -0300</pubDate>

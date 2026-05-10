@@ -1,4 +1,4 @@
-<h1 align="center"> CameraController </h1>
+<h1 align="center"> BrioControl </h1>
 
 <!-- subtext -->
 <div align="center">
@@ -68,7 +68,7 @@ Clone the project
 $ git clone https://github.com/itaybre/CameraController.git
 ```
 
-You're all set ! Now open the `CameraController.xcodeproj` with Xcode
+You're all set ! Now open the `BrioControl.xcodeproj` with Xcode
 
 ## FAQ
 
