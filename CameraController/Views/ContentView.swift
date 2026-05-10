@@ -28,6 +28,8 @@ struct ContentView: View {
         // each child carries its own .frame and the popover grows
         // to fit the sum of preview + tab content.
         VStack(spacing: 0) {
+            cameraNameLabel()
+
             cameraPreview()
                 .animation(nil, value: settings.hideCameraPreview)
 
@@ -51,6 +53,24 @@ struct ContentView: View {
     }
 
     @ViewBuilder
+    private func cameraNameLabel() -> some View {
+        // Reserve a header strip above the preview frame for the
+        // currently selected camera's display name. Centered, secondary
+        // text style so it reads as a caption rather than competing
+        // with the controls below.
+        Text(manager.selectedDevice?.name ?? "No Camera")
+            .font(.subheadline)
+            .fontWeight(.medium)
+            .foregroundStyle(.secondary)
+            .lineLimit(1)
+            .truncationMode(.middle)
+            .frame(maxWidth: .infinity)
+            .padding(.top, 10)
+            .padding(.bottom, 6)
+            .padding(.horizontal, 12)
+    }
+
+    @ViewBuilder
     private func cameraPreview() -> some View {
         if settings.hideCameraPreview {
             EmptyView()
@@ -61,8 +81,6 @@ struct ContentView: View {
                     height: settings.cameraPreviewSize.getHeight()
                 )
                 .scaleEffect(CGSize(width: settings.mirrorPreview ? -1 : 1, height: 1))
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(8)
         } else {
             Image("video.slash")
                 .frame(
@@ -70,8 +88,6 @@ struct ContentView: View {
                     height: settings.cameraPreviewSize.getHeight()
                 )
                 .background(Color.gray)
-                .clipShape(RoundedRectangle(cornerRadius: 12))
-                .padding(8)
         }
     }
 }
