@@ -7,11 +7,11 @@
 //
 //  Owns the menu-bar status item and the NSPopover that hosts the
 //  SwiftUI ContentView. macOS 26 SwiftUI ships only `.menu` and
-//  `.window` menu-bar scene styles, neither of which renders the
-//  popover arrow tail. AppKit's NSPopover does, and on macOS 26 it
+//  `.window` MenuBarExtra styles, neither of which renders the popover
+//  arrow tail. AppKit's NSPopover does, and on macOS 26 it
 //  automatically composes the Liquid Glass arrow tail with the popover
 //  surface — so we route the entire menu-bar UI through NSStatusItem +
-//  NSPopover here instead of through a SwiftUI scene.
+//  NSPopover here instead of MenuBarExtra.
 //
 //  Also owns Sparkle, LetsMove, the AVCaptureDevice video permission
 //  prompt, and the long-lived PreviewSession that backs the camera
