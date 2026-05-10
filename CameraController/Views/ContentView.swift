@@ -27,56 +27,54 @@ struct ContentView: View {
     @State private var preview = PreviewSession()
 
     var body: some View {
-        // GlassEffectContainer batches the Liquid Glass passes for every
-        // descendant that calls .glassEffect(_:in:), so the camera-preview
-        // frame and any future glass surfaces share a single render pass.
-        //
         // SettingsView no longer takes a captureDevice binding: it now
         // reads selectedDevice straight from @Environment(DevicesManager).
         // The picker that mutates that selection (CameraSection in
         // PreferencesView) builds its own @Bindable shadow locally, so
         // ContentView no longer needs to construct $manager.selectedDevice
         // here.
-        GlassEffectContainer(spacing: 0) {
-            VStack(spacing: 0) {
-                cameraPreview()
-                    .animation(nil, value: settings.hideCameraPreview)
+        VStack(spacing: 0) {
+            cameraPreview()
+                .animation(nil, value: settings.hideCameraPreview)
 
-                SettingsView()
-            }
-            .onAppear {
-                DevicesManager.shared.startMonitoring()
-            }
-            .onDisappear {
-                DevicesManager.shared.stopMonitoring()
-            }
-            // Drive PreviewSession from the selected-device identity. A
-            // change to selectedDevice cancels the previous task body and
-            // runs this one, so a rapid sequence of switches collapses
-            // to "detach prior, attach latest" with the intermediate
-            // attaches superseded.
-            .task(id: manager.selectedDevice?.avDevice?.uniqueID) {
-                if let device = manager.selectedDevice?.avDevice {
-                    await preview.attach(device: device,
-                                         quality: settings.cameraPreviewQuality)
-                } else {
-                    await preview.detach()
-                }
-            }
-            .onChange(of: scenePhase) { _, newPhase in
-                switch newPhase {
-                case .active:
-                    Task { await preview.resume() }
-                case .inactive, .background:
-                    Task { await preview.suspend() }
-                @unknown default:
-                    break
-                }
-            }
-            .frame(width: settings.cameraPreviewSize.getWidth())
-            .fixedSize(horizontal: true, vertical: false)
+            SettingsView()
+                .background(Color(nsColor: .windowBackgroundColor))
+                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
+                .padding(.horizontal, 8)
+                .padding(.bottom, 8)
         }
-        .background(.ultraThinMaterial)
+        .background(Color(nsColor: .windowBackgroundColor))
+        .onAppear {
+            DevicesManager.shared.startMonitoring()
+        }
+        .onDisappear {
+            DevicesManager.shared.stopMonitoring()
+        }
+        // Drive PreviewSession from the selected-device identity. A
+        // change to selectedDevice cancels the previous task body and
+        // runs this one, so a rapid sequence of switches collapses
+        // to "detach prior, attach latest" with the intermediate
+        // attaches superseded.
+        .task(id: manager.selectedDevice?.avDevice?.uniqueID) {
+            if let device = manager.selectedDevice?.avDevice {
+                await preview.attach(device: device,
+                                     quality: settings.cameraPreviewQuality)
+            } else {
+                await preview.detach()
+            }
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            switch newPhase {
+            case .active:
+                Task { await preview.resume() }
+            case .inactive, .background:
+                Task { await preview.suspend() }
+            @unknown default:
+                break
+            }
+        }
+        .frame(width: settings.cameraPreviewSize.getWidth())
+        .fixedSize(horizontal: true, vertical: false)
     }
 
     @ViewBuilder
