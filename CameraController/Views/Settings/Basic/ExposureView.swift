@@ -35,12 +35,16 @@ struct ExposureView: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        LabeledContent {
+            HStack {
+                Toggle("Auto", isOn: auto)
+                    .toggleStyle(.switch)
+                    .fixedSize()
+                Spacer()
+            }
+        } label: {
             Label("Exposure", systemImage: "clock.fill")
                 .symbolRenderingMode(.hierarchical)
-            Toggle("Auto", isOn: auto)
-                .toggleStyle(.switch)
-            Spacer()
         }
 
         if !auto.wrappedValue {

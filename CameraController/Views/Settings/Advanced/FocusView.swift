@@ -18,12 +18,16 @@ struct FocusView: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        LabeledContent {
+            HStack {
+                Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
+                    .toggleStyle(.switch)
+                    .fixedSize()
+                Spacer()
+            }
+        } label: {
             Label("Focus", systemImage: "camera.aperture")
                 .symbolRenderingMode(.hierarchical)
-            Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
-                .toggleStyle(.switch)
-            Spacer()
         }
 
         if !focusAuto.isEnabled {

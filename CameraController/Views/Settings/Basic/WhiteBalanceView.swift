@@ -18,12 +18,16 @@ struct WhiteBalanceView: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        LabeledContent {
+            HStack {
+                Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
+                    .toggleStyle(.switch)
+                    .fixedSize()
+                Spacer()
+            }
+        } label: {
             Label("White Balance", systemImage: "thermometer.sun.fill")
                 .symbolRenderingMode(.hierarchical)
-            Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
-                .toggleStyle(.switch)
-            Spacer()
         }
 
         if !whiteBalanceAuto.isEnabled {

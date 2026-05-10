@@ -18,12 +18,16 @@ struct HueView: View {
     }
 
     var body: some View {
-        HStack(spacing: 12) {
+        LabeledContent {
+            HStack {
+                Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
+                    .toggleStyle(.switch)
+                    .fixedSize()
+                Spacer()
+            }
+        } label: {
             Label("Hue", systemImage: "paintpalette.fill")
                 .symbolRenderingMode(.hierarchical)
-            Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
-                .toggleStyle(.switch)
-            Spacer()
         }
 
         if !hueAuto.isEnabled {
