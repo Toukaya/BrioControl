@@ -47,9 +47,19 @@ struct AdvancedView: View {
                 }
             }
 
-            if let fov = controller.logitechFieldOfView, fov.isCapable {
+            if (controller.logitechFieldOfView?.isCapable == true)
+                || (controller.logitechHDR?.isCapable == true) {
                 Section("Logitech BRIO") {
-                    FieldOfViewView(fieldOfView: fov)
+                    if let fov = controller.logitechFieldOfView, fov.isCapable {
+                        FieldOfViewView(fieldOfView: fov)
+                    }
+
+                    if let hdr = controller.logitechHDR, hdr.isCapable {
+                        Toggle("HDR", isOn: Binding(
+                            get: { hdr.isEnabled },
+                            set: { hdr.isEnabled = $0 }
+                        ))
+                    }
                 }
             }
         }

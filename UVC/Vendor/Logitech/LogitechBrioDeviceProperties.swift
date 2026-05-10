@@ -16,6 +16,71 @@ import Foundation
 import IOKit
 import IOKit.usb
 
+public final class LogitechHDRControl: UVCControl {
+    public private(set) var defaultPayload: Int = 0
+    public private(set) var currentPayload: Int = 0
+
+    public var defaultValue: Bool {
+        return LogitechHDRControl.payloadEnabled(defaultPayload)
+    }
+
+    public var isEnabled: Bool {
+        get {
+            return LogitechHDRControl.payloadEnabled(currentPayload)
+        }
+        set {
+            _ = setEnabled(newValue)
+        }
+    }
+
+    override init(_ interface: USBInterfacePointer, _ uvcSize: Int,
+                  _ uvcSelector: Selector, _ uvcUnit: Int, _ uvcInterface: Int) {
+        super.init(interface, uvcSize, uvcSelector, uvcUnit, uvcInterface)
+        configure()
+    }
+
+    public func getCurrentPayload() -> Int {
+        let payload = getDataFor(type: .getCurrent, length: uvcSize)
+        currentPayload = payload
+        return payload
+    }
+
+    @discardableResult
+    public func setPayload(_ payload: Int) -> Int {
+        if setData(value: payload, length: uvcSize) {
+            currentPayload = payload
+        }
+        return currentPayload
+    }
+
+    @discardableResult
+    public func setEnabled(_ enabled: Bool) -> Bool {
+        let payload = getCurrentPayload()
+        let updated = LogitechHDRControl.replacingEnabledBit(in: payload, enabled: enabled)
+        return LogitechHDRControl.payloadEnabled(setPayload(updated))
+    }
+
+    private func configure() {
+        updateIsCapable()
+
+        if isCapable {
+            defaultPayload = getDataFor(type: .getDefault, length: uvcSize)
+            currentPayload = getCurrentPayload()
+        }
+    }
+
+    private static func payloadEnabled(_ payload: Int) -> Bool {
+        return (payload & 0xFF) == 0x01
+    }
+
+    private static func replacingEnabledBit(in payload: Int, enabled: Bool) -> Int {
+        let lowByte = enabled ? 0x01 : 0x00
+        return (payload & ~0xFF) | lowByte
+    }
+}
+
+extension LogitechHDRControl: @unchecked Sendable {}
+
 public final class LogitechBrioDeviceProperties {
     /*
      * All XU descriptors found on this device. Populated at construction;
@@ -58,13 +123,20 @@ public final class LogitechBrioDeviceProperties {
     public let indicatorLed: UVCIntControl? = nil
 
     /*
-     * HDR. Placeholder until selectors are confirmed via USB capture.
+     * HDR candidate. Backed by Unit 21 (GUID
+     * 5A6D654C-7E35-4D4E-810D-069D15E0F79B), selector 0x01.
+     * 6-byte payload; byte[0] toggles HDR while bytes[1...5] are preserved.
      */
-    public let hdr: UVCIntControl? = nil
+    public lazy var hdr: LogitechHDRControl? = {
+        guard let unit = hdrUnit else { return nil }
+        return LogitechHDRControl(interface, 6, LogitechHdrXU.hdr,
+                                  unit.unitID, interfaceID)
+    }()
 
     private let interface: USBInterfacePointer
     private let interfaceID: Int
     private let videoPipeV3Unit: ExtensionUnit?
+    private let hdrUnit: ExtensionUnit?
 
     init(_ device: USBDevice) {
         let extensionUnits = device.descriptor.extensionUnits
@@ -73,6 +145,8 @@ public final class LogitechBrioDeviceProperties {
         self.interfaceID = device.descriptor.interfaceID
         self.videoPipeV3Unit = LogitechBrioDeviceProperties.findExtensionUnit(
             extensionUnits, withGuid: LogitechXUGuids.brioFoV)
+        self.hdrUnit = LogitechBrioDeviceProperties.findExtensionUnit(
+            extensionUnits, withGuid: LogitechXUGuids.brioHdr)
     }
 
     private static func findExtensionUnit(_ units: [ExtensionUnit],

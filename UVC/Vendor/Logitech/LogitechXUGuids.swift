@@ -25,12 +25,16 @@ public struct LogitechXUGuids {
     public static let userHwV1 = UUID(uuidString: "63610682-5070-49AB-B8CC-B3855E8D221F")!
 
     /*
-     * Placeholders for HDR and RightLight selectors. Public sources do not
-     * document these on BRIO. Will be filled in once a USB capture from
-     * Logi Tune toggling each control supplies the ground-truth GUID and
-     * selector value.
+     * BRIO HDR candidate XU. Derived from USB captures while toggling HDR in
+     * Logi Tune: Unit 21 / selector 0x01 / 6-byte payload where byte[0]
+     * flips between 0x00 and 0x01 while the trailing bytes stay constant.
      */
-    public static let brioHdrTbd: UUID? = nil
+    public static let brioHdr = UUID(uuidString: "5A6D654C-7E35-4D4E-810D-069D15E0F79B")!
+
+    /*
+     * Placeholder retained for future vendor controls whose GUIDs are still
+     * pending confirmation from USB captures.
+     */
     public static let brioRightLightTbd: UUID? = nil
 
     /*

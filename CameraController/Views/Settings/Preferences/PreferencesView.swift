@@ -18,8 +18,6 @@ struct PreferencesView: View {
             UpdatesSection()
             QuitButton()
         }
-        .formStyle(.grouped)
-        .frame(maxHeight: 360)
     }
 }
 

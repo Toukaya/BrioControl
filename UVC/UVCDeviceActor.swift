@@ -66,6 +66,7 @@ public enum UVCControlID: Hashable, Sendable {
 
     // Vendor (Logitech) XU controls.
     case logitechFieldOfView
+    case logitechHDR
     case logitechRightLight
     case logitechIndicatorLed
 }
@@ -105,6 +106,12 @@ public struct UVCBoolControlSnapshot: Sendable {
         self.isCapable = control.isCapable
         self.defaultValue = control.defaultValue
         self.isEnabled = control.isEnabled
+    }
+
+    public init(isCapable: Bool, defaultValue: Bool, isEnabled: Bool) {
+        self.isCapable = isCapable
+        self.defaultValue = defaultValue
+        self.isEnabled = isEnabled
     }
 }
 
@@ -157,6 +164,7 @@ public actor UVCDeviceActor {
     private var boolControls: [UVCControlID: UVCBoolControl] = [:]
     private var bitmapControls: [UVCControlID: UVCBitmapControl] = [:]
     private var multipleIntControls: [UVCControlID: UVCMultipleIntControl] = [:]
+    private var hdrControls: [UVCControlID: LogitechHDRControl] = [:]
 
     /// Strong references to the property containers solely to keep the
     /// underlying UVCControl objects alive for the actor's lifetime. The
@@ -213,6 +221,9 @@ public actor UVCDeviceActor {
             if let rightLight = brio.rightLight {
                 intControls[.logitechRightLight] = rightLight
             }
+            if let hdr = brio.hdr {
+                hdrControls[.logitechHDR] = hdr
+            }
             if let led = brio.indicatorLed {
                 intControls[.logitechIndicatorLed] = led
             }
@@ -227,6 +238,11 @@ public actor UVCDeviceActor {
     }
 
     public func snapshotBool(_ id: UVCControlID) -> UVCBoolControlSnapshot? {
+        if let ctl = hdrControls[id] {
+            return UVCBoolControlSnapshot(isCapable: ctl.isCapable,
+                                          defaultValue: ctl.defaultValue,
+                                          isEnabled: ctl.isEnabled)
+        }
         guard let ctl = boolControls[id] else { return nil }
         return UVCBoolControlSnapshot(ctl)
     }
@@ -252,6 +268,9 @@ public actor UVCDeviceActor {
 
     @discardableResult
     public func setBool(_ id: UVCControlID, _ value: Bool) -> Bool {
+        if let ctl = hdrControls[id] {
+            return ctl.setEnabled(value)
+        }
         guard let ctl = boolControls[id] else { return false }
         ctl.isEnabled = value
         return ctl.isEnabled
@@ -289,9 +308,23 @@ public actor UVCDeviceActor {
     }
 
     public func getBool(_ id: UVCControlID) -> Bool {
+        if let ctl = hdrControls[id] {
+            return ctl.isEnabled
+        }
         guard let ctl = boolControls[id] else { return false }
         ctl.updateEnabled()
         return ctl.isEnabled
+    }
+
+    public func getHDRPayload(_ id: UVCControlID) -> Int {
+        guard let ctl = hdrControls[id] else { return 0 }
+        return ctl.getCurrentPayload()
+    }
+
+    @discardableResult
+    public func setHDRPayload(_ id: UVCControlID, _ payload: Int) -> Int {
+        guard let ctl = hdrControls[id] else { return 0 }
+        return ctl.setPayload(payload)
     }
 
     public func getBitmapRaw(_ id: UVCControlID) -> Int {
@@ -318,6 +351,9 @@ public actor UVCDeviceActor {
 
     @discardableResult
     public func resetBool(_ id: UVCControlID) -> Bool {
+        if let ctl = hdrControls[id] {
+            return ctl.setEnabled(ctl.defaultValue)
+        }
         guard let ctl = boolControls[id] else { return false }
         ctl.isEnabled = ctl.defaultValue
         return ctl.isEnabled

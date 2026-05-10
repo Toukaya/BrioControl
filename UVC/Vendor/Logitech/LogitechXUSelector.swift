@@ -43,13 +43,14 @@ enum LogitechLedV1XU: Int, Selector {
 }
 
 /*
- * HDR XU selectors. TBD - selector value not publicly documented for BRIO.
- * Will be populated from a USB capture of Logi Tune toggling HDR. Until
- * then this enum has no cases and HDR stays hidden in the UI.
+ * BRIO HDR candidate XU (GUID 5A6D654C-7E35-4D4E-810D-069D15E0F79B).
+ * Derived from USB capture while toggling HDR in Logi Tune.
+ *   HDR selector: 0x01, length 6 bytes.
+ *   Payload layout: byte[0] = HDR enable bit (0=off, 1=on), bytes[1...5]
+ *   are companion vendor data that must be preserved on write.
  */
 enum LogitechHdrXU: Int, Selector {
-    // TBD: no confirmed selectors for BRIO HDR.
-    case unused = -1
+    case hdr = 0x01
 
     func raw() -> Int {
         return self.rawValue

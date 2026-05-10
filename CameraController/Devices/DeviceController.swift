@@ -64,6 +64,7 @@ final class DeviceController {
 
     // Vendor-specific (currently Logitech only)
     let logitechFieldOfView: NumberCaptureDeviceProperty?
+    let logitechHDR: BoolCaptureDeviceProperty?
     let logitechLed: NumberCaptureDeviceProperty?
     let logitechRightLight: NumberCaptureDeviceProperty?
 
@@ -106,6 +107,11 @@ final class DeviceController {
         // probe cost is paid once, on the same thread that built the
         // controls, before the actor takes ownership.
         let fovSnap: UVCIntControlSnapshot? = logitechBrio?.fieldOfView.map { UVCIntControlSnapshot($0) }
+        let hdrSnap: UVCBoolControlSnapshot? = logitechBrio?.hdr.map {
+            UVCBoolControlSnapshot(isCapable: $0.isCapable,
+                                   defaultValue: $0.defaultValue,
+                                   isEnabled: $0.isEnabled)
+        }
         let rightLightSnap: UVCIntControlSnapshot? = logitechBrio?.rightLight.map { UVCIntControlSnapshot($0) }
         let ledSnap: UVCIntControlSnapshot? = logitechBrio?.indicatorLed.map { UVCIntControlSnapshot($0) }
 
@@ -133,8 +139,22 @@ final class DeviceController {
         self.focusAbsolute = Self.makeNumber(actor, .focusAbsolute, focusAbsoluteSnap)
 
         self.logitechFieldOfView = fovSnap.map { Self.makeNumber(actor, .logitechFieldOfView, $0) }
+        self.logitechHDR = hdrSnap.map { Self.makeBool(actor, .logitechHDR, $0) }
         self.logitechRightLight = rightLightSnap.map { Self.makeNumber(actor, .logitechRightLight, $0) }
         self.logitechLed = ledSnap.map { Self.makeNumber(actor, .logitechIndicatorLed, $0) }
+    }
+
+    var isHDR: Bool {
+        return logitechHDR?.isEnabled ?? false
+    }
+
+    func setHDR(_ enabled: Bool) {
+        logitechHDR?.isEnabled = enabled
+    }
+
+    func toggleHDR() {
+        guard let hdr = logitechHDR else { return }
+        hdr.isEnabled.toggle()
     }
 
     private static func makeNumber(_ actor: UVCDeviceActor,
