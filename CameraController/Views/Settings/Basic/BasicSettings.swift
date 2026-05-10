@@ -42,12 +42,6 @@ struct BasicSettings: View {
                     WhiteBalanceView(controller: controller)
                 }
             }
-
-            if let rightLight = controller.logitechRightLight, rightLight.isCapable {
-                Section("Logitech BRIO") {
-                    RightLightView(rightLight: rightLight)
-                }
-            }
         }
         .formStyle(.grouped)
         .frame(maxHeight: 360)
