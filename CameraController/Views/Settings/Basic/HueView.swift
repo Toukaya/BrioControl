@@ -19,10 +19,11 @@ struct HueView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
+            HStack(spacing: 6) {
+                Text("Auto")
                 Toggle("Auto", isOn: $hueAuto.isEnabled.animation())
                     .toggleStyle(.switch)
-                    .fixedSize()
+                    .labelsHidden()
                 Spacer()
             }
         } label: {

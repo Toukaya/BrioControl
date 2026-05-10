@@ -36,10 +36,11 @@ struct ExposureView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
+            HStack(spacing: 6) {
+                Text("Auto")
                 Toggle("Auto", isOn: auto)
                     .toggleStyle(.switch)
-                    .fixedSize()
+                    .labelsHidden()
                 Spacer()
             }
         } label: {

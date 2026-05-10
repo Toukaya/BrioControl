@@ -19,10 +19,11 @@ struct FocusView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
+            HStack(spacing: 6) {
+                Text("Auto")
                 Toggle("Auto", isOn: $focusAuto.isEnabled.animation())
                     .toggleStyle(.switch)
-                    .fixedSize()
+                    .labelsHidden()
                 Spacer()
             }
         } label: {

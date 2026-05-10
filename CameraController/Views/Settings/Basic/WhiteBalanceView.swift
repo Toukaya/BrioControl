@@ -19,10 +19,11 @@ struct WhiteBalanceView: View {
 
     var body: some View {
         LabeledContent {
-            HStack {
+            HStack(spacing: 6) {
+                Text("Auto")
                 Toggle("Auto", isOn: $whiteBalanceAuto.isEnabled.animation())
                     .toggleStyle(.switch)
-                    .fixedSize()
+                    .labelsHidden()
                 Spacer()
             }
         } label: {
