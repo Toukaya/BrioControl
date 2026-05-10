@@ -9,21 +9,21 @@ Control your cameras settings without using the software provided (or not) by th
 
 <!-- shields -->
 <div align="center">
-    <!-- downloads -->
-    <a href="https://github.com/itaybre/CameraController/releases">
-        <img src="https://img.shields.io/github/downloads/itaybre/CameraController/total" alt="downloads"/>
-    </a>
-    <!-- version -->
-    <a href="https://github.com/itaybre/CameraController/releases/latest">
-        <img src="https://img.shields.io/github/release/itaybre/CameraController.svg" alt="latest version"/>
-    </a>
     <!-- license -->
-    <a href="https://github.com/itaybre/CameraController/blob/master/License.txt">
-        <img src="https://img.shields.io/github/license/itaybre/CameraController.svg" alt="license"/>
+    <a href="https://github.com/Toukaya/BrioControl/blob/master/LICENSE">
+        <img src="https://img.shields.io/github/license/Toukaya/BrioControl.svg" alt="license"/>
     </a>
     <!-- platform -->
+    <a href="https://github.com/Toukaya/BrioControl">
+        <img src="https://img.shields.io/badge/platform-macOS%2026%2B-lightgrey.svg" alt="platform"/>
+    </a>
+    <!-- swift version -->
+    <a href="https://github.com/Toukaya/BrioControl">
+        <img src="https://img.shields.io/badge/swift-6-orange.svg" alt="swift 6"/>
+    </a>
+    <!-- upstream -->
     <a href="https://github.com/itaybre/CameraController">
-        <img src="https://img.shields.io/badge/platform-macOS-lightgrey.svg" alt="platform"/>
+        <img src="https://img.shields.io/badge/forked%20from-itaybre%2FCameraController-blue.svg" alt="forked from itaybre/CameraController"/>
     </a>
 </div>
 
