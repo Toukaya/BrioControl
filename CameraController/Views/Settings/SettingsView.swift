@@ -41,11 +41,13 @@ struct SettingsView: View {
                 PreferencesView()
             }
         }
-        // macOS 26 native Liquid Glass pill tab bar (matches the
-        // System Settings chrome). The parent ContentView pins the
-        // overall popover frame, so this view no longer needs an
-        // explicit .frame(height:).
-        .tabViewStyle(.tabBarOnly)
+        // The new macOS 26 TabView { Tab(...) } API has no intrinsic
+        // vertical size when its container uses .fixedSize(vertical:
+        // false) — the tab bar renders but the content area collapses
+        // to 0 because each Form inside only sets a maxHeight. Pin a
+        // fixed height here so the popover stays stable across tab
+        // switches and matches the Forms' maxHeight: 360.
+        .frame(height: 360)
     }
 }
 
