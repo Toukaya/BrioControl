@@ -36,7 +36,7 @@ struct CameraSection_Previews: PreviewProvider {
         Form {
             CameraSection()
         }
-        .formStyle(.grouped)
+        .formStyle(.columns)
         .environment(DevicesManager.shared)
     }
 }

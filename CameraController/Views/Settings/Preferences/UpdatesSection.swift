@@ -44,7 +44,7 @@ struct UpdatesSection_Previews: PreviewProvider {
         Form {
             UpdatesSection()
         }
-        .formStyle(.grouped)
+        .formStyle(.columns)
         .environment(UserSettings.shared)
     }
 }

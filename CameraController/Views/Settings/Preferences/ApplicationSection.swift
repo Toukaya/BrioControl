@@ -32,7 +32,7 @@ struct ApplicationSection_Previews: PreviewProvider {
         Form {
             ApplicationSection()
         }
-        .formStyle(.grouped)
+        .formStyle(.columns)
         .environment(UserSettings.shared)
     }
 }
