@@ -5,7 +5,7 @@
 //  SwiftUI App lifecycle entry point. The menu-bar status item and
 //  popover are owned by AppDelegate (NSStatusItem + NSPopover) so the
 //  popover renders the macOS 26 Liquid Glass arrow tail — SwiftUI's
-//  MenuBarExtra(.window) does not. This Scene only hosts the standard
+//  menu-bar scene styles do not. This Scene only hosts the standard
 //  Preferences window (⌘,).
 //
 
