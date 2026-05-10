@@ -49,7 +49,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
 
         // Request camera access at app launch, before any
         // PreviewSession.attach() can run. The permission prompt
-        // ('CameraController would like to access the camera') appears
+        // ('BrioControl would like to access the camera') appears
         // as soon as the process is launched, so by the time the user
         // clicks the menu-bar icon for the first popover open, access
         // has already been granted (or denied) and the preview can
@@ -86,7 +86,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate, NSPopoverDelegate {
         let item = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         if let button = item.button {
             button.image = NSImage(systemSymbolName: "camera.fill",
-                                   accessibilityDescription: "Camera Controller")
+                                   accessibilityDescription: "BrioControl")
             button.target = self
             button.action = #selector(togglePopover(_:))
         }

@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import CameraController
+@testable import BrioControl
 @testable import UVC
 
 class StringTests: XCTestCase {

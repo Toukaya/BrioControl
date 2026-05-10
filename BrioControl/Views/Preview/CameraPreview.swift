@@ -5,7 +5,7 @@
 //  Thin NSViewRepresentable that hosts the AVCaptureVideoPreviewLayer
 //  produced by PreviewSession. Owns no AVFoundation state itself: the
 //  AVCaptureSession, format selection, and start/stop lifecycle all
-//  live in PreviewSession (CameraController/Devices/PreviewSession.swift).
+//  live in PreviewSession (BrioControl/Devices/PreviewSession.swift).
 //
 //  This view only:
 //   - mounts the provided layer as the NSView's backing CALayer sublayer,

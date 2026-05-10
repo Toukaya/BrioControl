@@ -25,7 +25,7 @@ struct ReadWriteSection: View {
             } label: {
                 Label("Read", systemImage: "arrow.down.circle")
                     .symbolRenderingMode(.hierarchical)
-                    .help("CameraController will read the configuration from the camera every X amount of time.")
+                    .help("BrioControl will read the configuration from the camera every X amount of time.")
             }
 
             LabeledContent {
@@ -39,7 +39,7 @@ struct ReadWriteSection: View {
             } label: {
                 Label("Write", systemImage: "arrow.up.circle")
                     .symbolRenderingMode(.hierarchical)
-                    .help("CameraController will write the configuration to the camera every X amount of time.")
+                    .help("BrioControl will write the configuration to the camera every X amount of time.")
             }
         }
     }

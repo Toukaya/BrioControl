@@ -5,7 +5,7 @@
 //  Layer-hosting NSView used by CameraPreview. Before TASK-09 this type
 //  also owned an AVCaptureSession and drove device configuration / start
 //  / stop inline; that responsibility now lives in PreviewSession
-//  (CameraController/Devices/PreviewSession.swift) and this file shrunk
+//  (BrioControl/Devices/PreviewSession.swift) and this file shrunk
 //  to a thin host: it mounts an externally-supplied
 //  AVCaptureVideoPreviewLayer and forwards mouse events so the menu-bar
 //  popover can be dragged.

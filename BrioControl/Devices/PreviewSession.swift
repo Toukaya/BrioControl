@@ -25,7 +25,7 @@ import Observation
 @Observable
 final class PreviewSession {
     // The single AVCaptureSession instance that backs the preview. The
-    // verification grep `rg 'AVCaptureSession\(\)' CameraController/`
+    // verification grep `rg 'AVCaptureSession\(\)' BrioControl/`
     // must match this one and only this one.
     //
     // `nonisolated(unsafe)` is the narrowest escape hatch that lets the
@@ -67,7 +67,7 @@ final class PreviewSession {
     // pipeline could produce when the user toggled scenes / devices
     // rapidly.
     @ObservationIgnored
-    private let ioQueue = DispatchQueue(label: "com.itaysoft.CameraController.PreviewSession.io",
+    private let ioQueue = DispatchQueue(label: "com.toukaya.BrioControl.PreviewSession.io",
                                         qos: .userInitiated)
 
     init() {

@@ -1,6 +1,6 @@
 //
-//  CameraControllerApp.swift
-//  CameraController
+//  BrioControlApp.swift
+//  BrioControl
 //
 //  SwiftUI App lifecycle entry point. The menu-bar status item and
 //  popover are owned by AppDelegate (NSStatusItem + NSPopover) so the
@@ -12,7 +12,7 @@
 import SwiftUI
 
 @main
-struct CameraControllerApp: App {
+struct BrioControlApp: App {
     // The AppDelegate adaptor owns the NSStatusItem, NSPopover, and
     // the long-lived PreviewSession that backs the camera preview, in
     // addition to Sparkle / LetsMove / the AVCaptureDevice video

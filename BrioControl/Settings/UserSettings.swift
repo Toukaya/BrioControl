@@ -23,7 +23,7 @@ final class UserSettings {
             // sanctioned path on every supported deployment target
             // (MACOSX_DEPLOYMENT_TARGET = 26.0).
             let helperService = SMAppService.loginItem(
-                identifier: "com.itaysoft.CameraController.Helper"
+                identifier: "com.toukaya.BrioControl.Helper"
             )
             let registerSucceeded: Bool
             if openAtLogin {

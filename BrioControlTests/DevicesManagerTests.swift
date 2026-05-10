@@ -8,7 +8,7 @@
 
 import XCTest
 import AVFoundation
-@testable import CameraController
+@testable import BrioControl
 
 @MainActor
 class DevicesManagerTests: XCTestCase {
