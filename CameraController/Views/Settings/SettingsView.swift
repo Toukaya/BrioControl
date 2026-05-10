@@ -41,6 +41,13 @@ struct SettingsView: View {
                 PreferencesView()
             }
         }
+        // The new macOS 26 TabView { Tab(...) } API has no intrinsic
+        // vertical size when its container uses .fixedSize(vertical:
+        // false) — the tab bar renders but the content area collapses
+        // to 0 because each Form inside only sets a maxHeight. Pin a
+        // fixed height here so the popover stays stable across tab
+        // switches and matches the Forms' maxHeight: 360.
+        .frame(height: 360)
     }
 }
 
