@@ -13,42 +13,31 @@ struct ContentView: View {
     @Environment(DevicesManager.self) private var manager
     @Environment(UserSettings.self) private var settings
 
-    // SwiftUI's scenePhase transitions when the MenuBarExtra window
-    // becomes key / loses key. We use those transitions to suspend the
-    // AVCaptureSession (and turn the camera LED off) while the popover
-    // is hidden, then resume on re-show.
-    @Environment(\.scenePhase) private var scenePhase
+    // PreviewSession is owned by AppDelegate (NSStatusItem +
+    // NSPopover lifetime) and injected via .environment(_:) on the
+    // NSHostingController root view. Reading it via @Environment here
+    // — instead of @State — keeps the AVCaptureSession instance
+    // stable across popover open/close cycles. AppDelegate's
+    // popoverWillShow / popoverDidClose hooks drive resume() /
+    // suspend(), so ContentView no longer watches scenePhase.
+    @Environment(PreviewSession.self) private var preview
 
-    // The single source of truth for the AVCaptureSession lifecycle.
-    // Created once per ContentView instance and driven declaratively
-    // via .task(id:) and .onChange(of:) modifiers below. See
-    // CameraController/Devices/PreviewSession.swift for the lifecycle
-    // contract.
-    @State private var preview = PreviewSession()
+    // Fixed popover content height. NSPopover sizes to its content's
+    // intrinsic size, so without an explicit height the popover
+    // resizes when switching between tabs whose Forms have
+    // different intrinsic heights.
+    private let popoverContentHeight: CGFloat = 480
 
     var body: some View {
-        // SettingsView no longer takes a captureDevice binding: it now
-        // reads selectedDevice straight from @Environment(DevicesManager).
-        // The picker that mutates that selection (CameraSection in
-        // PreferencesView) builds its own @Bindable shadow locally, so
-        // ContentView no longer needs to construct $manager.selectedDevice
-        // here.
+        // Tabs live at the top of the popover (matches the macOS 26
+        // System Settings convention). The camera preview sits below
+        // the tab bar and the active tab's content fills the rest of
+        // the popover.
         VStack(spacing: 0) {
+            SettingsView()
+
             cameraPreview()
                 .animation(nil, value: settings.hideCameraPreview)
-
-            SettingsView()
-                .background(Color(nsColor: .windowBackgroundColor))
-                .clipShape(RoundedRectangle(cornerRadius: 14, style: .continuous))
-                .padding(.horizontal, 8)
-                .padding(.bottom, 8)
-        }
-        .background(Color(nsColor: .windowBackgroundColor))
-        .onAppear {
-            DevicesManager.shared.startMonitoring()
-        }
-        .onDisappear {
-            DevicesManager.shared.stopMonitoring()
         }
         // Drive PreviewSession from the selected-device identity. A
         // change to selectedDevice cancels the previous task body and
@@ -63,18 +52,8 @@ struct ContentView: View {
                 await preview.detach()
             }
         }
-        .onChange(of: scenePhase) { _, newPhase in
-            switch newPhase {
-            case .active:
-                Task { await preview.resume() }
-            case .inactive, .background:
-                Task { await preview.suspend() }
-            @unknown default:
-                break
-            }
-        }
-        .frame(width: settings.cameraPreviewSize.getWidth())
-        .fixedSize(horizontal: true, vertical: false)
+        .frame(width: settings.cameraPreviewSize.getWidth(),
+               height: popoverContentHeight)
     }
 
     @ViewBuilder
@@ -89,7 +68,6 @@ struct ContentView: View {
                 )
                 .scaleEffect(CGSize(width: settings.mirrorPreview ? -1 : 1, height: 1))
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                .glassEffect(.regular, in: .rect(cornerRadius: 12))
                 .padding(8)
         } else {
             Image("video.slash")
@@ -99,7 +77,6 @@ struct ContentView: View {
                 )
                 .background(Color.gray)
                 .clipShape(RoundedRectangle(cornerRadius: 12))
-                .glassEffect(.regular, in: .rect(cornerRadius: 12))
                 .padding(8)
         }
     }
@@ -112,6 +89,7 @@ struct ContentView_Previews: PreviewProvider {
             .environment(DevicesManager.shared)
             .environment(UserSettings.shared)
             .environment(ProfileManager.shared)
+            .environment(PreviewSession())
     }
 }
 #endif
