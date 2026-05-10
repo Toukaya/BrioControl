@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F47D07C324C4104300E44A22"
-               BuildableName = "CameraController.app"
-               BlueprintName = "CameraController"
-               ReferencedContainer = "container:CameraController.xcodeproj">
+               BuildableName = "BrioControl.app"
+               BlueprintName = "BrioControl"
+               ReferencedContainer = "container:BrioControl.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -34,9 +34,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "F47D07DB24C4104600E44A22"
-               BuildableName = "CameraControllerTests.xctest"
-               BlueprintName = "CameraControllerTests"
-               ReferencedContainer = "container:CameraController.xcodeproj">
+               BuildableName = "BrioControlTests.xctest"
+               BlueprintName = "BrioControlTests"
+               ReferencedContainer = "container:BrioControl.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -57,9 +57,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F47D07C324C4104300E44A22"
-            BuildableName = "CameraController.app"
-            BlueprintName = "CameraController"
-            ReferencedContainer = "container:CameraController.xcodeproj">
+            BuildableName = "BrioControl.app"
+            BlueprintName = "BrioControl"
+            ReferencedContainer = "container:BrioControl.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -74,9 +74,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "F47D07C324C4104300E44A22"
-            BuildableName = "CameraController.app"
-            BlueprintName = "CameraController"
-            ReferencedContainer = "container:CameraController.xcodeproj">
+            BuildableName = "BrioControl.app"
+            BlueprintName = "BrioControl"
+            ReferencedContainer = "container:BrioControl.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

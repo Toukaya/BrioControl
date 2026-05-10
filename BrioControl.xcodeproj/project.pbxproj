@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		922AC8D6DDA32B15EF84F208 /* FieldOfViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180ACBB54F486B98C03D341 /* FieldOfViewView.swift */; };
 		F42460352A5A65A0009108C2 /* BrightnessView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460342A5A65A0009108C2 /* BrightnessView.swift */; };
 		F42460372A5A6697009108C2 /* ContrastView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460362A5A6697009108C2 /* ContrastView.swift */; };
 		F42460392A5A6706009108C2 /* SaturationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42460382A5A6706009108C2 /* SaturationView.swift */; };
@@ -30,7 +31,6 @@
 		F4260510C00301000000E353 /* UVCDeviceActorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510C00300000000E353 /* UVCDeviceActorTests.swift */; };
 		F4260510D00101000000E353 /* PreviewSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4260510D00100000000E353 /* PreviewSession.swift */; };
 		F42D42DB27A0F0C600107DFF /* MoveApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42DA27A0F0C600107DFF /* MoveApplication.swift */; };
-		FDF3D7BC9AEC1F9B0AAFD05A /* CameraControllerApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */; };
 		F42D42DD27A0F0DC00107DFF /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F42D42DC27A0F0DB00107DFF /* Security.framework */; platformFilter = maccatalyst; };
 		F42D42DF27A0F0EE00107DFF /* MoveApplication.strings in Resources */ = {isa = PBXBuildFile; fileRef = F42D42DE27A0F0EE00107DFF /* MoveApplication.strings */; };
 		F42D42E227A0F68000107DFF /* NSNotificationName+Devices.swift in Sources */ = {isa = PBXBuildFile; fileRef = F42D42E127A0F68000107DFF /* NSNotificationName+Devices.swift */; };
@@ -104,7 +104,7 @@
 		F4E5262D24C7DDB000125DF9 /* CaptureDevice.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5262C24C7DDB000125DF9 /* CaptureDevice.swift */; };
 		F4E5263024C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5262F24C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift */; };
 		F4E5263224C93A3400125DF9 /* DeviceController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4E5263124C93A3400125DF9 /* DeviceController.swift */; };
-		922AC8D6DDA32B15EF84F208 /* FieldOfViewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A180ACBB54F486B98C03D341 /* FieldOfViewView.swift */; };
+		FDF3D7BC9AEC1F9B0AAFD05A /* BrioControlApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21B49B063179E1ABEBCBDEC8 /* BrioControlApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -120,7 +120,7 @@
 			containerPortal = F47D07BC24C4104300E44A22 /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = F47D07C324C4104300E44A22;
-			remoteInfo = CameraController;
+			remoteInfo = BrioControl;
 		};
 		F4D4C6F724CBE81900581E05 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -156,6 +156,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		21B49B063179E1ABEBCBDEC8 /* BrioControlApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrioControlApp.swift; sourceTree = "<group>"; };
+		A180ACBB54F486B98C03D341 /* FieldOfViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOfViewView.swift; sourceTree = "<group>"; };
 		F42460342A5A65A0009108C2 /* BrightnessView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrightnessView.swift; sourceTree = "<group>"; };
 		F42460362A5A6697009108C2 /* ContrastView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContrastView.swift; sourceTree = "<group>"; };
 		F42460382A5A6706009108C2 /* SaturationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SaturationView.swift; sourceTree = "<group>"; };
@@ -179,7 +181,6 @@
 		F4260510C00300000000E353 /* UVCDeviceActorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UVCDeviceActorTests.swift; sourceTree = "<group>"; };
 		F4260510D00100000000E353 /* PreviewSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewSession.swift; sourceTree = "<group>"; };
 		F42D42DA27A0F0C600107DFF /* MoveApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoveApplication.swift; sourceTree = "<group>"; };
-		21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CameraControllerApp.swift; sourceTree = "<group>"; };
 		F42D42DC27A0F0DB00107DFF /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		F42D42DE27A0F0EE00107DFF /* MoveApplication.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = MoveApplication.strings; sourceTree = "<group>"; };
 		F42D42E127A0F68000107DFF /* NSNotificationName+Devices.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSNotificationName+Devices.swift"; sourceTree = "<group>"; };
@@ -194,15 +195,15 @@
 		F469CF4824DD0E310092C7F9 /* Profile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Profile.swift; sourceTree = "<group>"; };
 		F46C25772A49386D00FF9100 /* UnsupportedView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UnsupportedView.swift; sourceTree = "<group>"; };
 		F46C257A2A493FBD00FF9100 /* ProfilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfilesView.swift; sourceTree = "<group>"; };
-		F47D07C424C4104300E44A22 /* CameraController.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CameraController.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F47D07C424C4104300E44A22 /* BrioControl.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BrioControl.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F47D07C724C4104300E44A22 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F47D07C924C4104300E44A22 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F47D07CE24C4104600E44A22 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F47D07D124C4104600E44A22 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		F47D07D424C4104600E44A22 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F47D07D624C4104600E44A22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F47D07D724C4104600E44A22 /* CameraController.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = CameraController.entitlements; sourceTree = "<group>"; };
-		F47D07DC24C4104600E44A22 /* CameraControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CameraControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F47D07D724C4104600E44A22 /* BrioControl.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BrioControl.entitlements; sourceTree = "<group>"; };
+		F47D07DC24C4104600E44A22 /* BrioControlTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BrioControlTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		F47D07E224C4104600E44A22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F47D07EE24C4123600E44A22 /* DeviceManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceManager.swift; sourceTree = "<group>"; };
 		F47D07F124C4125B00E44A22 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
@@ -259,7 +260,6 @@
 		F4E5262C24C7DDB000125DF9 /* CaptureDevice.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureDevice.swift; sourceTree = "<group>"; };
 		F4E5262F24C7E0BC00125DF9 /* BitmapCaptureDeviceProperty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmapCaptureDeviceProperty.swift; sourceTree = "<group>"; };
 		F4E5263124C93A3400125DF9 /* DeviceController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceController.swift; sourceTree = "<group>"; };
-		A180ACBB54F486B98C03D341 /* FieldOfViewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FieldOfViewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -398,8 +398,8 @@
 		F47D07BB24C4104300E44A22 = {
 			isa = PBXGroup;
 			children = (
-				F47D07C624C4104300E44A22 /* CameraController */,
-				F47D07DF24C4104600E44A22 /* CameraControllerTests */,
+				F47D07C624C4104300E44A22 /* BrioControl */,
+				F47D07DF24C4104600E44A22 /* BrioControlTests */,
 				F4D4C6E224CBE7A000581E05 /* Helper */,
 				F4508ACD2A43E477003C44F1 /* UVC */,
 				F47D07C524C4104300E44A22 /* Products */,
@@ -410,18 +410,18 @@
 		F47D07C524C4104300E44A22 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F47D07C424C4104300E44A22 /* CameraController.app */,
-				F47D07DC24C4104600E44A22 /* CameraControllerTests.xctest */,
+				F47D07C424C4104300E44A22 /* BrioControl.app */,
+				F47D07DC24C4104600E44A22 /* BrioControlTests.xctest */,
 				F4D4C6E124CBE7A000581E05 /* Helper.app */,
 				F4508ACC2A43E477003C44F1 /* UVC.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		F47D07C624C4104300E44A22 /* CameraController */ = {
+		F47D07C624C4104300E44A22 /* BrioControl */ = {
 			isa = PBXGroup;
 			children = (
-				21B49B063179E1ABEBCBDEC8 /* CameraControllerApp.swift */,
+				21B49B063179E1ABEBCBDEC8 /* BrioControlApp.swift */,
 				F47D07C724C4104300E44A22 /* AppDelegate.swift */,
 				F47D07ED24C4119200E44A22 /* Resources */,
 				F42D42E027A0F66D00107DFF /* Extensions */,
@@ -432,7 +432,7 @@
 				F47D07D024C4104600E44A22 /* Preview Content */,
 				F42D42D927A0F0B200107DFF /* Vendored */,
 			);
-			path = CameraController;
+			path = BrioControl;
 			sourceTree = "<group>";
 		};
 		F47D07D024C4104600E44A22 /* Preview Content */ = {
@@ -444,7 +444,7 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		F47D07DF24C4104600E44A22 /* CameraControllerTests */ = {
+		F47D07DF24C4104600E44A22 /* BrioControlTests */ = {
 			isa = PBXGroup;
 			children = (
 				F47D07E224C4104600E44A22 /* Info.plist */,
@@ -452,7 +452,7 @@
 				F47D080924C50E1C00E44A22 /* StringTests.swift */,
 				F4260510C00300000000E353 /* UVCDeviceActorTests.swift */,
 			);
-			path = CameraControllerTests;
+			path = BrioControlTests;
 			sourceTree = "<group>";
 		};
 		F47D07EB24C4117A00E44A22 /* Views */ = {
@@ -487,7 +487,7 @@
 				F47D07CE24C4104600E44A22 /* Assets.xcassets */,
 				F47D07D324C4104600E44A22 /* Main.storyboard */,
 				F47D07D624C4104600E44A22 /* Info.plist */,
-				F47D07D724C4104600E44A22 /* CameraController.entitlements */,
+				F47D07D724C4104600E44A22 /* BrioControl.entitlements */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -681,9 +681,9 @@
 			productReference = F4508ACC2A43E477003C44F1 /* UVC.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		F47D07C324C4104300E44A22 /* CameraController */ = {
+		F47D07C324C4104300E44A22 /* BrioControl */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F47D07E524C4104600E44A22 /* Build configuration list for PBXNativeTarget "CameraController" */;
+			buildConfigurationList = F47D07E524C4104600E44A22 /* Build configuration list for PBXNativeTarget "BrioControl" */;
 			buildPhases = (
 				F47D07C024C4104300E44A22 /* Sources */,
 				F47D07C124C4104300E44A22 /* Frameworks */,
@@ -698,17 +698,17 @@
 				F4D4C6F824CBE81900581E05 /* PBXTargetDependency */,
 				F4508AD12A43E477003C44F1 /* PBXTargetDependency */,
 			);
-			name = CameraController;
+			name = BrioControl;
 			packageProductDependencies = (
 				F49FA8242A43BE5D0043E0E1 /* Sparkle */,
 			);
-			productName = CameraController;
-			productReference = F47D07C424C4104300E44A22 /* CameraController.app */;
+			productName = BrioControl;
+			productReference = F47D07C424C4104300E44A22 /* BrioControl.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F47D07DB24C4104600E44A22 /* CameraControllerTests */ = {
+		F47D07DB24C4104600E44A22 /* BrioControlTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F47D07E824C4104600E44A22 /* Build configuration list for PBXNativeTarget "CameraControllerTests" */;
+			buildConfigurationList = F47D07E824C4104600E44A22 /* Build configuration list for PBXNativeTarget "BrioControlTests" */;
 			buildPhases = (
 				F47D07D824C4104600E44A22 /* Sources */,
 				F47D07D924C4104600E44A22 /* Frameworks */,
@@ -719,9 +719,9 @@
 			dependencies = (
 				F47D07DE24C4104600E44A22 /* PBXTargetDependency */,
 			);
-			name = CameraControllerTests;
-			productName = CameraControllerTests;
-			productReference = F47D07DC24C4104600E44A22 /* CameraControllerTests.xctest */;
+			name = BrioControlTests;
+			productName = BrioControlTests;
+			productReference = F47D07DC24C4104600E44A22 /* BrioControlTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 		F4D4C6E024CBE7A000581E05 /* Helper */ = {
@@ -750,7 +750,7 @@
 				BuildIndependentTargetsInParallel = YES;
 				LastSwiftUpdateCheck = 1150;
 				LastUpgradeCheck = 2640;
-				ORGANIZATIONNAME = Itaysoft;
+				ORGANIZATIONNAME = Touka;
 				TargetAttributes = {
 					F4508ACB2A43E477003C44F1 = {
 						CreatedOnToolsVersion = 14.3;
@@ -768,7 +768,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F47D07BF24C4104300E44A22 /* Build configuration list for PBXProject "CameraController" */;
+			buildConfigurationList = F47D07BF24C4104300E44A22 /* Build configuration list for PBXProject "BrioControl" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -784,8 +784,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F47D07C324C4104300E44A22 /* CameraController */,
-				F47D07DB24C4104600E44A22 /* CameraControllerTests */,
+				F47D07C324C4104300E44A22 /* BrioControl */,
+				F47D07DB24C4104600E44A22 /* BrioControlTests */,
 				F4D4C6E024CBE7A000581E05 /* Helper */,
 				F4508ACB2A43E477003C44F1 /* UVC */,
 			);
@@ -921,7 +921,7 @@
 				F4D1714A2A3EBC740039E353 /* PreviewSizeSettings.swift in Sources */,
 				F4260510AA0001000000E353 /* PreviewQualitySettings.swift in Sources */,
 				922AC8D6DDA32B15EF84F208 /* FieldOfViewView.swift in Sources */,
-				FDF3D7BC9AEC1F9B0AAFD05A /* CameraControllerApp.swift in Sources */,
+				FDF3D7BC9AEC1F9B0AAFD05A /* BrioControlApp.swift in Sources */,
 				F469CF4724DD0D9F0092C7F9 /* ProfileManager.swift in Sources */,
 				F44150732A882D760021ADB5 /* ProfileRow.swift in Sources */,
 				F4E5262124C7BDD400125DF9 /* CameraPreviewInternal.swift in Sources */,
@@ -973,7 +973,7 @@
 		};
 		F47D07DE24C4104600E44A22 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = F47D07C324C4104300E44A22 /* CameraController */;
+			target = F47D07C324C4104300E44A22 /* BrioControl */;
 			targetProxy = F47D07DD24C4104600E44A22 /* PBXContainerItemProxy */;
 		};
 		F4D4C6F824CBE81900581E05 /* PBXTargetDependency */ = {
@@ -1205,25 +1205,25 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = CameraController/Resources/CameraController.entitlements;
+				CODE_SIGN_ENTITLEMENTS = BrioControl/Resources/BrioControl.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"CameraController/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"BrioControl/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
-				INFOPLIST_FILE = CameraController/Resources/Info.plist;
+				INFOPLIST_FILE = BrioControl/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController;
+				PRODUCT_BUNDLE_IDENTIFIER = com.toukaya.BrioControl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_STRICT_CONCURRENCY = complete;
@@ -1236,26 +1236,26 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = CameraController/Resources/CameraController.entitlements;
+				CODE_SIGN_ENTITLEMENTS = BrioControl/Resources/BrioControl.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 10;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_ASSET_PATHS = "\"CameraController/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"BrioControl/Preview Content\"";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GCC_OPTIMIZATION_LEVEL = s;
-				INFOPLIST_FILE = CameraController/Resources/Info.plist;
+				INFOPLIST_FILE = BrioControl/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController;
+				PRODUCT_BUNDLE_IDENTIFIER = com.toukaya.BrioControl;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -1269,21 +1269,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = PY9WJ3M9MW;
-				INFOPLIST_FILE = CameraControllerTests/Info.plist;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = BrioControlTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraControllerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.toukaya.BrioControlTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraController.app/Contents/MacOS/CameraController";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrioControl.app/Contents/MacOS/BrioControl";
 			};
 			name = Debug;
 		};
@@ -1291,21 +1292,22 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEAD_CODE_STRIPPING = YES;
-				DEVELOPMENT_TEAM = PY9WJ3M9MW;
-				INFOPLIST_FILE = CameraControllerTests/Info.plist;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = BrioControlTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@loader_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraControllerTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.toukaya.BrioControlTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 6.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CameraController.app/Contents/MacOS/CameraController";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/BrioControl.app/Contents/MacOS/BrioControl";
 			};
 			name = Release;
 		};
@@ -1331,7 +1333,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController.Helper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.toukaya.BrioControl.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -1363,7 +1365,7 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 26.0;
 				MARKETING_VERSION = 2.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.itaysoft.CameraController.Helper;
+				PRODUCT_BUNDLE_IDENTIFIER = com.toukaya.BrioControl.Helper;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
@@ -1385,7 +1387,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F47D07BF24C4104300E44A22 /* Build configuration list for PBXProject "CameraController" */ = {
+		F47D07BF24C4104300E44A22 /* Build configuration list for PBXProject "BrioControl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F47D07E324C4104600E44A22 /* Debug */,
@@ -1394,7 +1396,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F47D07E524C4104600E44A22 /* Build configuration list for PBXNativeTarget "CameraController" */ = {
+		F47D07E524C4104600E44A22 /* Build configuration list for PBXNativeTarget "BrioControl" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F47D07E624C4104600E44A22 /* Debug */,
@@ -1403,7 +1405,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F47D07E824C4104600E44A22 /* Build configuration list for PBXNativeTarget "CameraControllerTests" */ = {
+		F47D07E824C4104600E44A22 /* Build configuration list for PBXNativeTarget "BrioControlTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F47D07E924C4104600E44A22 /* Debug */,
