@@ -68,52 +68,34 @@ BrioControl is a fork of [itaybre/CameraController](https://github.com/itaybre/C
 - **Renamed `CameraController` → `BrioControl`** (Xcode project, target, scheme, source/test directories, bundle identifiers `com.toukaya.BrioControl{,.Helper}`, Info.plist `CFBundleDisplayName`).
 - **Xcode 26 project-format upgrade**, predictable PBX file IDs replaced with random 24-hex IDs, swiftlint complexity / function-body-length violations resolved structurally (helper extraction in `IOUSBConfigurationDescriptorPtr+UVC.swift`, `Snapshots` struct in `DeviceController.swift`).
 
-## Installation
+## Building from source
 
-### Manually
-
-Download the latest `.zip` from [Releases](https://github.com/itaybre/CameraController/releases/latest).
-
-### Homebrew
-
-```
-brew install --cask cameracontroller
-```
-
-## ToDo
-
-- Apply latest settings on startup
-- Add more Unit Tests
-- Support for some vendor specific capabilities (like Logitech LED control)
-
-## How to help
-
-Open [issues](https://github.com/itaybre/CameraController/issues) if you have a question, an enhancement to suggest or a bug you've found. If you want you can fork the code yourself and submit a pull request to improve the app.
-
-## How to build
+BrioControl is currently source-only — there are no published binaries, no signed release `.zip`, and no Homebrew cask. Build it locally with:
 
 ### Required
 
-- Xcode
-- [Swiftlint](https://github.com/realm/SwiftLint)
+- macOS 26 (Tahoe) or later
+- Xcode 26 or later
+- [SwiftLint](https://github.com/realm/SwiftLint) (used as a Run Script build phase)
 
-Clone the project
 ```sh
-$ git clone https://github.com/itaybre/CameraController.git
+git clone https://github.com/Toukaya/BrioControl.git
+cd BrioControl
+xcodebuild -scheme BrioControl -configuration Release build
 ```
 
-You're all set ! Now open the `BrioControl.xcodeproj` with Xcode
+Or open `BrioControl.xcodeproj` in Xcode and run.
 
 ## FAQ
 
-- Does it work with Apple's Facetime Camera?
-
-In old machines it will work, but new machines (wth T1 and T2 chip) require a special entitlement only available to Apple.
+- **Does it work with Apple's FaceTime camera?**
+  On older Intel Macs without the T1/T2 chip it will work; T1/T2/Apple Silicon FaceTime cameras require a special entitlement only available to Apple.
 
 ## Support
-- macOS Catalina (`10.15`) and up.
-- Works with cameras controllable via [UVC](https://www.usb.org/document-library/video-class-v15-document-set).
+- **macOS 26 (Tahoe)** only. The deployment target is `26.0` so the codebase can use Swift 6 strict concurrency, the Observation framework, the macOS 26 Liquid Glass APIs (`GlassEffectContainer`, `.glassEffect()`), `SMAppService`, and the modern `MenuBarExtra` / `NSPopover` chrome unconditionally.
+- Works with any camera controllable via [UVC](https://www.usb.org/document-library/video-class-v15-document-set), with first-class support for Logitech BRIO vendor extension units (Field of View, HDR).
 
 ## Contributors
-- [@itaybre](https://github.com/itaybre)
+- [@Toukaya](https://github.com/Toukaya) (BrioControl fork maintainer)
+- [@itaybre](https://github.com/itaybre) (upstream CameraController author)
 - Icons by [@herrerajeff](https://github.com/herrerajeff)
