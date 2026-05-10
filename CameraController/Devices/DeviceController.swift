@@ -78,70 +78,97 @@ final class DeviceController {
             return nil
         }
 
-        // Build snapshots BEFORE handing the property graph to the actor.
-        // At this point we are the single owner of every UVCControl, so
-        // reading the configured min/max/default/resolution/current
-        // fields is safe and serial.
-        let exposureModeSnap = UVCBitmapControlSnapshot(properties.exposureMode)
-        let exposureTimeSnap = UVCIntControlSnapshot(properties.exposureTime)
-        let gainSnap = UVCIntControlSnapshot(properties.gain)
-        let brightnessSnap = UVCIntControlSnapshot(properties.brightness)
-        let contrastSnap = UVCIntControlSnapshot(properties.contrast)
-        let saturationSnap = UVCIntControlSnapshot(properties.saturation)
-        let sharpnessSnap = UVCIntControlSnapshot(properties.sharpness)
-        let hueSnap = UVCIntControlSnapshot(properties.hue)
-        let hueAutoSnap = UVCBoolControlSnapshot(properties.hueAuto)
-        let whiteBalanceAutoSnap = UVCBoolControlSnapshot(properties.whiteBalanceAuto)
-        let whiteBalanceSnap = UVCIntControlSnapshot(properties.whiteBalance)
-        let powerLineSnap = UVCIntControlSnapshot(properties.powerLineFrequency)
-        let backlightSnap = UVCIntControlSnapshot(properties.backlightCompensation)
-        let zoomSnap = UVCIntControlSnapshot(properties.zoomAbsolute)
-        let panTiltSnap = UVCMultipleIntControlSnapshot(properties.panTiltAbsolute)
-        let rollSnap = UVCIntControlSnapshot(properties.rollAbsolute)
-        let focusAutoSnap = UVCBoolControlSnapshot(properties.focusAuto)
-        let focusAbsoluteSnap = UVCIntControlSnapshot(properties.focusAbsolute)
+        // All snapshots are constructed BEFORE the actor takes
+        // ownership of the property graph. See Snapshots below for the
+        // per-control build steps; the lazy vendor probes in
+        // LogitechBrioDeviceProperties are also forced inside that init.
+        let snap = Snapshots(properties: properties, brio: logitechBrio)
 
-        // Vendor controls. Touching `fieldOfView` / `rightLight` /
-        // `indicatorLed` triggers the lazy probe described in
-        // LogitechBrioDeviceProperties. Build the snapshots here so the
-        // probe cost is paid once, on the same thread that built the
-        // controls, before the actor takes ownership.
-        let fovSnap: UVCIntControlSnapshot? = logitechBrio?.fieldOfView.map { UVCIntControlSnapshot($0) }
-        let hdrSnap: UVCBoolControlSnapshot? = logitechBrio?.hdr.map {
-            UVCBoolControlSnapshot(isCapable: $0.isCapable,
-                                   defaultValue: $0.defaultValue,
-                                   isEnabled: $0.isEnabled)
-        }
-        let rightLightSnap: UVCIntControlSnapshot? = logitechBrio?.rightLight.map { UVCIntControlSnapshot($0) }
-        let ledSnap: UVCIntControlSnapshot? = logitechBrio?.indicatorLed.map { UVCIntControlSnapshot($0) }
-
-        // Hand off control ownership to the actor.
         let actor = UVCDeviceActor(properties: properties, logitechBrio: logitechBrio)
         self.uvcActor = actor
 
-        self.exposureMode = Self.makeBitmap(actor, .exposureMode, exposureModeSnap)
-        self.exposureTime = Self.makeNumber(actor, .exposureTime, exposureTimeSnap)
-        self.gain = Self.makeNumber(actor, .gain, gainSnap)
-        self.brightness = Self.makeNumber(actor, .brightness, brightnessSnap)
-        self.contrast = Self.makeNumber(actor, .contrast, contrastSnap)
-        self.saturation = Self.makeNumber(actor, .saturation, saturationSnap)
-        self.sharpness = Self.makeNumber(actor, .sharpness, sharpnessSnap)
-        self.hue = Self.makeNumber(actor, .hue, hueSnap)
-        self.hueAuto = Self.makeBool(actor, .hueAuto, hueAutoSnap)
-        self.whiteBalanceAuto = Self.makeBool(actor, .whiteBalanceAuto, whiteBalanceAutoSnap)
-        self.whiteBalance = Self.makeNumber(actor, .whiteBalance, whiteBalanceSnap)
-        self.powerLineFrequency = Self.makeNumber(actor, .powerLineFrequency, powerLineSnap)
-        self.backlightCompensation = Self.makeNumber(actor, .backlightCompensation, backlightSnap)
-        self.zoomAbsolute = Self.makeNumber(actor, .zoomAbsolute, zoomSnap)
-        self.panTiltAbsolute = Self.makeMultiple(actor, .panTiltAbsolute, panTiltSnap)
-        self.rollAbsolute = Self.makeNumber(actor, .rollAbsolute, rollSnap)
-        self.focusAuto = Self.makeBool(actor, .focusAuto, focusAutoSnap)
-        self.focusAbsolute = Self.makeNumber(actor, .focusAbsolute, focusAbsoluteSnap)
+        self.exposureMode = Self.makeBitmap(actor, .exposureMode, snap.exposureMode)
+        self.exposureTime = Self.makeNumber(actor, .exposureTime, snap.exposureTime)
+        self.gain = Self.makeNumber(actor, .gain, snap.gain)
+        self.brightness = Self.makeNumber(actor, .brightness, snap.brightness)
+        self.contrast = Self.makeNumber(actor, .contrast, snap.contrast)
+        self.saturation = Self.makeNumber(actor, .saturation, snap.saturation)
+        self.sharpness = Self.makeNumber(actor, .sharpness, snap.sharpness)
+        self.hue = Self.makeNumber(actor, .hue, snap.hue)
+        self.hueAuto = Self.makeBool(actor, .hueAuto, snap.hueAuto)
+        self.whiteBalanceAuto = Self.makeBool(actor, .whiteBalanceAuto, snap.whiteBalanceAuto)
+        self.whiteBalance = Self.makeNumber(actor, .whiteBalance, snap.whiteBalance)
+        self.powerLineFrequency = Self.makeNumber(actor, .powerLineFrequency, snap.powerLine)
+        self.backlightCompensation = Self.makeNumber(actor, .backlightCompensation, snap.backlight)
+        self.zoomAbsolute = Self.makeNumber(actor, .zoomAbsolute, snap.zoom)
+        self.panTiltAbsolute = Self.makeMultiple(actor, .panTiltAbsolute, snap.panTilt)
+        self.rollAbsolute = Self.makeNumber(actor, .rollAbsolute, snap.roll)
+        self.focusAuto = Self.makeBool(actor, .focusAuto, snap.focusAuto)
+        self.focusAbsolute = Self.makeNumber(actor, .focusAbsolute, snap.focusAbsolute)
 
-        self.logitechFieldOfView = fovSnap.map { Self.makeNumber(actor, .logitechFieldOfView, $0) }
-        self.logitechHDR = hdrSnap.map { Self.makeBool(actor, .logitechHDR, $0) }
-        self.logitechRightLight = rightLightSnap.map { Self.makeNumber(actor, .logitechRightLight, $0) }
-        self.logitechLed = ledSnap.map { Self.makeNumber(actor, .logitechIndicatorLed, $0) }
+        self.logitechFieldOfView = snap.fov.map { Self.makeNumber(actor, .logitechFieldOfView, $0) }
+        self.logitechHDR = snap.hdr.map { Self.makeBool(actor, .logitechHDR, $0) }
+        self.logitechRightLight = snap.rightLight.map { Self.makeNumber(actor, .logitechRightLight, $0) }
+        self.logitechLed = snap.led.map { Self.makeNumber(actor, .logitechIndicatorLed, $0) }
+    }
+
+    // Bundles every per-control snapshot built during DeviceController
+    // construction. Lives in its own struct so DeviceController.init
+    // stays under the function_body_length lint, and to make the
+    // snapshot-then-handoff invariant explicit: all snapshot reads are
+    // performed in this struct's init, BEFORE the actor takes ownership.
+    private struct Snapshots {
+        let exposureMode: UVCBitmapControlSnapshot
+        let exposureTime: UVCIntControlSnapshot
+        let gain: UVCIntControlSnapshot
+        let brightness: UVCIntControlSnapshot
+        let contrast: UVCIntControlSnapshot
+        let saturation: UVCIntControlSnapshot
+        let sharpness: UVCIntControlSnapshot
+        let hue: UVCIntControlSnapshot
+        let hueAuto: UVCBoolControlSnapshot
+        let whiteBalanceAuto: UVCBoolControlSnapshot
+        let whiteBalance: UVCIntControlSnapshot
+        let powerLine: UVCIntControlSnapshot
+        let backlight: UVCIntControlSnapshot
+        let zoom: UVCIntControlSnapshot
+        let panTilt: UVCMultipleIntControlSnapshot
+        let roll: UVCIntControlSnapshot
+        let focusAuto: UVCBoolControlSnapshot
+        let focusAbsolute: UVCIntControlSnapshot
+        let fov: UVCIntControlSnapshot?
+        let hdr: UVCBoolControlSnapshot?
+        let rightLight: UVCIntControlSnapshot?
+        let led: UVCIntControlSnapshot?
+
+        init(properties: UVCDeviceProperties, brio: LogitechBrioDeviceProperties?) {
+            self.exposureMode = UVCBitmapControlSnapshot(properties.exposureMode)
+            self.exposureTime = UVCIntControlSnapshot(properties.exposureTime)
+            self.gain = UVCIntControlSnapshot(properties.gain)
+            self.brightness = UVCIntControlSnapshot(properties.brightness)
+            self.contrast = UVCIntControlSnapshot(properties.contrast)
+            self.saturation = UVCIntControlSnapshot(properties.saturation)
+            self.sharpness = UVCIntControlSnapshot(properties.sharpness)
+            self.hue = UVCIntControlSnapshot(properties.hue)
+            self.hueAuto = UVCBoolControlSnapshot(properties.hueAuto)
+            self.whiteBalanceAuto = UVCBoolControlSnapshot(properties.whiteBalanceAuto)
+            self.whiteBalance = UVCIntControlSnapshot(properties.whiteBalance)
+            self.powerLine = UVCIntControlSnapshot(properties.powerLineFrequency)
+            self.backlight = UVCIntControlSnapshot(properties.backlightCompensation)
+            self.zoom = UVCIntControlSnapshot(properties.zoomAbsolute)
+            self.panTilt = UVCMultipleIntControlSnapshot(properties.panTiltAbsolute)
+            self.roll = UVCIntControlSnapshot(properties.rollAbsolute)
+            self.focusAuto = UVCBoolControlSnapshot(properties.focusAuto)
+            self.focusAbsolute = UVCIntControlSnapshot(properties.focusAbsolute)
+            self.fov = brio?.fieldOfView.map { UVCIntControlSnapshot($0) }
+            self.hdr = brio?.hdr.map {
+                UVCBoolControlSnapshot(isCapable: $0.isCapable,
+                                       defaultValue: $0.defaultValue,
+                                       isEnabled: $0.isEnabled)
+            }
+            self.rightLight = brio?.rightLight.map { UVCIntControlSnapshot($0) }
+            self.led = brio?.indicatorLed.map { UVCIntControlSnapshot($0) }
+        }
     }
 
     var isHDR: Bool {
