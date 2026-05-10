@@ -63,7 +63,6 @@ struct AdvancedView: View {
                 }
             }
         }
-        .formStyle(.grouped)
-        .frame(maxHeight: 360)
+        .formStyle(.columns)
     }
 }
