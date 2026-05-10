@@ -22,22 +22,16 @@ struct ContentView: View {
     // suspend(), so ContentView no longer watches scenePhase.
     @Environment(PreviewSession.self) private var preview
 
-    // Fixed popover content height. NSPopover sizes to its content's
-    // intrinsic size, so without an explicit height the popover
-    // resizes when switching between tabs whose Forms have
-    // different intrinsic heights.
-    private let popoverContentHeight: CGFloat = 480
-
     var body: some View {
-        // Tabs live at the top of the popover (matches the macOS 26
-        // System Settings convention). The camera preview sits below
-        // the tab bar and the active tab's content fills the rest of
-        // the popover.
+        // Camera preview at the top of the popover, settings tabs
+        // below. NSPopover sizes to the content's intrinsic size, so
+        // each child carries its own .frame and the popover grows
+        // to fit the sum of preview + tab content.
         VStack(spacing: 0) {
-            SettingsView()
-
             cameraPreview()
                 .animation(nil, value: settings.hideCameraPreview)
+
+            SettingsView()
         }
         // Drive PreviewSession from the selected-device identity. A
         // change to selectedDevice cancels the previous task body and
@@ -52,8 +46,8 @@ struct ContentView: View {
                 await preview.detach()
             }
         }
-        .frame(width: settings.cameraPreviewSize.getWidth(),
-               height: popoverContentHeight)
+        .frame(width: settings.cameraPreviewSize.getWidth())
+        .fixedSize(horizontal: true, vertical: false)
     }
 
     @ViewBuilder
